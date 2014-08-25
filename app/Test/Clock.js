@@ -36,6 +36,7 @@ define(function(require) {
         var ctx = this.canvas.back.ctx;
         util.setContext(this.canvas.back);
         ctx.translate(this.width / 2, this.height / 2);
+        ctx.lineCap = 'round';
         /* Decor */
         ctx.save();
         ctx.fillStyle = '#222222';
@@ -47,7 +48,7 @@ define(function(require) {
         ctx.restore();
         /* Milliseconds */
         ctx.save();
-        angle = d.getMilliseconds() * this.msPart;
+        var angle = d.getMilliseconds() * this.msPart;
         ctx.strokeStyle = 'blue';
         ctx.lineWidth = 0.5;
         ctx.rotate(angle);
@@ -78,7 +79,8 @@ define(function(require) {
         shape.line(0, -this.hourNeedleWidth, 0, 0);
         ctx.restore();
         /* Decor */
-        shape.rectangle(-5, -5, 10, 10);
+        var w8 = this.width / 64;
+        shape.rectangle(-w8, -w8, w8*2, w8*2);
         /* Flip backbuffer to front */
         this.canvas.flip();
     };
