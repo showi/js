@@ -36,7 +36,11 @@ define(function(require) {
         this.sizeHour = w * 1;
         this.date = new Date();
     }
-
+    
+    MODULE.prototype.getElement = function() {
+        return this.canvas.front.element;
+    };
+ 
     MODULE.prototype.draw = function() {
         this.canvas.clearBackBuffer();
         var ctx = this.canvas.back.ctx;
@@ -61,7 +65,7 @@ define(function(require) {
         shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         ctx.restore();
         /* Font */
-        /* Milliseconds */
+        /* Milliseconds  */
         var s = (this.width / 1000);
         var l = 0.8;
         if (this.drawMillisecond) {

@@ -8,7 +8,7 @@ html, body {
 	background-color: black;
 }
 .clock-container {
-	float: right;
+	float: left;
 }
 .ui-widget {
 	border-style: inset;
