@@ -62,6 +62,8 @@ define(function(require) {
         ctx.restore();
         /* Font */
         /* Milliseconds */
+        var s = (this.width / 1000);
+        var l = 0.8;
         if (this.drawMillisecond) {
             ctx.save();
             var angle = this.date.getMilliseconds() * this.msPart;
@@ -69,35 +71,35 @@ define(function(require) {
             ctx.lineWidth = 0.5;
             ctx.rotate(angle);
             shape.line(ctx, 0, -this.sizeMillisecond, 0, 0);
-            shape.circle(ctx, 0, -this.sizeMillisecond, 1);
+            shape.circle(ctx, 0, -this.sizeMillisecond, s);
             ctx.restore();
         }
         /* SECOND */
         ctx.save();
         ctx.strokeStyle = '#080348';
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 1 * l;
         angle = this.date.getSeconds() * this.sPart;
         ctx.rotate(angle);
         shape.line(ctx, 0, -this.sizeSecond, 0, 0);
-        shape.circle(ctx, 0, -this.sizeSecond, 2);
+        shape.circle(ctx, 0, -this.sizeSecond, s * 2);
         ctx.restore();
         /* MINUTES */
         ctx.save();
         ctx.strokeStyle = '#DDAA00';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * l;
         angle = this.date.getMinutes() * this.mnPart;
         ctx.rotate(angle);
         shape.line(ctx, 0, -this.sizeMinute, 0, 0);
-        shape.circle(ctx, 0, -this.sizeMinute, 3);
+        shape.circle(ctx, 0, -this.sizeMinute, s * 3);
         ctx.restore();
         /* HOUR */
         ctx.save();
         angle = this.date.getHours() * this.hPart;
         ctx.strokeStyle = '#DD4200';
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 4 * l;
         ctx.rotate(angle);
         shape.line(ctx, 0, -this.sizeHour, 0, 0);
-        shape.circle(ctx, 0, -this.sizeHour, 4);
+        shape.circle(ctx, 0, -this.sizeHour, s * 4);
         ctx.restore();
         /* Decor */
         var w8 = this.width / 64;

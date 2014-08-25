@@ -2,8 +2,8 @@ define(function(require) {
     jQuery('.clock-container').draggable();
     var glob = require('./global');
     var ModuleClock = require('./Test/Clock');
-    var size = 600;
-    var numClock = 4;
+    var size = 400;
+    var numClock = 8;
     var clocks = [];
     var delay = 50;
     for (var i = 0; i < numClock; i++) {
