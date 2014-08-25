@@ -21,8 +21,8 @@ define(function(require) {
         var w = this.width / 8;
         this.millisecondNeedleWidth = w * 1;
         this.secondNeedleWidth = w * 2;
-        this.minuteNeedleWidth = w * 3;
-        this.hourNeedleWidth = w * 4;
+        this.minuteNeedleWidth = w * 4;
+        this.hourNeedleWidth = w * 3;
         var PI = Math.PI / 180;
         this.msPart = (360 / 1000) * PI;
         this.sPart = (360 / 60) * PI;
@@ -37,26 +37,30 @@ define(function(require) {
         util.setContext(this.canvas.back);
         ctx.translate(this.width / 2, this.height / 2);
         ctx.lineCap = 'round';
+        ctx.strokeStyle = '#39AE7F';
         /* Decor */
         ctx.save();
-        ctx.fillStyle = '#222222';
+        ctx.fillStyle = '#00462A';
         shape.rectangle(-this.width / 2, -this.width / 2, this.width,
                 this.width);
-        ctx.fillStyle = '#444444';
-        var w3 = (this.width / 8) * 2;
+        ctx.fillStyle = '#007646';
+        var w3 = this.secondNeedleWidth;
+        shape.rectangle(-w3, -w3, w3*2, w3*2);
+        ctx.fillStyle = '#19AF73';
+        w3 = this.millisecondNeedleWidth;
         shape.rectangle(-w3, -w3, w3*2, w3*2);
         ctx.restore();
         /* Milliseconds */
         ctx.save();
         var angle = d.getMilliseconds() * this.msPart;
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = '#00462A';
         ctx.lineWidth = 0.5;
         ctx.rotate(angle);
         shape.line(0, -this.millisecondNeedleWidth, 0, 0);
         ctx.restore();
         /* SECOND */
         ctx.save();
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = '#080348';
         ctx.lineWidth = 1;
         angle = d.getSeconds() * this.sPart;
         ctx.rotate(angle);
@@ -64,7 +68,7 @@ define(function(require) {
         ctx.restore();
         /* MINUTES */
         ctx.save();
-        ctx.strokeStyle = 'green';
+        ctx.strokeStyle = '#DDAA00';
         ctx.lineWidth = 2;
         angle = d.getMinutes() * this.mnPart;
         ctx.rotate(angle);
@@ -73,7 +77,7 @@ define(function(require) {
         /* HOUR */
         ctx.save();
         angle = d.getHours() * this.hPart;
-        ctx.strokeStyle = 'yellow';
+        ctx.strokeStyle = '#DD4200';
         ctx.lineWidth = 4;
         ctx.rotate(angle);
         shape.line(0, -this.hourNeedleWidth, 0, 0);

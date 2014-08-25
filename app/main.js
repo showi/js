@@ -5,7 +5,7 @@ define(function(require) {
 
     var clock = new ModuleClock(200, 200, 'MyClock');
     var clock2 = new ModuleClock(400, 400, 'MyClock2');
-    var delay = 125;
+    var delay = 100;
     function __callback() {
         clock.draw();
         clock2.draw();
