@@ -2,14 +2,14 @@ define(function(require) {
     var graphit = require('./global');
     var NAMESPACE = {
         getContext : function() {
-            return graphit.context;
+            return window.graphit.context;
         },
         setContext : function(newContext) {
-            var context = this.getContext();
-            if (context != null && context == newContext) {
-                console.info('Same context');
-                return this;
-            }
+//            var context = this.getContext();
+//            if (context != null && context == newContext) {
+//                console.info('Same context');
+//                return this;
+//            }
             window.graphit.context = newContext;
             return this;
         },

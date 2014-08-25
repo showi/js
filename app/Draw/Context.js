@@ -1,13 +1,17 @@
 define(function(require) {
+    var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
 
     function MODULE(canvas) {
         this.__MODULE__ = 'Draw/Context';
         if (canvas === undefined) {
             canvas = document.createElement('canvas');
-        } else if (typeof canvas === 'string') {
-            canvas = document.getElementById(canvas);
+        } else if (typeof canvas === 'string' && canvas != null) {
+            var id = canvas;
+            canvas = document.getElementById(id);
+            if (canvas == null) {
+                throw new InvalidDocumentIdException(id);
+            }
         }
-        console.info('Context constructor: ', canvas);
         if (!(this instanceof MODULE)) { return new MODULE(canvas); }
         this.ctx = canvas.getContext('2d');
         this.element = canvas;

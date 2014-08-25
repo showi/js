@@ -1,10 +1,10 @@
 define(function(require) {
-    
+
     var util = require('../util');
     var tool = require('../Draw/tool');
 
     var NAMESPACE = {
-        __MODULE__: 'Draw/Shape',
+        __MODULE__ : 'Draw/Shape',
         line : function(sx, sy, ex, ey) {
             var ctx = util.getContext();
             ctx.beginPath();
