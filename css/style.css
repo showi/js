@@ -1,0 +1,45 @@
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;s
+}
+
+.ui-widget {
+	border-style: inset;
+	border-width: 2px;
+	border-color: grey;
+	height: auto !important;
+	clear: right;
+}
+.ui-widget > .header {
+	min-height: 0.75em;
+	text-align: center;
+	vertical-align: middle;
+	border-style: None;
+	border-width: 2px;
+	border-color: grey;
+	font-size: 1em;
+}
+.ui-widget > .content {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -4em;
+	border-style: outset;
+	border-width: 1px;
+	border-color: grey;
+	background-color: grey;
+	overflow: auto;
+}
+.ui-widget > .footer {
+	height: 2em;
+	border-style: none None None None;
+	border-width: 2px;
+	border-color: grey;
+	margin: 0 4em 0 0;
+	clear: both;
+	font-size: 0.5em;
+	text-align: right;
+}
+
