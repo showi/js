@@ -3,21 +3,27 @@ define(function(require) {
     var util = require('../util');
     var tool = require('../Draw/tool');
 
+    var ctx = util.getContext();
+
     var NAMESPACE = {
         __MODULE__ : 'Draw/Shape',
-        line : function(sx, sy, ex, ey) {
-            var ctx = util.getContext();
+        line : function(ctx, sx, sy, ex, ey) {
             ctx.beginPath();
             ctx.moveTo(sx, sy);
             ctx.lineTo(ex, ey);
-            tool.strokeAndFill();
+            tool.strokeAndFill(ctx);
             ctx.closePath();
         },
-        rectangle : function(lx, ly, rx, ry) {
-            var ctx = util.getContext();
+        rectangle : function(ctx, lx, ly, rx, ry) {
             ctx.beginPath();
             ctx.rect(lx, ly, rx, ry);
-            tool.strokeAndFill();
+            tool.strokeAndFill(ctx);
+            ctx.closePath();
+        },
+        circle: function(ctx, centerX, centerY, radius) {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            tool.strokeAndFill(ctx);
             ctx.closePath();
         }
     };

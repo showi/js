@@ -8,9 +8,8 @@ define(function(require) {
     var util = require('../util');
 
     function MODULE(width, height, id) {
-        if (width === undefined || height === undefined) { 
-            throw new MissingParameterException('width|height');
-        }
+        if (width === undefined || height === undefined) { throw new MissingParameterException(
+                'width|height'); }
         this.canvas = new Canvas({
             id : id,
             width : width,
@@ -28,63 +27,81 @@ define(function(require) {
         this.sPart = (360 / 60) * PI;
         this.mnPart = (360 / 60) * PI;
         this.hPart = (360 / 24) * PI;
+        this.drawMillisecond = false;
+        this.redrawDelay = 1000;
+        
+        this.sizeMillisecond = w * 4;
+        this.sizeSecond = w * 3;
+        this.sizeMinute = w * 2;
+        this.sizeHour = w * 1;
+        this.date = new Date();
     }
 
-    MODULE.prototype.draw = function(d) {
-        var d = new Date();
+    MODULE.prototype.draw = function() {
         this.canvas.clearBackBuffer();
         var ctx = this.canvas.back.ctx;
-        util.setContext(this.canvas.back);
-        ctx.translate(this.width / 2, this.height / 2);
+        var dWidth = this.width / 2;
+        ctx.translate(dWidth, dWidth);
         ctx.lineCap = 'round';
         ctx.strokeStyle = '#39AE7F';
-        /* Decor */
+        /* Background */
         ctx.save();
         ctx.fillStyle = '#00462A';
-        shape.rectangle(-this.width / 2, -this.width / 2, this.width,
-                this.width);
-        ctx.fillStyle = '#007646';
-        var w3 = this.secondNeedleWidth;
-        shape.rectangle(-w3, -w3, w3*2, w3*2);
-        ctx.fillStyle = '#19AF73';
-        w3 = this.millisecondNeedleWidth;
-        shape.rectangle(-w3, -w3, w3*2, w3*2);
+        var tw = this.sizeMillisecond;
+        shape.rectangle(ctx, -tw, -tw, tw*2, tw*2);
         ctx.restore();
-        /* Milliseconds */
         ctx.save();
-        var angle = d.getMilliseconds() * this.msPart;
-        ctx.strokeStyle = '#00462A';
-        ctx.lineWidth = 0.5;
-        ctx.rotate(angle);
-        shape.line(0, -this.millisecondNeedleWidth, 0, 0);
+        ctx.fillStyle = '#007646';
+        tw = this.sizeSecond;
+        shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         ctx.restore();
+        ctx.save();
+        ctx.fillStyle = '#19AF73';
+        tw = this.sizeMinute;
+        shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+        ctx.restore();
+        /* Font */
+        /* Milliseconds */
+        if (this.drawMillisecond) {
+            ctx.save();
+            var angle = this.date.getMilliseconds() * this.msPart;
+            ctx.strokeStyle = '#00462A';
+            ctx.lineWidth = 0.5;
+            ctx.rotate(angle);
+            shape.line(ctx, 0, -this.sizeMillisecond, 0, 0);
+            shape.circle(ctx, 0, -this.sizeMillisecond, 1);
+            ctx.restore();
+        }
         /* SECOND */
         ctx.save();
         ctx.strokeStyle = '#080348';
         ctx.lineWidth = 1;
-        angle = d.getSeconds() * this.sPart;
+        angle = this.date.getSeconds() * this.sPart;
         ctx.rotate(angle);
-        shape.line(0, -this.secondNeedleWidth, 0, 0);
+        shape.line(ctx, 0, -this.sizeSecond, 0, 0);
+        shape.circle(ctx, 0, -this.sizeSecond, 2);
         ctx.restore();
         /* MINUTES */
         ctx.save();
         ctx.strokeStyle = '#DDAA00';
         ctx.lineWidth = 2;
-        angle = d.getMinutes() * this.mnPart;
+        angle = this.date.getMinutes() * this.mnPart;
         ctx.rotate(angle);
-        shape.line(0, -this.minuteNeedleWidth, 0, 0);
+        shape.line(ctx, 0, -this.sizeMinute, 0, 0);
+        shape.circle(ctx, 0, -this.sizeMinute, 3);
         ctx.restore();
         /* HOUR */
         ctx.save();
-        angle = d.getHours() * this.hPart;
+        angle = this.date.getHours() * this.hPart;
         ctx.strokeStyle = '#DD4200';
         ctx.lineWidth = 4;
         ctx.rotate(angle);
-        shape.line(0, -this.hourNeedleWidth, 0, 0);
+        shape.line(ctx, 0, -this.sizeHour, 0, 0);
+        shape.circle(ctx, 0, -this.sizeHour, 4);
         ctx.restore();
         /* Decor */
         var w8 = this.width / 64;
-        shape.rectangle(-w8, -w8, w8*2, w8*2);
+        shape.rectangle(ctx, -w8, -w8, w8 * 2, w8 * 2);
         /* Flip backbuffer to front */
         this.canvas.flip();
     };

@@ -10,8 +10,7 @@ define(function(requiere) {
             return 'rgb(' + this.randInt(255) + ',' + this.randInt(255) + ','
                     + this.randInt(255) + ')';
         },
-        strokeAndFill: function() {
-            var ctx = graphit.context.ctx;
+        strokeAndFill: function(ctx) {
             if (ctx.fillStyle) {
                 ctx.fill();
             }

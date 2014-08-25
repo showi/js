@@ -3,9 +3,13 @@
 }
 html, body {
 	height: 100%;
+	width: 100%;
+	overflow: hidden;
 	background-color: black;
 }
-
+.clock-container {
+	float: right;
+}
 .ui-widget {
 	border-style: inset;
 	border-width: 2px;
