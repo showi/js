@@ -8,21 +8,29 @@ define(function(require) {
     var util = require('../util');
 
     function MODULE(width, height, id) {
-        if (width === undefined || height === undefined) { throw new MissingParameterException(); }
+        if (width === undefined || height === undefined) { 
+            throw new MissingParameterException('width|height');
+        }
         this.canvas = new Canvas({
-            id : 'MyClock',
-            width : 200,
-            height : 200
+            id : id,
+            width : width,
+            height : height
         });
         this.width = width;
         this.height = height;
-        this.millisecondNeedleWidth = (this.width / 4) * 1;
-        this.secondNeedleWidth = (this.width / 4) * 2;
-        this.minuteNeedleWidth = (this.width / 4) * 3;
-        this.hourNeedleWidth = (this.width / 4) * 4;
+        var w = this.width / 8;
+        this.millisecondNeedleWidth = w * 1;
+        this.secondNeedleWidth = w * 2;
+        this.minuteNeedleWidth = w * 3;
+        this.hourNeedleWidth = w * 4;
+        var PI = Math.PI / 180;
+        this.msPart = (360 / 1000) * PI;
+        this.sPart = (360 / 60) * PI;
+        this.mnPart = (360 / 60) * PI;
+        this.hPart = (360 / 24) * PI;
     }
 
-    MODULE.prototype.draw = function() {
+    MODULE.prototype.draw = function(d) {
         var d = new Date();
         this.canvas.clearBackBuffer();
         var ctx = this.canvas.back.ctx;
@@ -31,14 +39,15 @@ define(function(require) {
         /* Decor */
         ctx.save();
         ctx.fillStyle = '#222222';
-        shape.rectangle(-this.width/2, -this.width/2, this.width, this.width);
+        shape.rectangle(-this.width / 2, -this.width / 2, this.width,
+                this.width);
         ctx.fillStyle = '#444444';
-        shape.rectangle(-50, -50, 100, 100);
+        var w3 = (this.width / 8) * 2;
+        shape.rectangle(-w3, -w3, w3*2, w3*2);
         ctx.restore();
-        var angle = d.getSeconds() * (360 / 60) * Math.PI / 180;
         /* Milliseconds */
         ctx.save();
-        angle = d.getMilliseconds() * (360 / 1000) * (Math.PI / 180);
+        angle = d.getMilliseconds() * this.msPart;
         ctx.strokeStyle = 'blue';
         ctx.lineWidth = 0.5;
         ctx.rotate(angle);
@@ -48,7 +57,7 @@ define(function(require) {
         ctx.save();
         ctx.strokeStyle = 'red';
         ctx.lineWidth = 1;
-        angle = d.getSeconds() * (360 / 60) * (Math.PI / 180);
+        angle = d.getSeconds() * this.sPart;
         ctx.rotate(angle);
         shape.line(0, -this.secondNeedleWidth, 0, 0);
         ctx.restore();
@@ -56,19 +65,18 @@ define(function(require) {
         ctx.save();
         ctx.strokeStyle = 'green';
         ctx.lineWidth = 2;
-        angle = d.getMinutes() * (360 / 60) * (Math.PI / 180);
+        angle = d.getMinutes() * this.mnPart;
         ctx.rotate(angle);
         shape.line(0, -this.minuteNeedleWidth, 0, 0);
         ctx.restore();
         /* HOUR */
         ctx.save();
-        angle = d.getHours() * (360 / 24) * Math.PI / 180;
+        angle = d.getHours() * this.hPart;
         ctx.strokeStyle = 'yellow';
         ctx.lineWidth = 4;
         ctx.rotate(angle);
         shape.line(0, -this.hourNeedleWidth, 0, 0);
         ctx.restore();
-
         /* Decor */
         shape.rectangle(-5, -5, 10, 10);
         /* Flip backbuffer to front */
