@@ -55,6 +55,15 @@ define(function(require) {
         getDocumentSize : function() {
             return [documentElement.width(), documentElement.height()];
         },
+        centerElement : function(elm) {
+            elm.css("position","absolute");
+            elm.css("top", Math.max(0, ((windowElement.height() - elm.outerHeight()) / 2)
+                    + windowElement.scrollTop())
+                    + "px");
+            elm.css("left", Math.max(0, ((windowElement.width() - elm.outerWidth()) / 2)
+                    + windowElement.scrollLeft())
+                    + "px");
+        }
     };
     return UTIL;
 });

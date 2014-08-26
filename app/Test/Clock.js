@@ -35,9 +35,9 @@ define(function(require) {
     CLOCK.prototype.init = function() {
         var w = this._width / 8;
         this.sizeMillisecond = w * 0.5;
-        this.sizeSecond = w * 3;
-        this.sizeMinute = w * 2;
-        this.sizeHour = w * 1;
+        this.sizeSecond = w * 4;
+        this.sizeMinute = w * 3;
+        this.sizeHour = w * 1.5;
     };
 
     CLOCK.prototype.getElement = function() {
@@ -101,7 +101,6 @@ define(function(require) {
                 ctx.strokeStyle = 'black';
                 var font = 'bold ' + getFontSize(15).toString() + 'pt Arial';
                 ctx.font = font;
-                console.log('Font: ', font);
                 var x = cX + r * tX; 
                 var y = cY + r * tY;
                 ctx.fillText(i, x, y);
@@ -140,12 +139,12 @@ define(function(require) {
         this.drawBackground(ctx);
         /* Milliseconds  */
         var s = (this._width / 1000);
-        var l = 0.8;
+        var l = 1;
         if (this.drawMillisecond) {
             tool.saveAndRestore(ctx, function(ctx) {
                 var angle = that.date.getMilliseconds() * that.msPart;
                 ctx.strokeStyle = '#00462A';
-                ctx.lineWidth = 0.5;
+                ctx.lineWidth = 0.5 * l;
                 ctx.rotate(angle);
                 shape.line(ctx, 0, -that.sizeMillisecond, 0, 0);
                 shape.circle(ctx, 0, -that.sizeMillisecond, s);
@@ -155,7 +154,7 @@ define(function(require) {
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.strokeStyle = '#71266E';
             ctx.lineWidth = 1 * l;
-            angle = that.date.getSeconds() * that.sPart;
+            angle = Math.round(that.date.getSeconds()) * that.sPart;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeSecond, 0, 0);
             shape.circle(ctx, 0, -that.sizeSecond, s * 2);
@@ -164,14 +163,14 @@ define(function(require) {
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.strokeStyle = '#FF7600';
             ctx.lineWidth = 2 * l;
-            angle = that.date.getMinutes() * that.mnPart;
+            angle = Math.round(that.date.getMinutes()) * that.mnPart;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeMinute, 0, 0);
             shape.circle(ctx, 0, -that.sizeMinute, s * 3);
         });
         /* HOUR */
         tool.saveAndRestore(ctx, function(ctx) {
-            angle = that.date.getHours() * that.hPart;
+            angle = Math.round(that.date.getHours()) * that.hPart;
             ctx.strokeStyle = '#E11D38';
             ctx.lineWidth = 4 * l;
             ctx.rotate(angle);
