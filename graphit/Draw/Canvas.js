@@ -43,7 +43,7 @@ define(function(require) {
     };
 
     CANVAS.prototype.getElement = function() {
-        return this.element; 
+        return this.element;
     };
 
     CANVAS.prototype.width = function(value) {

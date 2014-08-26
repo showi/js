@@ -1,7 +1,7 @@
 define(function(require) {
 
     var util = require('../util');
-    var tool = require('../Draw/tool');
+    var tool = require('./tool');
 
     var SHAPE = {
         __MODULE__ : 'Draw/Shape',

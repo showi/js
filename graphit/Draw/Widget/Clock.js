@@ -1,6 +1,6 @@
 define(function(require) {
 
-    var MissingParameterException = require('../../Exception/MissingParameter');
+    var MissingParameterException = require('graphit/Exception/MissingParameter');
     var Context = require('../Context');
     var DoubleBuffer = require('../DoubleBuffer');
     var Canvas = require('../Canvas');

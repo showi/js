@@ -1,6 +1,6 @@
 define(function(require) {
 
-    var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
+    var InvalidDocumentIdException = require('graphit/Exception/InvalidDocumentId');
 
     function CONTEXT(canvas) {
         this.__MODULE__ = 'Draw/Context';
