@@ -122,7 +122,6 @@ define(function(require) {
                 ctx.strokeText(i, x, y);
             });
         }
-        console.log('BackFront: ', this._back.front);
         this.canvas.back.copyData(this._back.front);
     };
     CLOCK.prototype.draw = function() {
