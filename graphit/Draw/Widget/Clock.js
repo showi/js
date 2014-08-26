@@ -1,18 +1,18 @@
 define(function(require) {
 
-    var MissingParameterException = require('../Exception/MissingParameter');
-    var Context = require('../Draw/Context');
-    var DoubleBuffer = require('../Draw/DoubleBuffer');
-    var Canvas = require('../Draw/Canvas');
-    var tool = require('../Draw/tool');
-    var shape = require('../Draw/shape');
-    var util = require('../util');
+    var MissingParameterException = require('../../Exception/MissingParameter');
+    var Context = require('../Context');
+    var DoubleBuffer = require('../DoubleBuffer');
+    var Canvas = require('../Canvas');
+    var tool = require('../tool');
+    var shape = require('../shape');
+    var util = require('../../util');
 
     function CLOCK(width, height, id) {
         this.__MODULE__ = 'Test/Clock';
         if (width === undefined || height === undefined) { throw new MissingParameterException(
                 'width|height'); }
-        this.canvas = new DoubleBuffer({
+        this.dbuffer = new DoubleBuffer({
             id : id,
             width : width,
             height : height
@@ -43,10 +43,10 @@ define(function(require) {
     };
 
     CLOCK.prototype.getElement = function() {
-        return this.canvas.front.element;
+        return this.dbuffer.front.element;
     };
     CLOCK.prototype.drawBackground = function(ctx) {
-        if (!this.needRefresh) { return this.canvas.back
+        if (!this.needRefresh) { return this.dbuffer.back
                 .copyData(this.background); }
         this.background = new Canvas({
             width : this._width,
@@ -120,7 +120,7 @@ define(function(require) {
                 ctx.strokeText(i, x, y);
             });
         }
-        this.canvas.back.copyData(this.background);
+        this.dbuffer.back.copyData(this.background);
     };
 
     CLOCK.prototype.draw = function() {
@@ -128,8 +128,8 @@ define(function(require) {
         if (this.needRefresh) {
             this.init();
         }
-        this.canvas.clearBackBuffer();
-        var ctx = this.canvas.back.getCtx();
+        this.dbuffer.clearBackBuffer();
+        var ctx = this.dbuffer.back.getCtx();
         var dWidth = this._width / 2;
         ctx.translate(dWidth, dWidth);
         ctx.lineCap = 'round';
@@ -180,14 +180,14 @@ define(function(require) {
         this.strokeStyle = '#241B1C';
         shape.rectangle(ctx, -w8, -w8, w8 * 2, w8 * 2);
         /* Flip backbuffer to front */
-        this.canvas.flip();
+        this.dbuffer.flip();
         this.needRefresh = false;
     };
 
     CLOCK.prototype.width = function(value) {
-        if (value !== undefined) {
+        if (value !== undefined && this._width != value) {
             this._width = value;
-            this.canvas.width(value);
+            this.dbuffer.width(value);
             this.needRefresh = true;
             return this;
         }
@@ -195,9 +195,9 @@ define(function(require) {
     };
 
     CLOCK.prototype.height = function(value) {
-        if (value !== undefined) {
+        if (value !== undefined && this._height != value) {
             this._height = value;
-            this.canvas.height(value);
+            this.dbuffer.height(value);
             this.needRefresh = true;
             return this;
         }

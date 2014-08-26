@@ -1,4 +1,4 @@
-define(function() {
+define(function() {     
     return {
         log : function(msg) {
             console.log(msg);
@@ -7,4 +7,5 @@ define(function() {
             console.error(msg);
         }
     };
+    
 });

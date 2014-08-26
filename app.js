@@ -6,10 +6,10 @@
 requirejs.config({
     baseUrl: 'lib',
     paths: {
-        app: '../app'
+        graphit: '../graphit'
     }
 });
 
 // Start loading the main app file. Put all of
 // your application logic in there.
-requirejs(['app/main']);
+requirejs(['graphit/test/run']);

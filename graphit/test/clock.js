@@ -1,11 +1,11 @@
 define(function(require) {
     var glob = require('../global');
-    var ModuleClock = require('../Test/Clock');
+    var ModuleClock = require('../Draw/Widget/Clock');
     var util = require('../util');
     var maxSize = 320;
     var numClock = 24;
     var clocks = [];
-    var delay = 100;
+    var delay = 1000;
 
     function getClockSize() {
         return maxSize;

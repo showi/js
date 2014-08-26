@@ -9,7 +9,7 @@ define(function(require) {
         this.element = null;
         this.context = null;
         this._newContext(options.width, options.height, options.id);
-    }
+    };
 
     CANVAS.prototype._newContext = function(width, height, id) {
         var elm = undefined;
