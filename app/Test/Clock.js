@@ -79,7 +79,7 @@ define(function(require) {
             tw = that.sizeMillisecond;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         });
-        var fontSize = (this._width / (this._width * 2));
+//        var fontSize = (this._width / (this._width * 2));
         function getFontSize(coef) {
             var num = (that._width / 1000) * coef;
             return num.toString();
@@ -88,7 +88,6 @@ define(function(require) {
         var cY = 0;
         /* Font */
         var part = 360 / 60;
-//        ctx.font = 'bold 20pt Calibri';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
         for (var i = 0; i < 60; i += 5) {
