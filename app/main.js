@@ -33,7 +33,7 @@ define(function(require) {
             var size = util.getMin(util.getWindowSize());
             clock.width(size).height(size);
             clock.element.width(size).height(size);
-            util.centerElement(clocks.element);
+            util.centerElement(clocks.getElement());
         }
     }, false);
     function __callback() {

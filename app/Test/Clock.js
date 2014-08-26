@@ -61,22 +61,22 @@ define(function(require) {
         /* Background */
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#241B1C';
-            tw = that.sizeSecond / 2;
+            tw = that.sizeSecond;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         });
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#63353B';
-            tw = that.sizeMinute / 2;
+            tw = that.sizeMinute;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         });
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#26211C';
-            tw = that.sizeHour / 2;
+            tw = that.sizeHour;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         });
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#684E38';
-            tw = that.sizeMillisecond / 2;
+            tw = that.sizeMillisecond;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         });
         var fontSize = (this._width / (this._width * 2));
