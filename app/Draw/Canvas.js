@@ -1,12 +1,13 @@
 define(function(require) {
 
-    var MissingParameterException = require('../Exception/MissingParameter');
     var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
 
     var Context = require('../Draw/Context');
 
     function CANVAS(options) {
         this.__MODULE__ = 'Draw/Canvas';
+        this.element = null;
+        this.context = null;
         this._newContext(options.width, options.height, options.id);
     }
 
@@ -37,12 +38,12 @@ define(function(require) {
                 + ' x="' + this.x + '" y="' + this.y + '">';
     };
 
-    CANVAS.prototype.getContext = function(back) {
+    CANVAS.prototype.getContext = function() {
         return this.context;
     };
 
-    CANVAS.prototype.getElement = function(back) {
-        return this.element;
+    CANVAS.prototype.getElement = function() {
+        return this.element; 
     };
 
     CANVAS.prototype.width = function(value) {
