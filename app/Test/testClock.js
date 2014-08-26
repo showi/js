@@ -2,8 +2,8 @@ define(function(require) {
     var glob = require('../global');
     var ModuleClock = require('../Test/Clock');
     var util = require('../util');
-    var maxSize = 100;
-    var numClock = 128;
+    var maxSize = 320;
+    var numClock = 24;
     var clocks = [];
     var delay = 100;
 
@@ -28,8 +28,8 @@ define(function(require) {
         for (var i = 0; i < clocks.length; i++) {
             var clock = clocks[i];
             var size = util.getMin(util.getWindowSize());
-            clock.width(size).height(size);
-            clock.element.width(size).height(size);
+//            clock.width(size).height(size);
+//            clock.element.width(size).height(size);
         }
     }, false);
     function __callback() {
