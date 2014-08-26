@@ -8,9 +8,7 @@ define(function(require) {
         } else if (typeof canvas === 'string' && canvas != null) {
             var id = canvas;
             canvas = document.getElementById(id);
-            if (canvas == null) {
-                throw new InvalidDocumentIdException(id);
-            }
+            if (canvas == null) { throw new InvalidDocumentIdException(id); }
         }
         if (!(this instanceof CONTEXT)) { return new CONTEXT(canvas); }
         this.ctx = canvas.getContext('2d');
@@ -20,14 +18,12 @@ define(function(require) {
         }
     }
 
-    CONTEXT.prototype.setContext = function(canvas)
-    {
+    CONTEXT.prototype.setContext = function(canvas) {
         this.element = canvas;
         this.ctx = canvas.getContext('2d');
         return this;
     };
-    CONTEXT.prototype.getElement = function()
-    {
+    CONTEXT.prototype.getElement = function() {
         return this.element;
     };
 
@@ -37,7 +33,7 @@ define(function(require) {
             this.ctx.width = value;
             return this;
         }
-        return this.ctx.width;
+        return this.element.width;
     };
     CONTEXT.prototype.height = function(value) {
         if (value !== undefined) {
@@ -45,13 +41,13 @@ define(function(require) {
             this.ctx.height = value;
             return this;
         }
-        return this.ctx.height;
+        return this.element.height;
     };
 
     CONTEXT.prototype.copyData = function(src) {
-        this.ctx.putImageData(
-                src.ctx.getImageData(0, 0, this.element.width, this.element.height),
-                0, 0);
+        console.log('Width', this.width(), 'Height', this.height());
+        this.ctx.putImageData(src.ctx.getImageData(0, 0, this.width(), this
+                .height()), 0, 0);
     };
 
     CONTEXT.setup = function() {

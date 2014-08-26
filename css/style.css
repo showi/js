@@ -1,17 +1,20 @@
 * {
 	margin: 0;
 }
-html, body {
+
+html,body {
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
 	background-color: #191319;
 }
+
 .clock-container {
 	float: left;
 	margin: 0;
 	padding: 0;
 }
+
 .ui-widget {
 	border-style: inset;
 	border-width: 2px;
@@ -19,7 +22,8 @@ html, body {
 	height: auto !important;
 	clear: right;
 }
-.ui-widget > .header {
+
+.ui-widget>.header {
 	min-height: 0.75em;
 	text-align: center;
 	vertical-align: middle;
@@ -28,7 +32,8 @@ html, body {
 	border-color: grey;
 	font-size: 1em;
 }
-.ui-widget > .content {
+
+.ui-widget>.content {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
@@ -39,7 +44,8 @@ html, body {
 	background-color: grey;
 	overflow: auto;
 }
-.ui-widget > .footer {
+
+.ui-widget>.footer {
 	height: 2em;
 	border-style: none None None None;
 	border-width: 2px;
@@ -49,4 +55,3 @@ html, body {
 	font-size: 0.5em;
 	text-align: right;
 }
-

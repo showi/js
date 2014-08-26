@@ -3,64 +3,35 @@ define(function(require) {
     var MissingParameterException = require('../Exception/MissingParameter');
     var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
 
-    //    var List = require('../List/Dl/List');
     var Context = require('../Draw/Context');
 
     function CANVAS(options) {
         this.__MODULE__ = 'Draw/Canvas';
-        if (options === undefined) {
-            throw new MissingParameterException('options');
-        }
-        if (options.width === undefined) { throw new MissingParameterException('options.width'); }
-        if (options.height === undefined) { throw new MissingParameterException(
-                'options.height'); }
-        this._width = options.width;
-        this._height = options.height;
-        this.x = (options.x === undefined) ? 0 : x;
-        this.y = (options.y === undefined) ? 0 : y;
-        var id = (options.id === undefined)? undefined: options.id;
-        this.front = this._newContext(id);
-        this.back = null;
+        console.log(this.__MODULE__, this);
+        this._newContext(options.width, options.height, options.id);
     }
 
-    CANVAS.prototype._newContext = function(id) {
+    CANVAS.prototype._newContext = function(width, height, id) {
         var elm = undefined;
         if (id !== undefined) {
             elm = document.getElementById(id);
-            if (!elm) {
-                throw new InvalidDocumentIdException(id);
-            }
+            if (!elm) { throw new InvalidDocumentIdException(id); }
         } else {
             elm = document.createElement('canvas');
         }
-        elm.width = this._width;
-        elm.height = this._height;
-        elm = new Context(elm);
-        return elm;
+        elm.width = width;
+        elm.height = height;
+        this.element = elm;
+        this.context = new Context(elm);
     };
 
-    CANVAS.prototype.clearBackBuffer = function() {
-        this.back = this._newContext();
-    };
-
-    CANVAS.prototype.flip = function() {
-        this.front.ctx.putImageData(
-                this.back.ctx.getImageData(
-                                           0, 0,
-                this._width, this._height), 0, 0);
-    };
     CANVAS.prototype.copyData = function(src) {
-        this.back.ctx.putImageData(
-                src.ctx.getImageData(
-                                           0, 0,
-                this._width, this._height), 0, 0);
+        console.log('Width', this.width(), 'Height', this.height());
+        console.log('This', this, 'Src', src);
+        this.context.copyData(src.context);
     };
-    CANVAS.prototype.getFront = function() {
-        this.layers.first;
-    };
-
-    CANVAS.prototype.getBack = function() {
-        this.layers.last;
+    CANVAS.prototype.getCtx = function() {
+        return this.context.ctx;
     };
 
     CANVAS.prototype.toString = function() {
@@ -69,30 +40,28 @@ define(function(require) {
     };
 
     CANVAS.prototype.getContext = function(back) {
-        if (back) { return this.layers.last.content; }
-        return this.layers.first.content;
+        return this.context;
     };
 
     CANVAS.prototype.getElement = function(back) {
-        if (back) { return this.layers.last.content.getElement(); }
-        return this.layers.first.content.getElement();
+        return this.element;
     };
 
     CANVAS.prototype.width = function(value) {
         if (value !== undefined) {
-            this._width = value;
-            this.front.width(value);
+            this.context.width(value);
+            this.element.width(value);
             return this;
         }
-        return this._width;
+        return this.context.width();
     };
     CANVAS.prototype.height = function(value) {
         if (value !== undefined) {
-            this._height = value;
-            this.front.height(value);
+            this.context.height(value);
+            this.element.height(value);
             return this;
         }
-        return this._height;
+        return this.context.height();
     };
     return CANVAS;
 });

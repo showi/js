@@ -12,8 +12,6 @@ define(function(require) {
         return util.getMin(util.getDocumentSize());
     }
     console.log('>>> Creating clocks * ', numClock);
-    var date = new Date();
-
     var width = getClockSize();
     var height = width;
     var size = getClockSize();
@@ -39,7 +37,7 @@ define(function(require) {
             var clock = clocks[i];
             clock.date = date;
             clock.draw();
-         }
+        }
         setTimeout(__callback, delay);
     }
     jQuery('.clock-container').draggable().resizable();

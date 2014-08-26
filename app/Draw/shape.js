@@ -18,7 +18,7 @@ define(function(require) {
             tool.strokeAndFill(ctx);
             ctx.closePath();
         },
-        circle: function(ctx, centerX, centerY, radius) {
+        circle : function(ctx, centerX, centerY, radius) {
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             tool.strokeAndFill(ctx);
