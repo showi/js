@@ -6,7 +6,7 @@ define(function(require) {
     var numClock = 1;
 //    var ps = size / numClock;
     var clocks = [];
-    var delay = 50;
+    var delay = 500;
 
     function getClockSize() {
         return util.getMin(util.getDocumentSize());
@@ -19,7 +19,7 @@ define(function(require) {
     var size = getClockSize();
     for (var i = 0; i < numClock; i++) {
         clocks[i] = new ModuleClock(width, height);
-        clocks[i].drawMillisecond = true;
+        //clocks[i].drawMillisecond = true;
         var elm = jQuery('<div class="clock-container"></div>');
         elm.width(size).height(size);
         util.centerElement(elm);
