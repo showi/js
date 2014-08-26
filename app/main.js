@@ -3,12 +3,13 @@ define(function(require) {
     var ModuleClock = require('./Test/Clock');
     var util = require('./util');
     var maxSize = 400;
-    var numClock = 1;
+    var numClock = 10;
 //    var ps = size / numClock;
     var clocks = [];
     var delay = 1000;
 
     function getClockSize() {
+        return maxSize;
         return util.getMin(util.getDocumentSize());
     }
     console.log('>>> Creating clocks * ', numClock);
@@ -22,7 +23,7 @@ define(function(require) {
         //clocks[i].drawMillisecond = true;
         var elm = jQuery('<div class="clock-container"></div>');
         elm.width(size).height(size);
-        util.centerElement(elm);
+//        util.centerElement(elm);
         elm.append(clocks[i].getElement());
         clocks[i].element = elm;
         jQuery('body').append(elm);
@@ -33,7 +34,7 @@ define(function(require) {
             var size = util.getMin(util.getWindowSize());
             clock.width(size).height(size);
             clock.element.width(size).height(size);
-            util.centerElement(clocks.getElement());
+//            util.centerElement(clocks.getElement());
         }
     }, false);
     function __callback() {
