@@ -1,20 +1,17 @@
 define(function(require) {
+
     var graphit = require('./global');
-    var NAMESPACE = {
-        getContext : function() {
-            return window.graphit.context;
-        },
-        setContext : function(newContext) {
-//            var context = this.getContext();
-//            if (context != null && context == newContext) {
-//                console.info('Same context');
-//                return this;
-//            }
-            window.graphit.context = newContext;
-            return this;
+    var documentElement = jQuery(document);
+    var windowElement = jQuery(window);
+
+    var UTIL = {
+        __MODULE__ : 'util',
+        getGlobal : function() {
+            return window.graphit;
         },
         isArray : function(value) {
-            return Object.prototype.toString.call(value) === '[object Array]';
+            return Object.prototype.toString.call(value) === Object.prototype.toString
+                    .call([]);
         },
         isString : function(value) {
             return (typeof value) === "string";
@@ -39,7 +36,25 @@ define(function(require) {
         },
         getDocumentById : function(id) {
             return document.getElementById(id);
-        }
+        },
+        getMin : function(values) {
+            if (!this.isArray(values)) {
+                values = [values];
+            }
+            var min = values[0];
+            for (var i = 1; i < values.length; i++) {
+                if (values[i] < min) {
+                    min = values[i];
+                }
+            }
+            return min;
+        },
+        getWindowSize : function() {
+            return [windowElement.width(), windowElement.height()];
+        },
+        getDocumentSize : function() {
+            return [documentElement.width(), documentElement.height()];
+        },
     };
-    return NAMESPACE;
+    return UTIL;
 });

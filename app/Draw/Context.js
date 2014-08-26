@@ -1,7 +1,7 @@
 define(function(require) {
     var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
 
-    function MODULE(canvas) {
+    function CONTEXT(canvas) {
         this.__MODULE__ = 'Draw/Context';
         if (canvas === undefined) {
             canvas = document.createElement('canvas');
@@ -12,25 +12,49 @@ define(function(require) {
                 throw new InvalidDocumentIdException(id);
             }
         }
-        if (!(this instanceof MODULE)) { return new MODULE(canvas); }
+        if (!(this instanceof CONTEXT)) { return new CONTEXT(canvas); }
         this.ctx = canvas.getContext('2d');
         this.element = canvas;
-        if (!MODULE.prototype.arc) {
-            MODULE.setup.call(this, this.ctx);
+        if (!CONTEXT.prototype.arc) {
+            CONTEXT.setup.call(this, this.ctx);
         }
     }
 
-    MODULE.prototype.setContext = function(canvas)
+    CONTEXT.prototype.setContext = function(canvas)
     {
         this.element = canvas;
         this.ctx = canvas.getContext('2d');
         return this;
     };
-    MODULE.prototype.getElement = function()
+    CONTEXT.prototype.getElement = function()
     {
         return this.element;
     };
-    MODULE.setup = function() {
+
+    CONTEXT.prototype.width = function(value) {
+        if (value !== undefined) {
+            this.element.width = value;
+            this.ctx.width = value;
+            return this;
+        }
+        return this.ctx.width;
+    };
+    CONTEXT.prototype.height = function(value) {
+        if (value !== undefined) {
+            this.element.height = value;
+            this.ctx.height = value;
+            return this;
+        }
+        return this.ctx.height;
+    };
+
+    CONTEXT.prototype.copyData = function(src) {
+        this.ctx.putImageData(
+                src.ctx.getImageData(0, 0, this.element.width, this.element.height),
+                0, 0);
+    };
+
+    CONTEXT.setup = function() {
         var methods = ['arc', 'arcTo', 'beginPath', 'bezierCurveTo',
                 'clearRect', 'clip', 'closePath', 'drawImage', 'fill',
                 'fillRect', 'fillText', 'lineTo', 'moveTo',
@@ -55,7 +79,7 @@ define(function(require) {
         var gmethl, propl;
         for (var i = 0, methl = methods.length; i < methl; i++) {
             var m = methods[i];
-            MODULE.prototype[m] = (function(m) {
+            CONTEXT.prototype[m] = (function(m) {
                 return function() {
                     this.ctx[m].apply(this.ctx, arguments);
                     return this;
@@ -65,7 +89,7 @@ define(function(require) {
 
         for (i = 0, gmethl = getterMethods.length; i < gmethl; i++) {
             var gm = getterMethods[i];
-            MODULE.prototype[gm] = (function(gm) {
+            CONTEXT.prototype[gm] = (function(gm) {
                 return function() {
                     return this.ctx[gm].apply(this.ctx, arguments);
                 };
@@ -74,7 +98,7 @@ define(function(require) {
 
         for (i = 0, propl = props.length; i < propl; i++) {
             var p = props[i];
-            MODULE.prototype[p] = (function(p) {
+            CONTEXT.prototype[p] = (function(p) {
                 return function(value) {
                     if (typeof value === 'undefined') { return this.ctx[p]; }
                     this.ctx[p] = value;
@@ -83,5 +107,5 @@ define(function(require) {
             }(p));
         }
     };
-    return MODULE;
+    return CONTEXT;
 });

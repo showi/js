@@ -7,7 +7,8 @@ define(function(require) {
     var shape = require('../Draw/shape');
     var util = require('../util');
 
-    function MODULE(width, height, id) {
+    function CLOCK(width, height, id) {
+        this.__MODULE__ = 'Test/Clock';
         if (width === undefined || height === undefined) { throw new MissingParameterException(
                 'width|height'); }
         this.canvas = new Canvas({
@@ -15,129 +16,196 @@ define(function(require) {
             width : width,
             height : height
         });
-        this.width = width;
-        this.height = height;
-        var w = this.width / 8;
-        this.millisecondNeedleWidth = w * 1;
-        this.secondNeedleWidth = w * 2;
-        this.minuteNeedleWidth = w * 4;
-        this.hourNeedleWidth = w * 3;
+        this._width = width;
+        this._height = height;
+        this.hourFormat = 24;
+        this.drawMillisecond = false;
+        this.redrawDelay = 1000;
+        this.date = new Date();
         var PI = Math.PI / 180;
         this.pi = PI;
         this.msPart = (360 / 1000) * PI;
         this.sPart = (360 / 60) * PI;
         this.mnPart = (360 / 60) * PI;
-        this.hPart = (360 / 24) * PI;
-        this.drawMillisecond = false;
-        this.redrawDelay = 1000;
+        this.hPart = (360 / this.hourFormat) * PI;
+        this.needRefresh = true;
+        this.init();
+    }
 
-        this.sizeMillisecond = w * 4;
+    CLOCK.prototype.init = function() {
+        var w = this._width / 8;
+        this.sizeMillisecond = w * 0.5;
         this.sizeSecond = w * 3;
         this.sizeMinute = w * 2;
         this.sizeHour = w * 1;
-        this.date = new Date();
-    }
-
-    MODULE.prototype.getElement = function() {
-        return this.canvas.front.element;
     };
 
-    MODULE.prototype.draw = function() {
+    CLOCK.prototype.getElement = function() {
+        return this.canvas.front.element;
+    };
+    CLOCK.prototype.drawBackground = function(ctx) {
+        if (!this.needRefresh) {
+            if (this._back !== undefined) {
+                return this.canvas.back.copyData(this._back.front);               
+            }
+        }
+        this._back = new Canvas({
+            width : this._width,
+            height : this._height
+        });
+        ctx = this._back.front.ctx;
+        var dWidth = this._width / 2;
+        ctx.translate(dWidth, dWidth);
+        var that = this;
+        var tw = null;
+        /* Background */
+        tool.saveAndRestore(ctx, function(ctx) {
+            ctx.fillStyle = '#241B1C';
+            tw = that.sizeSecond / 2;
+            shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+        });
+        tool.saveAndRestore(ctx, function(ctx) {
+            ctx.fillStyle = '#63353B';
+            tw = that.sizeMinute / 2;
+            shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+        });
+        tool.saveAndRestore(ctx, function(ctx) {
+            ctx.fillStyle = '#26211C';
+            tw = that.sizeHour / 2;
+            shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+        });
+        tool.saveAndRestore(ctx, function(ctx) {
+            ctx.fillStyle = '#684E38';
+            tw = that.sizeMillisecond / 2;
+            shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+        });
+        var fontSize = (this._width / (this._width * 2));
+        function getFontSize(coef) {
+            var num = (that._width / 1000) * coef;
+            return num.toString();
+        }
+        var cX = -5;
+        var cY = 0;
+        /* Font */
+        var part = 360 / 60;
+//        ctx.font = 'bold 20pt Calibri';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        for (var i = 0; i < 60; i += 5) {
+            tool.saveAndRestore(ctx, function(ctx) {
+                var angle = (i + 45) * part * that.pi;
+                var r = that.sizeMinute;
+                var tX = Math.cos(angle);
+                var tY = Math.sin(angle);
+                ctx.fillStyle = '#DDAA00';
+                ctx.strokeStyle = 'black';
+                var font = 'bold ' + getFontSize(15).toString() + 'pt Arial';
+                ctx.font = font;
+                console.log('Font: ', font);
+                var x = cX + r * tX; 
+                var y = cY + r * tY;
+                ctx.fillText(i, x, y);
+                ctx.strokeText(i, x, y);
+            });
+        }
+        part = (360 / that.hourFormat);
+        for (var i = 0; i < this.hourFormat; i += 3) {
+            tool.saveAndRestore(ctx, function(ctx) {
+                var angle = (i + 90) * part * that.pi;
+                var r = that.sizeHour;
+                var tX = Math.cos(angle);
+                var tY = Math.sin(angle);
+                ctx.fillStyle = '#DDAA00';
+                ctx.strokeStyle = 'black';
+                ctx.font = 'bold ' + getFontSize(30) + 'pt Arial';
+                var x = cX + r * tX;
+                var y = cY + r * tY;
+                ctx.fillText(i, x, y);
+                ctx.strokeText(i, x, y);
+            });
+        }
+        console.log('BackFront: ', this._back.front);
+        this.canvas.back.copyData(this._back.front);
+    };
+    CLOCK.prototype.draw = function() {
+        var that = this;
+        if (this.needRefresh) {
+            this.init();
+        }
         this.canvas.clearBackBuffer();
         var ctx = this.canvas.back.ctx;
-        var dWidth = this.width / 2;
+        var dWidth = this._width / 2;
         ctx.translate(dWidth, dWidth);
         ctx.lineCap = 'round';
-        ctx.strokeStyle = '#39AE7F';
-        /* Background */
-        ctx.save();
-        ctx.fillStyle = '#00462A';
-        var tw = this.sizeMillisecond;
-        shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
-        ctx.restore();
-        ctx.save();
-        ctx.fillStyle = '#007646';
-        tw = this.sizeSecond;
-        shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
-        ctx.restore();
-        ctx.save();
-        ctx.fillStyle = '#19AF73';
-        ctx.font = 'bold 20pt Calibri';
-        tw = this.sizeMinute;
-        shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
-        ctx.restore();
-        
-        /* Font */
-        for (var i = 0; i < 60; i += 5) {
-            ctx.save();
-            var angle = (i + 45)  * (360 / 60) * this.pi;
-            var r = this.sizeMinute;
-            var cX = 0;
-            var cY = 0;
-            var tX = Math.cos(angle);
-            var tY = Math.sin(angle);
-            ctx.fillStyle = '#DDAA00';
-            ctx.font = 'bold 5pt Calibri';
-            ctx.fillText(i, cX + r * tX, cY + r * tY);
-            ctx.restore();
-        }
-        for (var i = 0; i < 12; i += 1) {
-            ctx.save();
-            var angle = (i + 45)  * (360 / 12) * this.pi;
-            var r = this.sizeHour;
-            var cX = 0;
-            var cY = 0;
-            var tX = Math.cos(angle);
-            var tY = Math.sin(angle);
-            ctx.fillText(i, cX + r * tX, cY + r * tY);
-            ctx.font = 'bold 15pt Calibri';
-            ctx.restore();
-        }
+        this.drawBackground(ctx);
         /* Milliseconds  */
-        var s = (this.width / 1000);
+        var s = (this._width / 1000);
         var l = 0.8;
         if (this.drawMillisecond) {
-            ctx.save();
-            var angle = this.date.getMilliseconds() * this.msPart;
-            ctx.strokeStyle = '#00462A';
-            ctx.lineWidth = 0.5;
-            ctx.rotate(angle);
-            shape.line(ctx, 0, -this.sizeMillisecond, 0, 0);
-            shape.circle(ctx, 0, -this.sizeMillisecond, s);
-            ctx.restore();
+            tool.saveAndRestore(ctx, function(ctx) {
+                var angle = that.date.getMilliseconds() * that.msPart;
+                ctx.strokeStyle = '#00462A';
+                ctx.lineWidth = 0.5;
+                ctx.rotate(angle);
+                shape.line(ctx, 0, -that.sizeMillisecond, 0, 0);
+                shape.circle(ctx, 0, -that.sizeMillisecond, s);
+            });
         }
         /* SECOND */
-        ctx.save();
-        ctx.strokeStyle = '#080348';
-        ctx.lineWidth = 1 * l;
-        angle = this.date.getSeconds() * this.sPart;
-        ctx.rotate(angle);
-        shape.line(ctx, 0, -this.sizeSecond, 0, 0);
-        shape.circle(ctx, 0, -this.sizeSecond, s * 2);
-        ctx.restore();
+        tool.saveAndRestore(ctx, function(ctx) {
+            ctx.strokeStyle = '#71266E';
+            ctx.lineWidth = 1 * l;
+            angle = that.date.getSeconds() * that.sPart;
+            ctx.rotate(angle);
+            shape.line(ctx, 0, -that.sizeSecond, 0, 0);
+            shape.circle(ctx, 0, -that.sizeSecond, s * 2);
+        });
         /* MINUTES */
-        ctx.save();
-        ctx.strokeStyle = '#DDAA00';
-        ctx.lineWidth = 2 * l;
-        angle = this.date.getMinutes() * this.mnPart;
-        ctx.rotate(angle);
-        shape.line(ctx, 0, -this.sizeMinute, 0, 0);
-        shape.circle(ctx, 0, -this.sizeMinute, s * 3);
-        ctx.restore();
+        tool.saveAndRestore(ctx, function(ctx) {
+            ctx.strokeStyle = '#FF7600';
+            ctx.lineWidth = 2 * l;
+            angle = that.date.getMinutes() * that.mnPart;
+            ctx.rotate(angle);
+            shape.line(ctx, 0, -that.sizeMinute, 0, 0);
+            shape.circle(ctx, 0, -that.sizeMinute, s * 3);
+        });
         /* HOUR */
-        ctx.save();
-        angle = this.date.getHours() * this.hPart;
-        ctx.strokeStyle = '#DD4200';
-        ctx.lineWidth = 4 * l;
-        ctx.rotate(angle);
-        shape.line(ctx, 0, -this.sizeHour, 0, 0);
-        shape.circle(ctx, 0, -this.sizeHour, s * 4);
-        ctx.restore();
+        tool.saveAndRestore(ctx, function(ctx) {
+            angle = that.date.getHours() * that.hPart;
+            ctx.strokeStyle = '#E11D38';
+            ctx.lineWidth = 4 * l;
+            ctx.rotate(angle);
+            shape.line(ctx, 0, -that.sizeHour, 0, 0);
+            shape.circle(ctx, 0, -that.sizeHour, s * 4);
+        });
         /* Decor */
-        var w8 = this.width / 64;
+        var w8 = this._width / 64;
+        this.fillStyle = '#241B1C';
+        this.strokeStyle = '#241B1C';
         shape.rectangle(ctx, -w8, -w8, w8 * 2, w8 * 2);
         /* Flip backbuffer to front */
         this.canvas.flip();
+        this.needRefresh = false;
     };
-    return MODULE;
+
+    CLOCK.prototype.width = function(value) {
+        if (value !== undefined) {
+            this._width = value;
+            this.canvas.width(value);
+            this.needRefresh = true;
+            return this;
+        }
+        return this._width;
+    };
+
+    CLOCK.prototype.height = function(value) {
+        if (value !== undefined) {
+            this._height = value;
+            this.canvas.height(value);
+            this.needRefresh = true;
+            return this;
+        }
+        return this._height;
+    };
+    return CLOCK;
 });

@@ -3,9 +3,7 @@ define(function(require) {
     var util = require('../util');
     var tool = require('../Draw/tool');
 
-    var ctx = util.getContext();
-
-    var NAMESPACE = {
+    var SHAPE = {
         __MODULE__ : 'Draw/Shape',
         line : function(ctx, sx, sy, ex, ey) {
             ctx.beginPath();
@@ -27,5 +25,5 @@ define(function(require) {
             ctx.closePath();
         }
     };
-    return NAMESPACE;
+    return SHAPE;
 });

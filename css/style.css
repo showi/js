@@ -5,10 +5,12 @@ html, body {
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-	background-color: black;
+	background-color: #191319;
 }
 .clock-container {
 	float: left;
+	margin: 0;
+	padding: 0;
 }
 .ui-widget {
 	border-style: inset;

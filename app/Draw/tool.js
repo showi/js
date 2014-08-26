@@ -1,8 +1,8 @@
 define(function(requiere) {
     var graphit = window.graphit;
 
-    var MODULE = {
-        __MODULE__: 'Draw/tool',
+    var TOOL = {
+        __MODULE__ : 'Draw/tool',
         randInt : function(max) {
             return Math.floor((Math.random() * max) + 1);
         },
@@ -10,7 +10,7 @@ define(function(requiere) {
             return 'rgb(' + this.randInt(255) + ',' + this.randInt(255) + ','
                     + this.randInt(255) + ')';
         },
-        strokeAndFill: function(ctx) {
+        strokeAndFill : function(ctx) {
             if (ctx.fillStyle) {
                 ctx.fill();
             }
@@ -18,15 +18,19 @@ define(function(requiere) {
                 ctx.stroke();
             }
         },
-        incRotation: function(angle, step) {
+        incRotation : function(angle, step) {
             angle += step;
             if (angle >= 360) {
                 c = Math.round(angle / 360);
                 angle = angle - (c * 360);
             }
-            console.log('IncRotation: ' + angle + ' (step: ' + step + ')');
             return Math.round(angle * 10) / 10;
+        },
+        saveAndRestore : function(ctx, callback) {
+            ctx.save();
+            callback(ctx);
+            ctx.restore();
         }
     };
-    return MODULE;
+    return TOOL;
 });
