@@ -6,7 +6,7 @@ define(function(require) {
     var numClock = 1;
 //    var ps = size / numClock;
     var clocks = [];
-    var delay = 500;
+    var delay = 1000;
 
     function getClockSize() {
         return util.getMin(util.getDocumentSize());
