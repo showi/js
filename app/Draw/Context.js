@@ -9,40 +9,18 @@ define(function(require) {
             CONTEXT.setup.call(this, this.ctx);
         }
         this.setCanvas(canvas);
-        // this.ctx = canvas.getContext('2d');
     }
 
     CONTEXT.prototype.setCanvas = function(canvas) {
         this.ctx = canvas.getContext('2d');
-        this.element = canvas;
     };
 
-    CONTEXT.prototype.getElement = function() {
-        return this.element;
-    };
     CONTEXT.prototype.getCtx = function() {
         return this.ctx;
     };
-    CONTEXT.prototype.width = function(value) {
-        if (value !== undefined) {
-            this.element.width = value;
-            this.ctx.width = value;
-            return this;
-        }
-        return this.element.width;
-    };
-    CONTEXT.prototype.height = function(value) {
-        if (value !== undefined) {
-            this.element.height = value;
-            this.ctx.height = value;
-            return this;
-        }
-        return this.element.height;
-    };
-
-    CONTEXT.prototype.copyData = function(src) {
-        this.ctx.putImageData(src.ctx.getImageData(0, 0, this.width(), this
-                .height()), 0, 0);
+    
+    CONTEXT.prototype.copyData = function(src, sX, sY, width, height) {
+        this.ctx.putImageData(src.ctx.getImageData(sX, sY, width, height), 0, 0);
     };
 
     CONTEXT.setup = function() {

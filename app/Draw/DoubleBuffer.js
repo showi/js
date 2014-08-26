@@ -22,9 +22,9 @@ define(function(require) {
         this.front.copyData(this.back);
     };
 
-    CANVAS.prototype.copyData = function(target, src) {
-        return target.copyData(src);
-    };
+//    CANVAS.prototype.copyData = function(target, src) {
+//        return target.copyData(src);
+//    };
 
     CANVAS.prototype.toString = function() {
         return '<canvas width="' + this._width + '" height="' + this._height

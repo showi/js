@@ -25,7 +25,7 @@ define(function(require) {
     };
 
     CANVAS.prototype.copyData = function(src) {
-        this.context.copyData(src.context);
+        this.context.copyData(src.context, 0, 0, this.width(), this.height());
     };
 
     CANVAS.prototype.getCtx = function() {
@@ -47,18 +47,18 @@ define(function(require) {
 
     CANVAS.prototype.width = function(value) {
         if (value !== undefined) {
-            this.context.width(value);
+            this.element.width = value;
             return this;
         }
-        return this.context.width();
+        return this.element.width;
     };
 
     CANVAS.prototype.height = function(value) {
         if (value !== undefined) {
-            this.context.height(value);
+            this.element.height = value;
             return this;
         }
-        return this.context.height();
+        return this.element.height;
     };
 
     return CANVAS;
