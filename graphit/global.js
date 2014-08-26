@@ -11,7 +11,9 @@ define(function(require) {
     window[NAMESPACE] = {
         __NAMESPACE__ : 'graphit',
         __VERSION__ : '0.0.1',
-        context : null,
+        tool: null,
+        util: null,
+        shape: null,
     };
     console.log('> Global', window[NAMESPACE]);
     return window[NAMESPACE];
