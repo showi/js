@@ -1,4 +1,5 @@
 define(function(require) {
+
     var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
 
     function CONTEXT(canvas) {
@@ -45,7 +46,6 @@ define(function(require) {
     };
 
     CONTEXT.prototype.copyData = function(src) {
-        console.log('Width', this.width(), 'Height', this.height());
         this.ctx.putImageData(src.ctx.getImageData(0, 0, this.width(), this
                 .height()), 0, 0);
     };

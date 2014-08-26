@@ -7,7 +7,6 @@ define(function(require) {
 
     function CANVAS(options) {
         this.__MODULE__ = 'Draw/Canvas';
-        console.log(this.__MODULE__, this);
         this._newContext(options.width, options.height, options.id);
     }
 
@@ -26,10 +25,9 @@ define(function(require) {
     };
 
     CANVAS.prototype.copyData = function(src) {
-        console.log('Width', this.width(), 'Height', this.height());
-        console.log('This', this, 'Src', src);
         this.context.copyData(src.context);
     };
+
     CANVAS.prototype.getCtx = function() {
         return this.context.ctx;
     };
