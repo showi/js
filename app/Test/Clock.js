@@ -23,24 +23,25 @@ define(function(require) {
         this.minuteNeedleWidth = w * 4;
         this.hourNeedleWidth = w * 3;
         var PI = Math.PI / 180;
+        this.pi = PI;
         this.msPart = (360 / 1000) * PI;
         this.sPart = (360 / 60) * PI;
         this.mnPart = (360 / 60) * PI;
         this.hPart = (360 / 24) * PI;
         this.drawMillisecond = false;
         this.redrawDelay = 1000;
-        
+
         this.sizeMillisecond = w * 4;
         this.sizeSecond = w * 3;
         this.sizeMinute = w * 2;
         this.sizeHour = w * 1;
         this.date = new Date();
     }
-    
+
     MODULE.prototype.getElement = function() {
         return this.canvas.front.element;
     };
- 
+
     MODULE.prototype.draw = function() {
         this.canvas.clearBackBuffer();
         var ctx = this.canvas.back.ctx;
@@ -52,7 +53,7 @@ define(function(require) {
         ctx.save();
         ctx.fillStyle = '#00462A';
         var tw = this.sizeMillisecond;
-        shape.rectangle(ctx, -tw, -tw, tw*2, tw*2);
+        shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         ctx.restore();
         ctx.save();
         ctx.fillStyle = '#007646';
@@ -61,10 +62,37 @@ define(function(require) {
         ctx.restore();
         ctx.save();
         ctx.fillStyle = '#19AF73';
+        ctx.font = 'bold 20pt Calibri';
         tw = this.sizeMinute;
         shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
         ctx.restore();
+        
         /* Font */
+        for (var i = 0; i < 60; i += 5) {
+            ctx.save();
+            var angle = (i + 45)  * (360 / 60) * this.pi;
+            var r = this.sizeMinute;
+            var cX = 0;
+            var cY = 0;
+            var tX = Math.cos(angle);
+            var tY = Math.sin(angle);
+            ctx.fillStyle = '#DDAA00';
+            ctx.font = 'bold 5pt Calibri';
+            ctx.fillText(i, cX + r * tX, cY + r * tY);
+            ctx.restore();
+        }
+        for (var i = 0; i < 24; i += 2) {
+            ctx.save();
+            var angle = (i + 90)  * (360 / 24) * this.pi;
+            var r = this.sizeHour;
+            var cX = 0;
+            var cY = 0;
+            var tX = Math.cos(angle);
+            var tY = Math.sin(angle);
+            ctx.fillText(i, cX + r * tX, cY + r * tY);
+            ctx.font = 'bold 15pt Calibri';
+            ctx.restore();
+        }
         /* Milliseconds  */
         var s = (this.width / 1000);
         var l = 0.8;

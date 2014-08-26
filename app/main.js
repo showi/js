@@ -2,7 +2,7 @@ define(function(require) {
     jQuery('.clock-container').draggable();
     var glob = require('./global');
     var ModuleClock = require('./Test/Clock');
-    var size = 400;
+    var size = 500;
     var numClock = 16;
     var ps = size / numClock;
     var clocks = [];
@@ -18,8 +18,10 @@ define(function(require) {
         jQuery('body').append(elm);
     }
     function __callback() {
+        var date = new Date();
         for (var i = 0; i < clocks.length; i++) {
-            clocks[i].date = new Date();
+            clocks[i].date = date;
+            clocks[i].date.setHours(date.getHours() + 1);
             clocks[i].draw();
         }
         setTimeout(__callback, delay);
