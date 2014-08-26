@@ -81,9 +81,9 @@ define(function(require) {
             ctx.fillText(i, cX + r * tX, cY + r * tY);
             ctx.restore();
         }
-        for (var i = 0; i < 24; i += 2) {
+        for (var i = 0; i < 12; i += 1) {
             ctx.save();
-            var angle = (i + 90)  * (360 / 24) * this.pi;
+            var angle = (i + 45)  * (360 / 12) * this.pi;
             var r = this.sizeHour;
             var cX = 0;
             var cY = 0;

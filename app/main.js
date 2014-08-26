@@ -21,7 +21,7 @@ define(function(require) {
         var date = new Date();
         for (var i = 0; i < clocks.length; i++) {
             clocks[i].date = date;
-            clocks[i].date.setHours(date.getHours() + 1);
+//            clocks[i].date.setHours(date.getHours() + 1);
             clocks[i].draw();
         }
         setTimeout(__callback, delay);
