@@ -48,18 +48,18 @@ define(function(require) {
     CANVAS.prototype.width = function(value) {
         if (value !== undefined) {
             this.context.width(value);
-            this.element.width(value);
             return this;
         }
         return this.context.width();
     };
+
     CANVAS.prototype.height = function(value) {
         if (value !== undefined) {
             this.context.height(value);
-            this.element.height(value);
             return this;
         }
         return this.context.height();
     };
+
     return CANVAS;
 });

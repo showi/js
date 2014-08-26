@@ -4,30 +4,25 @@ define(function(require) {
 
     function CONTEXT(canvas) {
         this.__MODULE__ = 'Draw/Context';
-        if (canvas === undefined) {
-            canvas = document.createElement('canvas');
-        } else if (typeof canvas === 'string' && canvas != null) {
-            var id = canvas;
-            canvas = document.getElementById(id);
-            if (canvas == null) { throw new InvalidDocumentIdException(id); }
-        }
         if (!(this instanceof CONTEXT)) { return new CONTEXT(canvas); }
-        this.ctx = canvas.getContext('2d');
-        this.element = canvas;
         if (!CONTEXT.prototype.arc) {
             CONTEXT.setup.call(this, this.ctx);
         }
+        this.setCanvas(canvas);
+        // this.ctx = canvas.getContext('2d');
     }
 
-    CONTEXT.prototype.setContext = function(canvas) {
-        this.element = canvas;
+    CONTEXT.prototype.setCanvas = function(canvas) {
         this.ctx = canvas.getContext('2d');
-        return this;
+        this.element = canvas;
     };
+
     CONTEXT.prototype.getElement = function() {
         return this.element;
     };
-
+    CONTEXT.prototype.getCtx = function() {
+        return this.ctx;
+    };
     CONTEXT.prototype.width = function(value) {
         if (value !== undefined) {
             this.element.width = value;
@@ -82,7 +77,6 @@ define(function(require) {
                 };
             }(m));
         }
-
         for (i = 0, gmethl = getterMethods.length; i < gmethl; i++) {
             var gm = getterMethods[i];
             CONTEXT.prototype[gm] = (function(gm) {
@@ -91,7 +85,6 @@ define(function(require) {
                 };
             }(gm));
         }
-
         for (i = 0, propl = props.length; i < propl; i++) {
             var p = props[i];
             CONTEXT.prototype[p] = (function(p) {

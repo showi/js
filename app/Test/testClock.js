@@ -36,6 +36,7 @@ define(function(require) {
         var date = new Date();
         for (var i = 0; i < clocks.length; i++) {
             var clock = clocks[i];
+            date.setHours(date.getHours() + i);
             clock.date = date;
             clock.draw();
         }

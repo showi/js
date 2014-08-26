@@ -23,7 +23,7 @@ define(function(require) {
     };
 
     CANVAS.prototype.copyData = function(target, src) {
-        target.copyData(src);
+        return target.copyData(src);
     };
 
     CANVAS.prototype.toString = function() {
@@ -48,5 +48,6 @@ define(function(require) {
         }
         return this.front.height();
     };
+
     return CANVAS;
 });
