@@ -2,14 +2,14 @@ define(function(require) {
     var glob = require('../global');
     var ModuleClock = require('../Test/Clock');
     var util = require('../util');
-    var maxSize = 400;
-    var numClock = 10;
+    var maxSize = 100;
+    var numClock = 128;
     var clocks = [];
-    var delay = 1000;
+    var delay = 100;
 
     function getClockSize() {
         return maxSize;
-        return util.getMin(util.getDocumentSize());
+        //return util.getMin(util.getDocumentSize());
     }
     console.log('>>> Creating clocks * ', numClock);
     var width = getClockSize();
@@ -17,6 +17,7 @@ define(function(require) {
     var size = getClockSize();
     for (var i = 0; i < numClock; i++) {
         clocks[i] = new ModuleClock(width, height);
+        clocks[i].drawMillisecond = true;
         var elm = jQuery('<div class="clock-container"></div>');
         elm.width(size).height(size);
         elm.append(clocks[i].getElement());
