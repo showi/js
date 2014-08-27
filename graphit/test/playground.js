@@ -30,13 +30,17 @@ define(function(require) {
        api.util.injectMixin(Canvas, Mixin);
        api.util.injectMixin(Canvas, Mixin2);
 
+       var opts = { width: 200, height: 200 };
        var canvas = new Canvas(opts);
-       console.log(canvas.mixit('BAR'));
-       console.log(canvas.mixit2('FOO'));
+       jQuery('body').append(canvas.getElement());
+       var ctx = canvas.getCtx();
+       ctx.fillStyle = 'red';
+       api.shape.rectangle(ctx, 0, 0, opts.width, opts.height);
+       ctx.fillStyle = 'white';
+       api.shape.rectangle(ctx, 10, 10, opts.width - 20, opts.height - 20);
+       api.fillStyle = 'red';
+       api.shape.rectangle(ctx, 20, 20, opts.width - 40, opts.height - 40);
        
-       var Layer = graphit.factory.Layer;
-       var opts = {width: 200, height: 200, foo: 'bar'};
-       var layer = new Layer(opts);
     };
     return new MODULE();
 });

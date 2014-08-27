@@ -1,7 +1,7 @@
 define(function (require) {
 
 	function Module(message) {
-		this.name = 'MissingMethodException';
+		this.name = 'InvalidParameter';
 		this.message = message;
 	}
 	

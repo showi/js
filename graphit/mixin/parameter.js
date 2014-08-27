@@ -1,4 +1,10 @@
 define(function(require) {
+    var log = require('graphit/log');
+    var util = require('graphit/util');
+
+    var InvalidParameterException = require('graphit/exception/InvalidParameter');
+    var MissingParameterException = require('graphit/exception/MissingParameter');
+    
     return {
         setParameters : function(options, validators) {
             if (validators !== undefined) {
@@ -12,21 +18,21 @@ define(function(require) {
         checkParameters : function(options, validators) {
             for (name in options) {
                 if (!(name in validators)) {
-                    console.error('Invalid Field:', name);
-                    throw 'InvalidField';
+                    log.error(this.__MODULE__ + ' / Invalid Field:', name);
+                    throw new InvalidParameterException(name);
                 }
             }
             for (name in validators) {
                 if (!(name in options)) {
-                    console.error('Missing parameter: ', name);
-                    throw 'MissingParameter';
+                    log.error(this.__MODULE__ + ' / Missing parameter', name);
+                    throw new MissingParameterException(name);
                 }
                 var value = options[name];
-                if (this.isNullOrUndef(value)) {
+                if (util.isNullOrUndef(value)) {
                     if ('required' in validators[name]) {
                         if (!('default' in validators[name])) {
-                            console.error('Missing Parameter:', name);
-                            throw 'MissingParameter';
+                            log.error('Missing Parameter:', name);
+                            throw new MissingParameterException(name);
                         }
                     }
 

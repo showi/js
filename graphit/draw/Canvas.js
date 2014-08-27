@@ -2,15 +2,28 @@ define(function(require) {
 
     var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
     var Context = require('../draw/Context');
-    var util = require('graphit/util');    
+    var util = require('graphit/util');
     var MixinParameter = require('../mixin/parameter');
-    
+
+    var VALIDATORS = {
+        width : {
+            required : true,
+            defaultValue : 100
+        },
+        height : {
+            required : true,
+            defaultValue : 100
+        },
+    };
+
     function CANVAS(options) {
         this.__MODULE__ = 'graphit/draw/Canvas';
+        this.checkParameters(options, VALIDATORS);
         this.element = null;
         this.context = null;
         this._newContext(options.width, options.height, options.id);
-    };
+    }
+    ;
 
     CANVAS.prototype._newContext = function(width, height, id) {
         var elm = undefined;

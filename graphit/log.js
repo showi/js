@@ -2,10 +2,12 @@ define(function() {
     return {
         __MODULE__: 'graphit/log',
         log : function(msg) {
-            console.log(msg);
+            console.error.apply(console, arguments);
         },
         error : function(msg) {
-            console.error(msg);
+            var args = ['[-]']
+            args = args.concat(arguments);
+            console.error.apply(console, args);
         },
         action: function(msg) {
             msg = '%c >> ' + msg;
