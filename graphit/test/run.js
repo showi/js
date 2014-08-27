@@ -4,7 +4,7 @@ define(function(require) {
         clock: require('./clock'),
         playground: require('./playground')
     };
-    var execute = ['playground'];
+    var execute = ['playground', 'clock'];
     for (var i = 0; i < execute.length; i++) {
         var key = execute[i];
         if (key in tests) {

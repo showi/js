@@ -4,7 +4,7 @@ define(function(require) {
 
     var InvalidParameterException = require('graphit/exception/InvalidParameter');
     var MissingParameterException = require('graphit/exception/MissingParameter');
-    
+
     return {
         setParameters : function(options, validators) {
             if (validators !== undefined) {
@@ -23,19 +23,21 @@ define(function(require) {
                 }
             }
             for (name in validators) {
+                var validator = validators[name];
+                var value = undefined;
                 if (!(name in options)) {
-                    log.error(this.__MODULE__ + ' / Missing parameter', name);
-                    throw new MissingParameterException(name);
-                }
-                var value = options[name];
-                if (util.isNullOrUndef(value)) {
-                    if ('required' in validators[name]) {
-                        if (!('default' in validators[name])) {
-                            log.error('Missing Parameter:', name);
+                    if (validator.required) {
+                        if (!('defaultValue' in validator)) {
+                            log.error(
+                                    this.__MODULE__ + ' / Missing parameter',
+                                    name);
                             throw new MissingParameterException(name);
+                        } else {
+                            value = validator.defaultValue;
                         }
                     }
-
+                } else {
+                    value = options[name];
                 }
             }
         }

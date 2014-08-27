@@ -14,6 +14,9 @@ define(function(require) {
             required : true,
             defaultValue : 100
         },
+        id : {
+            required: false,
+        }
     };
 
     function CANVAS(options) {
