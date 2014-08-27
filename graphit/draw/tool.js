@@ -2,7 +2,7 @@ define(function(requiere) {
     var graphit = window.graphit;
 
     var TOOL = {
-        __MODULE__ : 'Draw/tool',
+        __MODULE__ : 'graphit/draw/tool',
         randInt : function(max) {
             return Math.floor((Math.random() * max) + 1);
         },

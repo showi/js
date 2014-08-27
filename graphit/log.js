@@ -1,5 +1,6 @@
 define(function() {     
     return {
+        __MODULE__: 'graphit/log',
         log : function(msg) {
             console.log(msg);
         },

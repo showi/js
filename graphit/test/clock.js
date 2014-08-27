@@ -1,23 +1,30 @@
 define(function(require) {
 
     var glob = require('../global');
-    var ModuleClock = require('../Draw/Widget/Clock');
+    var ModuleClock = require('../draw/widget/Clock');
     var util = require('../util');
     var log = require('../log');
     
-    function MODULE() {
+    function MODULE(options) {
         this.__MODULE__ = 'graphit/test/clock';
+        if (options !== undefined) {
+            util.setParameters(this, options, {
+                width: {required: true, defaultValue: 200},
+                height: { require: true,defaultValue: 200},
+                max_size: {required: false, defaultValue: 200},
+                numClock: {required: true, 'default': 1 },
+            });
+        }
     }
 
     MODULE.prototype.run = function() {
         var maxSize = 320;
-        var numClock = 24;
+        var numClock = 1;
         var clocks = [];
-        var delay = 1000;
+        var delay = 100;
 
         function getClockSize() {
-            return maxSize;
-            // return util.getMin(util.getDocumentSize());
+            return util.getMin(util.getDocumentSize());
         }
         log.action('Creating ' + numClock + ' clocks');
         var width = getClockSize();
@@ -33,14 +40,14 @@ define(function(require) {
             jQuery('body').append(elm);
         }
         log.action('Register RESIZE event listener');
-        window.addEventListener('resize', function(e) {
-            for (var i = 0; i < clocks.length; i++) {
-                var clock = clocks[i];
-                var size = util.getMin(util.getWindowSize());
-                // clock.width(size).height(size);
-                // clock.element.width(size).height(size);
-            }
-        }, false);
+//        window.addEventListener('resize', function(e) {
+//            for (var i = 0; i < clocks.length; i++) {
+//                var clock = clocks[i];
+//                var size = util.getMin(util.getWindowSize());
+//                // clock.width(size).height(size);
+//                // clock.element.width(size).height(size);
+//            }
+//        }, false);
         function __callback() {
             var date = new Date();
             for (var i = 0; i < clocks.length; i++) {
@@ -51,9 +58,9 @@ define(function(require) {
             }
             setTimeout(__callback, delay);
         }
-        jQuery('.clock-container').draggable().resizable();
+        jQuery('.clock-container').draggable();
         log.action('Running callback');
         __callback();
     };
-    return new MODULE();
+    return new MODULE;
 });

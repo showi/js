@@ -1,11 +1,12 @@
 define(function(require) {
 
-    var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
-
-    var Context = require('../Draw/Context');
-
+    var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
+    var Context = require('../draw/Context');
+    var util = require('graphit/util');    
+    var MixinParameter = require('../mixin/parameter');
+    
     function CANVAS(options) {
-        this.__MODULE__ = 'Draw/Canvas';
+        this.__MODULE__ = 'graphit/draw/Canvas';
         this.element = null;
         this.context = null;
         this._newContext(options.width, options.height, options.id);
@@ -61,6 +62,6 @@ define(function(require) {
         }
         return this.element.height;
     };
-
+    util.injectMixin(CANVAS, MixinParameter);
     return CANVAS;
 });

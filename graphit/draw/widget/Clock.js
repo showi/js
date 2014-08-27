@@ -1,6 +1,6 @@
 define(function(require) {
 
-    var MissingParameterException = require('graphit/Exception/MissingParameter');
+    var MissingParameterException = require('graphit/exception/MissingParameter');
     var Context = require('../Context');
     var DoubleBuffer = require('../DoubleBuffer');
     var Canvas = require('../Canvas');
@@ -9,7 +9,7 @@ define(function(require) {
     var util = require('../../util');
 
     function CLOCK(width, height, id) {
-        this.__MODULE__ = 'Test/Clock';
+        this.__MODULE__ = 'graphit/draw/widget/clock';
         if (width === undefined || height === undefined) { throw new MissingParameterException(
                 'width|height'); }
         this.dbuffer = new DoubleBuffer({

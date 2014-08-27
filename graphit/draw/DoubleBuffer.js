@@ -1,12 +1,12 @@
 define(function(require) {
 
-    var MissingParameterException = require('../Exception/MissingParameter');
-    var InvalidDocumentIdException = require('../Exception/InvalidDocumentId');
+    var MissingParameterException = require('../exception/MissingParameter');
+    var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
 
-    var Canvas = require('../Draw/Canvas');
+    var Canvas = require('../draw/Canvas');
 
     function CANVAS(options) {
-        this.__MODULE__ = 'Draw/DoubleBuffer';
+        this.__MODULE__ = 'graphit/draw/DoubleBuffer';
         this.front = new Canvas(options);
         this.back = null;
     }

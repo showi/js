@@ -4,7 +4,7 @@ define(function(require) {
     var tool = require('./tool');
 
     var SHAPE = {
-        __MODULE__ : 'Draw/Shape',
+        __MODULE__ : 'graphit/draw/shape',
         line : function(ctx, sx, sy, ex, ey) {
             ctx.beginPath();
             ctx.moveTo(sx, sy);

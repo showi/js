@@ -1,9 +1,9 @@
 define(function(require) {
 
-    var InvalidDocumentIdException = require('graphit/Exception/InvalidDocumentId');
+    var InvalidDocumentIdException = require('graphit/exception/InvalidDocumentId');
 
     function CONTEXT(canvas) {
-        this.__MODULE__ = 'Draw/Context';
+        this.__MODULE__ = 'graphit/draw/Context';
         if (!(this instanceof CONTEXT)) { return new CONTEXT(canvas); }
         if (!CONTEXT.prototype.arc) {
             CONTEXT.setup.call(this, this.ctx);
