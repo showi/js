@@ -25,7 +25,6 @@ define(function(require) {
         api.log.title(this.__MODULE__);
 
         var Canvas = graphit.factory.Canvas;
-        console.log('Canvas', Canvas);
         api.util.injectMixin(Canvas, Mixin);
         api.util.injectMixin(Canvas, Mixin2);
 
@@ -35,22 +34,27 @@ define(function(require) {
         };
         var step = 1;
 
-        for (var i = 0; i < 256; i++) {
-            var canvas = new Canvas(opts);
-            jQuery('body').append(canvas.getElement());
-            var ctx = canvas.getCtx();
+        var canvas = new Canvas(opts);
+        jQuery('body').append(canvas.getElement());
+        var ctx = canvas.getCtx();
 
-            function stepRectangle(step) {
-                api.shape.rectangle(ctx, step, step, opts.width - (step * 2),
-                        opts.height - (step * 2));
-            }
-            ctx.fillStyle = 'red';
-            api.shape.rectangle(ctx, 0, 0, opts.width, opts.height);
-            ctx.fillStyle = 'white';
-            stepRectangle(step * 2);
-            ctx.fillStyle = 'red';
-            stepRectangle(step * 4);
-            jQuery(canvas.getElement()).draggable();
+        function stepRectangle(step) {
+            api.shape.rectangle(ctx, step, step, opts.width - (step * 2),
+                    opts.height - (step * 2));
+        }
+        ctx.fillStyle = 'red';
+        api.shape.rectangle(ctx, 0, 0, opts.width, opts.height);
+        ctx.fillStyle = 'white';
+        stepRectangle(step * 2);
+        ctx.fillStyle = 'red';
+        stepRectangle(step * 4);
+
+        for (var i = 0; i < 256; i++) {
+            var c = new Canvas(opts);
+            c.copyData(canvas);
+            var elm = c.getElement();
+            jQuery('body').append(elm);
+            jQuery(elm).draggable();
         }
     };
     return new MODULE();

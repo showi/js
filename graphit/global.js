@@ -15,6 +15,6 @@ define(function(require) {
         util: null,
         shape: null,
     };
-    console.log('> Global', window[NAMESPACE]);
+    console.log('> graphit', window[NAMESPACE]);
     return window[NAMESPACE];
 });

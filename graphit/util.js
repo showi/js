@@ -7,21 +7,14 @@ define(function(require) {
     var UTIL = {
         __MODULE__ : 'graphit/util',
         injectMixin : function(cls, mixin) {
-            console.log('Injecting mixin', cls, mixin);
             if ('prototype' in mixin) {
                 for (key in mixin.prototype) {
-                    console.log('Prototype', key);
                     cls.prototype[key] = mixin.prototype[key];
                 }
             } else {
                 for (key in mixin) {
-                    console.log('Key', key);
                     var fn = mixin[key];
-                    console.log('Fn', typeof fn);
                     if (this.isFunction(fn)) {
-                        console.log(' - Adding method', key);
-                        console.log(' - Prototype', cls.prototype);
-                        
                         cls.prototype[key] = fn;
                     } else {
                         cls[key] = fn;
@@ -32,7 +25,6 @@ define(function(require) {
         setParameters : function(that, options, validators) {
             this.checkParameters(options, validators);
             for (key in options) {
-                console.log('Key/Value', key, options[key]);
                 that[key] = options[key];
             }
         },
