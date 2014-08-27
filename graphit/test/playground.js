@@ -38,7 +38,7 @@ define(function(require) {
        api.shape.rectangle(ctx, 0, 0, opts.width, opts.height);
        ctx.fillStyle = 'white';
        api.shape.rectangle(ctx, 10, 10, opts.width - 20, opts.height - 20);
-       api.fillStyle = 'red';
+       ctx.fillStyle = 'red';
        api.shape.rectangle(ctx, 20, 20, opts.width - 40, opts.height - 40);
        
     };
