@@ -1,5 +1,6 @@
 define(function(require) {
 
+    require('graphit/string');
     var graphit = require('./global');
     var documentElement = jQuery(document);
     var windowElement = jQuery(window);
@@ -115,6 +116,32 @@ define(function(require) {
                     .outerWidth()) / 2)
                     + windowElement.scrollLeft())
                     + "px");
+        },
+        catchException: function(obj, meth) {
+          try {
+              return obj[meth].call(obj);
+          } catch(e) {
+              console.error('Exception', e);
+          } 
+          return false;
+        },
+        runTest: function(name) {
+            var that = this;
+            require(['graphit/test/' + name], function(test) {
+                console.log('>>>>> Running test', name);
+                for (key in test) {
+                    if (key.startsWith('test_') && !test.hasOwnProperty(key)) {
+                        console.log('>>>', key);
+                        that.catchException(test, key);
+                    } 
+                }
+                if ('run' in test) {
+                    if (!test.hasOwnProperty('run')) {
+                        console.log('>>> run');
+                        that.catchException(test, 'run');
+                    }
+                }
+            });
         }
     };
     return UTIL;
