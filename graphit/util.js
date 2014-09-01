@@ -7,6 +7,12 @@ define(function(require) {
 
     var UTIL = {
         __MODULE__ : 'graphit/util',
+        genuid: function() {
+            if (graphit.__GENUID__ === undefined) {
+                graphit.__GENUID__ = 0;
+            }
+            return graphit.__GENUID__++;
+        },
         injectMixin : function(cls, mixin) {
             if ('prototype' in mixin) {
                 for (key in mixin.prototype) {
@@ -122,6 +128,7 @@ define(function(require) {
               return obj[meth].call(obj);
           } catch(e) {
               console.error('Exception', e);
+              console.error(e.stack);
           } 
           return false;
         },

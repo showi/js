@@ -11,6 +11,7 @@ define(function(require) {
         this.height = 480;
     }
     RANDART.prototype.run = function() {
+        var body = jQuery('body');
         var canvas = new Canvas({
             width : this.width,
             height : this.height
@@ -21,16 +22,23 @@ define(function(require) {
             top : '1em',
             left : '1em'
         });
-        jQuery('body').append(canvas.getElement());
+        body.append(canvas.getElement());
         var that = this;
-        var max = 128;
+        var max = 256;
         var count = 0;
         this.max = this.width;
         var rotate = 0;
+        var miniature = [];
         function fn() {
+            if (miniature.length > 64) {
+                var c = miniature.pop();
+                jQuery('#' + c.getElement().id).remove();
+                doClean = 0;
+            }
             if (count > max) {
                 var n = canvas.downScale(0.25);
-                jQuery('body').append(n.getElement());
+                miniature.unshift(n);
+                body.append(n.getElement());
                 count = 0;
                 ctx.fillStyle = util.randomColor();
                 shape.rectangle(ctx, 0, 0, that.width, that.height);

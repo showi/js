@@ -35,7 +35,9 @@ define(function(require) {
             if (!elm) { throw new InvalidDocumentIdException(id); }
         } else {
             elm = document.createElement('canvas');
+            id = util.genuid();
         }
+        elm.id = 'graphit-canvas-uid-' + id;
         elm.width = width;
         elm.height = height;
         this.element = elm;
@@ -99,7 +101,6 @@ define(function(require) {
         // next weight is weight of current source point within next target's point.
         var crossX = false; // does scaled px cross its current px right border ?
         var crossY = false; // does scaled px cross its current px bottom border ?
-        console.log(sw, sh);
         var sBuffer = cv.getCtx().getImageData(0, 0, sw, sh).data; // source buffer 8 bit rgba
         var tBuffer = new Float32Array(3 * sw * sh); // target buffer Float32 rgb
         var sR = 0, sG = 0,  sB = 0; // source's current point r,g,b
