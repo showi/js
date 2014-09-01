@@ -33,6 +33,9 @@ define(function(require) {
                 ctx.fillStyle = util.randomColor();
                 shape.rectangle(ctx, 0, 0, that.width, that.height);
                 ctx.fillStyle = util.randomColor();
+                var n = canvas.clone();
+                n.resize(n.width()/2, n.height()/2);
+                jQuery('body').append(n.getElement());
             }
             rotate = (rotate > 360)? 0: rotate + 1;
             count++;

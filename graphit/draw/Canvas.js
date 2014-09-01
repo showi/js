@@ -46,6 +46,19 @@ define(function(require) {
         this.context.copyData(src.context, 0, 0, this.width(), this.height());
     };
 
+    CANVAS.prototype.clone = function() {
+        var c = new CANVAS({width: this.width(), height: this.height()});
+        c.copyData(this);
+        return c;
+    };
+    
+    CANVAS.prototype.resize = function(width, height) {
+        var copy = this.clone();
+        this.width(width).height(height);
+        var ctx = this.getCtx();
+        this.context.copyData(copy.context, 0, 0, width, height);
+    };
+
     CANVAS.prototype.getCtx = function() {
         return this.context.ctx;
     };
