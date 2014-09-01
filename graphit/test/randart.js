@@ -31,7 +31,7 @@ define(function(require) {
                                             'vertical-align': 'middle'});
         body.append(canvas.getElement());
         var that = this;
-        var max = 128;
+        var max = 1;
         var count = 0;
         this.max = this.width;
         var rotate = 0;
@@ -48,14 +48,21 @@ define(function(require) {
         console.log('row/col', row, col);
         var maxMiniature = row * col;
         console.log('MaxMiniature', maxMiniature);
+        var timeout = 100;
+        var pass = (timeout/1000) * max;
+        if (pass <= 0) {
+            pass = 1;
+        }
+        console.log('pass', pass);
+        console.log('timeout', timeout);
         function fn() {
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < pass; i++) {
                 if (miniature.length > maxMiniature) {
                     var c = miniature.pop();
                     function cb() {
                         c.getElement().remove();
                     }
-                    setTimeout(cb, 1);
+                    setTimeout(cb, 0);
                 }
                 if (count > max) {
                     var scale = 1.0 / that.ratio;
@@ -65,7 +72,7 @@ define(function(require) {
                     body.append(n.getElement());
                     count = 0;
                     ctx.fillStyle = tool.randomColor();
-                    shape.rectangle(ctx, 0, 0, that.width, that.height);
+                    //shape.rectangle(ctx, 0, 0, that.width, that.height);
                     if (randomBool(0.5)) {
                         ctx.fillStyle = tool.randomColor();
                     }
@@ -84,7 +91,7 @@ define(function(require) {
                 var method = 'draw_' + kind;
                 that[method].call(that, ctx);
             }
-            setTimeout(fn, 100);
+            setTimeout(fn, timeout);
         };
         fn();
     };
