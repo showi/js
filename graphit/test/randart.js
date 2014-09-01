@@ -24,18 +24,18 @@ define(function(require) {
         jQuery('body').append(canvas.getElement());
         var that = this;
         var max = 512;
-        var count = max;
+        var count = 0;
         this.max = this.width;
         var rotate = 0;
         function fn() {
             if (count > max) {
+                var n = canvas.clone();
+                n.resize(n.width()/4, n.height()/4);
+                jQuery('body').append(n.getElement());
                 count = 0;
                 ctx.fillStyle = util.randomColor();
                 shape.rectangle(ctx, 0, 0, that.width, that.height);
                 ctx.fillStyle = util.randomColor();
-                var n = canvas.clone();
-                n.resize(n.width()/2, n.height()/2);
-                jQuery('body').append(n.getElement());
             }
             rotate = (rotate > 360)? 0: rotate + 1;
             count++;
