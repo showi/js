@@ -23,24 +23,31 @@ define(function(require) {
         });
         jQuery('body').append(canvas.getElement());
         var that = this;
-        var max = 512;
+        var max = 128;
         var count = 0;
         this.max = this.width;
         var rotate = 0;
         function fn() {
             if (count > max) {
-                var n = canvas.downScale(0.25);//n.resize(n.width()/4, n.height()/4);
+                var n = canvas.downScale(0.25);
                 jQuery('body').append(n.getElement());
                 count = 0;
                 ctx.fillStyle = util.randomColor();
                 shape.rectangle(ctx, 0, 0, that.width, that.height);
-                ctx.fillStyle = util.randomColor();
+                if (randomBool(0.5)) {
+                    ctx.fillStyle = util.randomColor();
+                }
             }
             rotate = (rotate > 360)? 0: rotate + 1;
             count++;
             ctx.rotate(rotate);
             ctx.lineWidth = randInt(5);
-            ctx.strokeStyle = util.randomColor();
+            if (randomBool(0.8)) {
+                ctx.fillStyle = util.randomColor();
+            }
+            if (randomBool(0.8)) {
+                ctx.fillStyle = util.randomColor();
+            }
             var kind = choice(['line', 'rectangle', 'circle']);
             var method = 'draw_' + kind;
             that[method].call(that, ctx);

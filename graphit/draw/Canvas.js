@@ -77,6 +77,10 @@ define(function(require) {
     };
     
     CANVAS.prototype.downScale = function(scale) {
+        /*
+         https://stackoverflow.com/questions/
+         18922880/html5-canvas-resize-downscale-image-high-quality
+        */
         var cv = this.context;
         if (!(scale < 1) || !(scale > 0)) throw ('scale must be a positive number <1 ');
         var sqScale = scale * scale; // square scale = area of source pixel within target
