@@ -24,7 +24,8 @@ define(function(require) {
         var delay = 100;
 
         function getClockSize() {
-            return util.getMin(util.getDocumentSize());
+//            return util.getMin(util.getDocumentSize());
+            return maxSize;
         }
         log.action('Creating ' + numClock + ' clocks');
         var width = getClockSize();
@@ -37,6 +38,7 @@ define(function(require) {
             elm.width(size).height(size);
             elm.append(clocks[i].getElement());
             clocks[i].element = elm;
+            elm.css({position: 'absolute', top: '2em', left: '2em'});
             jQuery('body').append(elm);
         }
         log.action('Register RESIZE event listener');

@@ -11,9 +11,13 @@ define(function(require) {
     window[NAMESPACE] = {
         __MODULE__ : 'graphit',
         __VERSION__ : '0.0.1',
+        __UID__: 0,
         tool: null,
         util: null,
         shape: null,
+        genuid: function () {
+            return this.__UID__++;
+        }
     };
     console.log('> graphit', window[NAMESPACE]);
     return window[NAMESPACE];
