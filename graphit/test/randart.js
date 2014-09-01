@@ -24,19 +24,19 @@ define(function(require) {
         });
         body.append(canvas.getElement());
         var that = this;
-        var max = 256;
+        var max = 128;
         var count = 0;
         this.max = this.width;
         var rotate = 0;
         var miniature = [];
         function fn() {
-            if (miniature.length > 64) {
+            if (miniature.length > 16) {
                 var c = miniature.pop();
                 jQuery('#' + c.getElement().id).remove();
                 doClean = 0;
             }
             if (count > max) {
-                var n = canvas.downScale(0.25);
+                var n = canvas.downScale(0.5);
                 miniature.unshift(n);
                 body.append(n.getElement());
                 count = 0;
