@@ -29,8 +29,7 @@ define(function(require) {
         var rotate = 0;
         function fn() {
             if (count > max) {
-                var n = canvas.clone();
-                n.resize(n.width()/4, n.height()/4);
+                var n = canvas.downScale(0.25);//n.resize(n.width()/4, n.height()/4);
                 jQuery('body').append(n.getElement());
                 count = 0;
                 ctx.fillStyle = util.randomColor();
