@@ -16,7 +16,6 @@ define(function(require) {
     var rex_nl = new RegExp("\\n");
     rex_nl.global = true;
     function log() {
-        console.log.call(console, arguments);
         var msg = '';
         for (var i = 0; i < arguments.length; i++) {
             var a = arguments[i] + '';
@@ -79,7 +78,7 @@ define(function(require) {
             m.rotate(angle);
         }
         var d = m.determinant();
-        console.log(m, 'determinant', d);
+        log(m, 'determinant', d);
         log('Identity');
         m.identity();
         l();
@@ -136,15 +135,27 @@ define(function(require) {
         log(m);
     };
 
+    MATH.prototype.test_mult = function() {
+        var A = new Matrix33([1,2,3,4,5,6,7,8,9]);
+        var B = new Matrix33([1,2,3,4,5,6,7,8,9]);
+        var st = new Date();
+        var pass = 1000000;
+        for (var i = 0; i < pass; i++) {
+            A.mul(B);
+        }
+        var diff = new Date() - st;
+        log('mul', 'pass', pass, 'time', diff, 's');
+    };
+
     MATH.prototype.test_mul = function() {
         var A = new Matrix33([23,92,72,44,81,92,41,49,64]);
         var B = new Matrix33([11,94,74,38,23,71,52,29,59]);
         var C = new Matrix33([7493, 6366, 12482,
                               8346, 8667, 14435,
                               5641, 6837, 10289]);
-        console.log('Matrix mul', A.toString(), B.toString());
+        log('Matrix mul', A.toString(), B.toString());
         A.mul(B);
-        console.log('Result', A.toString());
+        log('Result', A.toString());
         if(!A.equal(C)) {
             throw 'MatrixMultiplicationBadResult';
         }
@@ -152,7 +163,7 @@ define(function(require) {
         B = new Matrix33([1,2,3,4,5,6,7,8,9]);
         C = new Matrix33([30, 36, 42, 66, 81, 96, 102, 126, 150]);
         A.mul(B);
-        console.log('Result', A.toString());
+        log('Result', A.toString());
         if(!A.equal(C)) {
             throw 'MatrixMultiplicationBadResult';
         }

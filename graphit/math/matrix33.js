@@ -18,6 +18,7 @@ define(function(require) {
          * 
          * @param matrix: If defined we are copying data
          */
+        this.__namespace__ = 'graphit/math/matrix33';
         if (matrix === undefined) {
             this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         } else {
@@ -28,9 +29,6 @@ define(function(require) {
                 this.copy(matrix);
             }    
         }
-        this.__namespace__ = 'graphit/math/matrix33';
-        console.log('typeof', typeof matrix, matrix);
-        
     };
 
     MATRIX33.prototype.setData = function(data) {
