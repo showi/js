@@ -30,8 +30,8 @@ define(function(require) {
                 node.update();
             }
             if (tutil.hasCapability(node, eCap.transform)) {
-                that.ctx.rotate(node.matrix.angle());
-                that.ctx.translate(node.matrix[eMat.m13], node.matrix[eMat.m23]);
+                that.ctx.rotate(node.transform.angle());
+                that.ctx.translate(node.transform._data[eMat.m13], node.transform._data[eMat.m23]);
             }
             if('render' in node) {
                 node.render(that);
