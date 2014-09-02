@@ -136,6 +136,10 @@ define(function(require) {
             var that = this;
             require(['graphit/test/' + name], function(test) {
                 console.log('>>>>> Running test', name);
+                if (name in graphit.test) {
+                    throw 'TestAlreadyRunning';
+                }
+                graphit.test[name] = test;
                 for (key in test) {
                     if (key.startsWith('test_') && !test.hasOwnProperty(key)) {
                         console.log('>>>', key);

@@ -17,7 +17,11 @@ define(function(require) {
         shape: null,
         genuid: function () {
             return this.__UID__++;
-        }
+        },
+        tree: {
+            node: [],
+        },
+        test: {}
     };
     console.log('> graphit', window[NAMESPACE]);
     return window[NAMESPACE];

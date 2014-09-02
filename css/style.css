@@ -7,8 +7,12 @@ html,body {
 	width: 100%;
 	overflow: hidden;
 	background-color: #191319;
+	margin: 0;
+	padding: 0;
 }
+canvas {
 
+}
 .clock-container {
 	float: left;
 	margin: 0;
