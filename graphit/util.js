@@ -4,10 +4,10 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var documentElement = jQuery(document);
     var windowElement = jQuery(window);
-    
+
     var UTIL = {
         __MODULE__ : 'graphit/util',
-        genuid: function() {
+        genuid : function() {
             if (graphit.__GENUID__ === undefined) {
                 graphit.__GENUID__ = 0;
             }
@@ -16,6 +16,10 @@ define(function(require) {
         injectMixin : function(cls, mixin) {
             if ('prototype' in mixin) {
                 for (key in mixin.prototype) {
+                    if (key in cls.prototype) {
+                        console.warn('Method already set', key, "exit..");
+                        return false;
+                    }
                     cls.prototype[key] = mixin.prototype[key];
                 }
             } else {
@@ -28,14 +32,14 @@ define(function(require) {
                     }
                 }
             }
+            return true;
         },
         windowSize : function() {
-            return new Vector2d(windowElement.width(), 
-                                windowElement.height());
+            return new Vector2d(windowElement.width(), windowElement.height());
         },
         documentSize : function() {
-            return new Vector2d(documentElement.width(), 
-                                documentElement.height());
+            return new Vector2d(documentElement.width(), documentElement
+                    .height());
         },
         setParameters : function(that, options, validators) {
             this.checkParameters(options, validators);
@@ -67,7 +71,7 @@ define(function(require) {
                 }
             }
         },
-        join: function(a, separator) {
+        join : function(a, separator) {
             var s = '';
             for (var i = 0; i < a.length; i++) {
                 s += a[i] + separator;
@@ -81,7 +85,7 @@ define(function(require) {
         getGlobal : function() {
             return window.graphit;
         },
-        choice: function(choices) {
+        choice : function(choices) {
             return choices[Math.randInt(0, choices.length)];
         },
         isArray : function(value) {
@@ -104,13 +108,6 @@ define(function(require) {
         },
         isFunction : function(value) {
             return (typeof value) === 'function';
-        },
-        genId : function() {
-            graphit.genid += 1;
-            return graphit.genid;
-        },
-        getDocumentById : function(id) {
-            return document.getElementById(id);
         },
         getMin : function(values) {
             if (!this.isArray(values)) {
@@ -136,30 +133,27 @@ define(function(require) {
                     + windowElement.scrollLeft())
                     + "px");
         },
-        catchException: function(obj, meth) {
-          try {
-              return obj[meth].call(obj);
-          } catch(e) {
-              console.error('Exception', e);
-              console.error(e.stack);
-          } 
-          return false;
+        catchException : function(obj, meth) {
+            try {
+                return obj[meth].call(obj);
+            } catch (e) {
+                console.error('Exception', e);
+                console.error(e.stack);
+            }
+            return false;
         },
-        runTest: function(name) {
+        runTest : function(name) {
             var that = this;
             require(['graphit/test/' + name], function(test) {
-                console.log('>>>>> Running test', 
-                            name, '(',
+                console.log('>>>>> Running test', name, '(',
                             test.__namespace__, ')');
-                if (name in graphit.test) {
-                    throw 'TestAlreadyRunning';
-                }
+                if (name in graphit.test) { throw 'TestAlreadyRunning'; }
                 graphit.test[name] = test;
                 for (key in test) {
                     if (key.startsWith('test_') && !test.hasOwnProperty(key)) {
                         console.log('>>>', key);
                         that.catchException(test, key);
-                    } 
+                    }
                 }
                 if ('run' in test) {
                     if (!test.hasOwnProperty('run')) {

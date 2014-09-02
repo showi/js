@@ -21,6 +21,7 @@ define(function(require) {
         this.__namespace__ = 'graphit/tree/node/node';
         this.uid = ns.genuid();
         this.childs = [];
+        this.capability = 0;
         if (!(this instanceof NODE)) { return new NODE(parent); }
         if (!NODE.prototype.parent) {
             injectProperties(NODE, ['parent', 'traversable']);
@@ -52,7 +53,7 @@ define(function(require) {
     NODE.prototype.log = function(msg) {
         console.log(this.__namespace__, this.uid, msg);
     };
-
+    
     ns.tree.node[_ns_] = NODE;
     return ns.tree.node[_ns_];
 });

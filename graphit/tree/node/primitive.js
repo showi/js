@@ -4,12 +4,13 @@ define(function(require) {
     var Line = require('graphit/math/line');
     var ns = require('graphit/namespace');
     var shape = require('graphit/draw/shape');
-
+    var util = require('graphit/tree/util');
+    var eCap = require('graphit/tree/enum/capability');
     var _ns_ = 'primitive';
      
-    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {
-        return ns.tree.node[_ns_];
-    }
+//    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {
+//        return ns.tree.node[_ns_];
+//    }
     
     var CTX_PROPERTIES = {
             'fillStyle':true,
@@ -20,6 +21,7 @@ define(function(require) {
     function PRIMITIVE() {
         Node.call(this, arguments);
         this.__namespace__ = 'graphit/tree/node/primitive';
+        util.setCapability(this, eCap.render);
         this.traversable(false);
         this.primitive = [];
     };
@@ -67,10 +69,11 @@ define(function(require) {
                                          line.b.x, line.b.y);
     };
 
-    PRIMITIVE.prototype.drawCircl = function(renderer, circle) {
+    PRIMITIVE.prototype.drawCircle = function(renderer, circle) {
         shape.circl(renderer.ctx, circle.x, circl.y, circle.radius);
     };
 
     ns.tree.node[_ns_] = PRIMITIVE;
-    return ns.tree.node[_ns_];
+//    return ns.tree.node[_ns_];
+    return PRIMITIVE;
 });

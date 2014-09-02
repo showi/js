@@ -102,7 +102,7 @@ define(function(require) {
         jQuery(elm).center().draggable();
 
         var pool = [];
-        var root = factory.tree.node('primitive', {
+        var root = factory.tree.node(Primitive, {
             pool : pool
         });
         for (var i = 0; i < 256; i++) {
@@ -121,7 +121,7 @@ define(function(require) {
             r.ctx.restore();
         };
         var that = this;
-        this.timeout = 500;
+        this.timeout = 100;
         this.startTime = new Date();
         this.pauseTimeout = 1000;
         this.frames = 0;
