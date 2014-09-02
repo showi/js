@@ -1,6 +1,7 @@
 define(function(require) {
 
     var Primitive = require('graphit/tree/node/primitive');
+    var TransMixin = require('graphit/tree/mixin/transform');
     var DoubleBuffer = require('graphit/draw/doublebuffer');
     var shape = require('graphit/draw/shape');
     var Line = require('graphit/math/line');
@@ -102,9 +103,7 @@ define(function(require) {
         jQuery(elm).center().draggable();
 
         var pool = [];
-        var root = factory.tree.node(Primitive, {
-            pool : pool
-        });
+        var root = factory.tree.node(Primitive, {pool : pool}, [TransMixin]);
         for (var i = 0; i < 256; i++) {
             root.addPrimitive(genLine(width, height));
         }
@@ -116,9 +115,11 @@ define(function(require) {
         renderer.pre_render = function(r) {
             r.ctx = db.back.getCtx();
             r.ctx.save();
-            r.ctx.fillStyle = 'rgba(0.0, 0.0, 0.0, 0.0)';
-            shape.rectangle(r.ctx, 0, 0, width, height);
+//            r.ctx.fillStyle = 'rgba(0.0, 0.0, 0.0, 0.0)';
+//            shape.rectangle(r.ctx, 0, 0, width, height);
             r.ctx.restore();
+            r.root.translate(width / 2, height, 2);
+
         };
         var that = this;
         this.timeout = 100;
@@ -130,6 +131,7 @@ define(function(require) {
         this.alive(true);
         var count = 0;
         var numCount = 128;
+
         function render() {
             if (!that.alive()) {
                 console.log('Quit...');
@@ -139,6 +141,7 @@ define(function(require) {
                 ctimeout = that.pauseTimeout;
             } else {
                 db.clearBackBuffer();
+                renderer.root.rotate(0.1 * Math.PI/180);
                 renderer.render();
                 db.flip();
                 muteTree(pool, that.width);

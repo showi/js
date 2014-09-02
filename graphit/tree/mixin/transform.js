@@ -8,16 +8,17 @@ define(function(require) {
     function TRANSFORM() {
         console.log('Setting tranform capability', this);
         util.setCapability(this, eCap.transform);
-        this.matrix = new Matrix33();
+        this.transform = new Matrix33();
+        this.worldTransform = new Matrix33();
         this.position = new Vector2d();
     };
 
     TRANSFORM.prototype.rotate = function(angle) {
-        this.matrix.rotate(angle);
+        this.transform.rotate(angle);
     };
 
     TRANSFORM.prototype.translate = function(vector) {
-        this.matrix.translate(vector);
+        this.transform.translate(vector);
     };
     return TRANSFORM;
 });

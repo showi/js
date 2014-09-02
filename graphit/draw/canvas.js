@@ -54,13 +54,25 @@ define(function(require) {
         return c;
     };
     
-    CANVAS.prototype.resize = function(width, height) {
-        var copy = this.clone();
-        this.width(width).height(height);
-        var ctx = this.getCtx();
-        this.context.copyData(copy.context, 0, 0, width, height);
-    };
+//    CANVAS.prototype.resize = function(width, height) {
+//        var copy = this.clone();
+//        this.width(width).height(height);
+//        var ctx = this.getCtx();
+//        this.context.copyData(copy.context, 0, 0, width, height);
+//    };
 
+    CANVAS.prototype.clear = function(color) {
+        if (color === undefined) {
+            color = 'rgba(0,0,0,1)';
+        }
+        var ctx = this.context.ctx;
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.rect(0,0, this.width(), this.height());
+        ctx.stroke();
+        ctx.restore();
+    };
+    
     CANVAS.prototype.getCtx = function() {
         return this.context.ctx;
     };

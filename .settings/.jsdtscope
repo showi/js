@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="" />
-	<classpathentry kind="con"
-		path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER" />
-	<classpathentry kind="con"
-		path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary" />
-	<classpathentry kind="output" path="" />
+	<classpathentry excluding="graphit/|graphit/Widget/|graphit/__OLD__/|graphit/draw/|graphit/draw/widget/|graphit/exception/|graphit/extend/|graphit/list/Dl/|graphit/math/|graphit/math/enum/|graphit/mixin/|graphit/physic/|graphit/test/|graphit/tree/|graphit/tree/enum/|graphit/tree/mixin/|graphit/tree/node/|lib/|node_modules/.bin/|node_modules/requirejs/|node_modules/requirejs/bin/" kind="src" path=""/>
+	<classpathentry excluding="math/enum/|tree/node/|draw/|test/|Widget/|__OLD__/|list/Dl/|extend/|exception/|tree/enum/|physic/|tree/|math/|mixin/|tree/mixin/|draw/widget/" kind="src" path="graphit"/>
+	<classpathentry kind="src" path="graphit/__OLD__"/>
+	<classpathentry excluding="widget/" kind="src" path="graphit/draw"/>
+	<classpathentry kind="src" path="graphit/draw/widget"/>
+	<classpathentry kind="src" path="graphit/exception"/>
+	<classpathentry kind="src" path="graphit/extend"/>
+	<classpathentry kind="src" path="graphit/list/Dl"/>
+	<classpathentry excluding="enum/" kind="src" path="graphit/math"/>
+	<classpathentry kind="src" path="graphit/math/enum"/>
+	<classpathentry kind="src" path="graphit/mixin"/>
+	<classpathentry kind="src" path="graphit/physic"/>
+	<classpathentry kind="src" path="graphit/test"/>
+	<classpathentry excluding="node/|enum/|mixin/" kind="src" path="graphit/tree"/>
+	<classpathentry kind="src" path="graphit/tree/enum"/>
+	<classpathentry kind="src" path="graphit/tree/mixin"/>
+	<classpathentry kind="src" path="graphit/tree/node"/>
+	<classpathentry kind="src" path="graphit/Widget"/>
+	<classpathentry kind="src" path="lib"/>
+	<classpathentry kind="src" path="node_modules/.bin"/>
+	<classpathentry excluding="bin/" kind="src" path="node_modules/requirejs"/>
+	<classpathentry kind="src" path="node_modules/requirejs/bin"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
 </classpath>

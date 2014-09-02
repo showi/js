@@ -2,6 +2,9 @@ define(function(require) {
 
     var util = require('graphit/util');
     var ParameterMixin = require('graphit/mixin/parameter');    
+    var tutil = require('graphit/tree/util');
+    var eCap = require('graphit/tree/enum/capability');
+    var eMat = require('graphit/math/enum/matrix');
 
     var VALIDATOR = {
             'root': {
@@ -17,21 +20,27 @@ define(function(require) {
     }
     
     RENDERER.prototype.render = function() {
-//        console.log('Start rendering');
         var that = this;
+        that.ctx.save();
         if ('pre_render' in this) {
             this.pre_render(this);
         }
         this.root.preTraverse(function(node) {
+            if('update' in node) {
+                node.update();
+            }
+            if (tutil.hasCapability(node, eCap.transform)) {
+                that.ctx.rotate(node.matrix.angle());
+                that.ctx.translate(node.matrix[eMat.m13], node.matrix[eMat.m23]);
+            }
             if('render' in node) {
-                that.ctx.save();
                 node.render(that);
-                that.ctx.restore();
             }
         });
         if ('post_render' in this) {
             this.post_render(this);
         }
+        that.ctx.restore();
     };
     util.injectMixin(RENDERER, ParameterMixin);
     return RENDERER;

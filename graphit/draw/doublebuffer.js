@@ -8,14 +8,16 @@ define(function(require) {
     function CANVAS(options) {
         this.__MODULE__ = 'graphit/draw/doublebuffer';
         this.front = new Canvas(options);
-        this.back = null;
+        this.back = new Canvas(options);
+//        this.back = null;
     }
 
-    CANVAS.prototype.clearBackBuffer = function() {
-        this.back = new Canvas({
-            width : this.width(),
-            height : this.height()
-        });
+    CANVAS.prototype.clearBackBuffer = function(color) {
+        this.back.clear(color);
+//        this.back = new Canvas({
+//            width : this.width(),
+//            height : this.height()
+//        });
     };
 
     CANVAS.prototype.flip = function() {
