@@ -7,7 +7,7 @@ define(function(require) {
 
     var element = jQuery('<div id="graphit-test-matrix33" class="test-container"></div>');
     var body = jQuery('body');
-    var PASS = 1000000;
+    var PASS = 10000000;
 
     function pageScroll() {
         window.scrollBy(0,100);
