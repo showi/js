@@ -3,9 +3,9 @@ define(function(require) {
     var MissingParameterException = require('graphit/exception/MissingParameter');
     var MixinParameter = require('graphit/mixin/parameter');
     
-    var Context = require('../Context');
-    var DoubleBuffer = require('../DoubleBuffer');
-    var Canvas = require('../Canvas');
+    var Context = require('../context');
+    var DoubleBuffer = require('../doublebuffer');
+    var Canvas = require('../canvas');
     var tool = require('../tool');
     var shape = require('../shape');
     var util = require('../../util');

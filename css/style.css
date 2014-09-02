@@ -5,8 +5,9 @@
 html,body {
 	height: 100%;
 	width: 100%;
-	overflow: hidden;
-	background-color: #191319;
+	/* overflow: hidden; */
+	background-color: black;
+	color: white;
 	margin: 0;
 	padding: 0;
 }
@@ -58,4 +59,11 @@ canvas {
 	clear: both;
 	font-size: 0.5em;
 	text-align: right;
+}
+
+.test-speed-container .msg {
+	border-style: none None dotted None;
+	border-width: 1px;
+	border-color: grey;
+		overflow: auto;
 }

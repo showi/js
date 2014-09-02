@@ -1,5 +1,4 @@
 define(function(require) {
-console.log('Math', Math);
 if (typeof Math.randInt != 'function') {
     console.log('Extend Math object with randInt method');
     Math.randInt = function (a, b){

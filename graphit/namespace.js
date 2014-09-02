@@ -7,6 +7,10 @@ define(function(require) {
         console.log('>>> Global namespace already defined');
         return window[NAMESPACE];
     }
+
+    require('graphit/extend/string');
+    require('graphit/extend/math');
+
     console.log('>>> Creating global namespace');
     window[NAMESPACE] = {
         __MODULE__ : 'graphit',

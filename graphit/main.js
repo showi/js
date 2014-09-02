@@ -1,9 +1,11 @@
 define(function(require) {
-
     var util = require('graphit/util');
-    
-    var kinds = ['randart', 'clock',];
-    for(var i = 0; i < kinds.length; i++) {
-        util.runTest(kinds[i]);
+    var choices = ['randart', 'clock', 'wall', 'movingpaint'];
+    var choice = util.choice(choices);
+    console.log('>>> random test:', choice, '(', choices, ')');
+    util.runTest(choice);
+    function reload() {
+            window.location.reload();
     }
+    setTimeout(reload, 1000*60);
 });

@@ -2,7 +2,7 @@ define(function(require) {
 
     var util = require('graphit/util');    
     var MixinParameter = require('../mixin/parameter');
-    var Context = require('../draw/Context');
+    var Context = require('../draw/context');
     var MissingParameterException = require('graphit/exception/MissingParameter');
     
     var VALIDATORS = {
@@ -15,7 +15,7 @@ define(function(require) {
     };
 
     function LAYER(options) {
-        this.__MODULE__ = 'graphit/draw/Layer';
+        this.__namespace__ = 'graphit/draw/layer';
         try {
             this.setParameters(options, VALIDATORS);
         } catch (e) {

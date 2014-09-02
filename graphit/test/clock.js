@@ -1,7 +1,7 @@
 define(function(require) {
 
-    var glob = require('../global');
-    var ModuleClock = require('../draw/widget/Clock');
+    var glob = require('../namespace');
+    var ModuleClock = require('../draw/widget/clock');
     var util = require('../util');
     var log = require('../log');
     

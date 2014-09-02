@@ -3,17 +3,17 @@ define(function(require) {
     var MissingParameterException = require('../exception/MissingParameter');
     var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
 
-    var Canvas = require('../draw/Canvas');
+    var Canvas = require('../draw/canvas');
 
     function CANVAS(options) {
-        this.__MODULE__ = 'graphit/draw/DoubleBuffer';
+        this.__MODULE__ = 'graphit/draw/doublebuffer';
         this.front = new Canvas(options);
         this.back = null;
     }
 
     CANVAS.prototype.clearBackBuffer = function() {
         this.back = new Canvas({
-            width  : this.width(),
+            width : this.width(),
             height : this.height()
         });
     };
@@ -21,10 +21,6 @@ define(function(require) {
     CANVAS.prototype.flip = function() {
         this.front.copyData(this.back);
     };
-
-//    CANVAS.prototype.copyData = function(target, src) {
-//        return target.copyData(src);
-//    };
 
     CANVAS.prototype.toString = function() {
         return '<canvas width="' + this._width + '" height="' + this._height

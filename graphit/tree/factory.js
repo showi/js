@@ -2,7 +2,7 @@ define(function(require) {
     
     require('graphit/tree/node/element');
     require('graphit/tree/node/primitive');
-    var ns = require('graphit/global');
+    var ns = require('graphit/namespace');
     
     var FACTORY = {
             node: function(name, opts) {

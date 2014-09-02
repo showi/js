@@ -1,21 +1,16 @@
 define(function(require) {
- 
-    var global = require('graphit/global');
-    var ns = require('graphit/global');
+
+    var ns = require('graphit/namespace');
     var _ns_ = 'node';
-    
-    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {
-        return ns.tree.node[_ns_];
-    }
+
+    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) { return ns.tree.node[_ns_]; }
     function injectProperties(obj, properties) {
         for (var i = 0; i < properties.length; i++) {
             var meth = properties[i];
             var key = '_' + meth;
-//            console.log('getter/setter for ' + key);
+            //            console.log('getter/setter for ' + key);
             obj.prototype[meth] = function(value) {
-                if (value === undefined) {
-                    return obj[key];
-                }
+                if (value === undefined) { return obj[key]; }
                 obj[key] = value;
                 return this;
             };
@@ -24,7 +19,7 @@ define(function(require) {
 
     function NODE(parent) {
         this.__namespace__ = 'graphit/tree/node/node';
-        this.uid = global.genuid();
+        this.uid = ns.genuid();
         this.childs = [];
         if (!(this instanceof NODE)) { return new NODE(parent); }
         if (!NODE.prototype.parent) {
@@ -33,18 +28,15 @@ define(function(require) {
         this.parent(parent);
         this.traversable(true);
     };
-    
+
     NODE.prototype.appendChild = function(child) {
         child.parent = this;
         this.childs.push(child);
     };
-    
+
     NODE.prototype.preTraverse = function(fn) {
         fn(this);
-        if (!this.traversable()) {
-//            this.log('Not traversable');
-            return;
-        }
+        if (!this.traversable()) { return; }
         for (var i = 0; i < this.childs.length; i++) {
             this.childs[i].preTraverse(fn);
         }

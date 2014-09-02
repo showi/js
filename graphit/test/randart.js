@@ -1,18 +1,18 @@
 define(function(require) {
 
 
-    var Canvas = require('graphit/draw/Canvas');
+    var Canvas = require('graphit/draw/canvas');
     var shape = require('graphit/draw/shape');
     var tool = require('graphit/draw/tool');
     var util = require('graphit/util');
 
     function RANDART() {
-        this.__MODULE__ = 'graphit/test/randart';
-        var size = util.getDocumentSize();
+        this.__namespace__ = 'graphit/test/randart';
+        var size = util.documentSize();
         this.size = size;
         this.ratio = 2.0;
-        this.width = Math.round(size[0]  / this.ratio);
-        this.height = Math.round(size[1] / this.ratio);
+        this.width = Math.round(size.x  / this.ratio);
+        this.height = Math.round(size.y / this.ratio);
         console.log('w/h', this.width, this.height);
     }
     RANDART.prototype.run = function() {
@@ -66,7 +66,6 @@ define(function(require) {
                 }
                 if (count > max) {
                     var scale = 1.0 / that.ratio;
-                    console.log('scale', scale);
                     var n = canvas.downScale(scale);
                     miniature.unshift(n);
                     body.append(n.getElement());

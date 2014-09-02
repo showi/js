@@ -2,9 +2,9 @@ define(function(require) {
     
     var Node = require('./node');
     var Line = require('graphit/math/line');
-    var ns = require('graphit/global');
+    var ns = require('graphit/namespace');
     var shape = require('graphit/draw/shape');
-    require('graphit/math');
+
     var _ns_ = 'primitive';
      
     if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {

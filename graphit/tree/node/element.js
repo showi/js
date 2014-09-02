@@ -1,7 +1,7 @@
 define(function(require) {
  
     var Node = require('./node');
-    var ns = require('graphit/global');
+    var ns = require('graphit/namespace');
     var _ns_ = 'element';
     
     if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {

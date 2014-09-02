@@ -5,10 +5,10 @@ define(function(require) {
     var shape = require('./draw/shape');
     var InvalidNamespaceException = require('./exception/InvalidNamespace');
 
-    var Canvas = require('./draw/Canvas');
-    var Context = require('./draw/Context');
-    var DoubleBuffer = require('./draw/DoubleBuffer');
-    var Layer = require('./draw/Layer');
+    var Canvas = require('./draw/canvas');
+    var Context = require('./draw/context');
+    var DoubleBuffer = require('./draw/doublebuffer');
+    var Layer = require('./draw/layer');
     
     window.graphit.loadClass = function(name) {
         if (!(name in _registered_class)) {

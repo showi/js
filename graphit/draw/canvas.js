@@ -1,7 +1,7 @@
 define(function(require) {
 
     var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
-    var Context = require('../draw/Context');
+    var Context = require('../draw/context');
     var util = require('graphit/util');
     var MixinParameter = require('../mixin/parameter');
 
@@ -20,7 +20,7 @@ define(function(require) {
     };
 
     function CANVAS(options) {
-        this.__MODULE__ = 'graphit/draw/Canvas';
+        this.__namespace__ = 'graphit/draw/canvas';
         this.checkParameters(options, VALIDATORS);
         this.element = null;
         this.context = null;

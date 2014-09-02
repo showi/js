@@ -21,7 +21,7 @@ define(function(require) {
     };
 
     function TREE() {
-        this.__MODULE__ = 'graphit/test/tree';
+        this.__namespace__ = 'graphit/test/movingpaint';
     }
 
     function genLine(width, height) {
@@ -88,7 +88,7 @@ define(function(require) {
     TREE.prototype.run = function() {
         console.log('----- Testing tree -----');
         var size = util.documentSize();
-        var scale = 0.98;
+        var scale = 0.50;
         var width = size.x * scale;
         var height = size.y * scale;
         var db = new DoubleBuffer({
@@ -99,7 +99,7 @@ define(function(require) {
         var body = jQuery('body');
         var elm = canvas.getElement();
         body.append(elm);
-        jQuery(elm).center();
+        jQuery(elm).center().draggable();
 
         var pool = [];
         var root = factory.tree.node('primitive', {

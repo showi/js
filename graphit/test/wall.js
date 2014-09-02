@@ -2,8 +2,8 @@ define(function(require) {
 
     var api = require('../api');
 
-    var Layer = require('../draw/Layer');
-    var Canvas = require('graphit/draw/Canvas');
+    var Layer = require('graphit/draw/layer');
+    var Canvas = require('graphit/draw/canvas');
 
     var Mixin = {
         mixit : function(value) {
@@ -18,7 +18,7 @@ define(function(require) {
         return '<mixin2>' + value + '</mixin2>';
     };
     function MODULE() {
-        this.__MODULE__ = 'graphit/test/playground';
+        this.__namespace__ = 'graphit/test/wall';
     }
 
     MODULE.prototype.run = function() {

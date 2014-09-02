@@ -1,5 +1,5 @@
 define(function(require) {
-    var CCanvas = require('./Draw/Canvas');
+    var CCanvas = require('./draw/canvas');
     var canvas = new CCanvas(1, 1);
     
     window.graphit.gContext = canvas.getContext();

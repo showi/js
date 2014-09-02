@@ -1,10 +1,10 @@
 define(function(require) {
 
-    require('graphit/string');
-    var graphit = require('./global');
+    var graphit = require('./namespace');
+    var Vector2d = require('graphit/math/vector2d');
     var documentElement = jQuery(document);
     var windowElement = jQuery(window);
-
+    
     var UTIL = {
         __MODULE__ : 'graphit/util',
         genuid: function() {
@@ -28,6 +28,14 @@ define(function(require) {
                     }
                 }
             }
+        },
+        windowSize : function() {
+            return new Vector2d(windowElement.width(), 
+                                windowElement.height());
+        },
+        documentSize : function() {
+            return new Vector2d(documentElement.width(), 
+                                documentElement.height());
         },
         setParameters : function(that, options, validators) {
             this.checkParameters(options, validators);
@@ -59,12 +67,22 @@ define(function(require) {
                 }
             }
         },
+        join: function(a, separator) {
+            var s = '';
+            for (var i = 0; i < a.length; i++) {
+                s += a[i] + separator;
+            }
+            return s;
+        },
         isNullOrUndef : function(value) {
             if (value === undefined || value == null) { return true; }
             return false;
         },
         getGlobal : function() {
             return window.graphit;
+        },
+        choice: function(choices) {
+            return choices[Math.randInt(0, choices.length)];
         },
         isArray : function(value) {
             return Object.prototype.toString.call(value) === Object.prototype.toString
@@ -106,12 +124,7 @@ define(function(require) {
             }
             return min;
         },
-        getWindowSize : function() {
-            return [windowElement.width(), windowElement.height()];
-        },
-        getDocumentSize : function() {
-            return [documentElement.width(), documentElement.height()];
-        },
+
         centerElement : function(elm) {
             elm.css("position", "absolute");
             elm.css("top", Math.max(0, ((windowElement.height() - elm
@@ -135,7 +148,9 @@ define(function(require) {
         runTest: function(name) {
             var that = this;
             require(['graphit/test/' + name], function(test) {
-                console.log('>>>>> Running test', name);
+                console.log('>>>>> Running test', 
+                            name, '(',
+                            test.__namespace__, ')');
                 if (name in graphit.test) {
                     throw 'TestAlreadyRunning';
                 }
