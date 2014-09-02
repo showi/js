@@ -5,14 +5,22 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var Canvas = require('graphit/draw/canvas');
 
-    var element = jQuery('<div id="graphit-test-matrix33" class="test-speed-container"></div>');
+    var element = jQuery('<div id="graphit-test-matrix33" class="test-container"></div>');
     var body = jQuery('body');
+    var PASS = 1000000;
+
+    function pageScroll() {
+        window.scrollBy(0,100);
+        scrolldelay = setTimeout(pageScroll,10);
+    }
     body.css({
         'background-color' : 'black',
         color : 'white',
         scroll : 'auto',
     });
+//    pageScroll();
     body.append(element);
+    
     var rex_nl = new RegExp("\\n");
     rex_nl.global = true;
     function log() {
@@ -23,7 +31,7 @@ define(function(require) {
             a = a.replace('>', '&gt;');
             msg += a + ' ';
         }
-        msg = jQuery('<div class="msg">*<pre>' +  msg + '<pre></div>');
+        msg = jQuery('<div class="msg"><pre>' +  msg + '</pre></div>');
         element.append(msg);
     }
 
@@ -32,7 +40,7 @@ define(function(require) {
     }
 
     MATH.prototype.run = function() {
-
+//        pageScroll();
     };
 
     MATH.prototype.test_translate = function() {
@@ -84,7 +92,7 @@ define(function(require) {
         l();
     };
     function testfn(m, name, value) {
-        var pass = 1000000;
+        var pass = PASS;
         var st = new Date();
         log(name, '> Testing function with', pass, 'pass');
         function async() {
@@ -98,7 +106,8 @@ define(function(require) {
             var diff = et - st;
             log(name, '> Time', diff, 'ms');
         }
-        setTimeout(async, 0);
+        async();
+//        setTimeout(async, 0);
     }
 
     MATH.prototype.test_rotateSpeed = function() {
@@ -106,6 +115,7 @@ define(function(require) {
         testfn(m, 'rotate', 10);
         log(m, m.toString());
     };
+
     MATH.prototype.test_rotateSpeed = function() {
         var m = new Matrix33();
         testfn(m, 'determinant');
@@ -135,16 +145,15 @@ define(function(require) {
         log(m);
     };
 
-    MATH.prototype.test_mult = function() {
+    MATH.prototype.test_speedMul = function() {
         var A = new Matrix33([1,2,3,4,5,6,7,8,9]);
         var B = new Matrix33([1,2,3,4,5,6,7,8,9]);
         var st = new Date();
-        var pass = 1000000;
-        for (var i = 0; i < pass; i++) {
+        for (var i = 0; i < PASS; i++) {
             A.mul(B);
         }
         var diff = new Date() - st;
-        log('mul', 'pass', pass, 'time', diff, 's');
+        log('mul', 'pass', PASS, 'time', diff, 'ms');
     };
 
     MATH.prototype.test_mul = function() {

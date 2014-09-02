@@ -61,9 +61,12 @@ canvas {
 	text-align: right;
 }
 
-.test-speed-container .msg {
+.test-container .msg {
+	margin: 0 1em;
 	border-style: none None dotted None;
 	border-width: 1px;
 	border-color: grey;
 		overflow: auto;
+	font-family: monospace;
+	font-size: medium;
 }
