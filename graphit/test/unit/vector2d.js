@@ -11,19 +11,27 @@ define(function(require) {
 
     };
 
-    function test_fn(name) {        
+    function test_fn(name) {
+        var args = arguments;
         function outer() {
             var a = new graphit.math.vector2d();
             var b = new graphit.math.vector2d();
             a.randomize();
             b.randomize();
-            function fn() {
-                return a[name](b);
+            var fn = undefined;
+            if (name == 'fromPoints') {
+                fn = function() {
+                    return a.fromPoints(args[0], args[1]);
+                };
+            } else {
+                fn = function() {
+                    return a[name](b);
+                };
             }
             return util.testFunction('Vector2d', name, fn);
         }
-        setTimeout(outer, 0);
-//        outer();
+        // setTimeout(outer, 0);
+        outer();
     };
 
     VECTOR2D.prototype.test_add = function() {
@@ -46,13 +54,22 @@ define(function(require) {
         test_fn('copy');
     };
 
-    VECTOR2D.prototype.test_length = function() {
-        test_fn('length');
-        test_fn('lengthSlow');
+    VECTOR2D.prototype.test_fromPoints = function() {
         var a = new graphit.math.vector2d();
         a.randomize();
-        console.log('Length norm/slow', a.length(), a.lengthSlow());
+        var b = new graphit.math.vector2d();
+        b.randomize();
+        test_fn('fromPoints', a, b);
     };
+
+    VECTOR2D.prototype.test_length = function() {
+        var r1 = test_fn('length');
+        var r2 = test_fn('lengthSlow');
+        var a = new graphit.math.vector2d();
+        a.randomize();
+        util.log('Length norm/slow', a.length(), a.lengthSlow());
+    };
+
     VECTOR2D.prototype.test_randomize = function() {
         test_fn('randomize');
     };

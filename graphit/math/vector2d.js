@@ -46,7 +46,10 @@ define(function(require) {
     };
 
     VECTOR2D.prototype.fromPoints = function(a, b) {
-        return b.clone().sub(a);
+        var vector = b.clone().sub(a);
+        this.x = vector.x;
+        this.y = vector.y;
+        return this;
     };
 
     VECTOR2D.prototype.toString = function() {
