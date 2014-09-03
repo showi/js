@@ -12,6 +12,9 @@ define(function(require) {
     var Renderer = require('graphit/tree/renderer');
     require('graphit/extend/jquery');
 
+    var minWidth = 0.01;
+    var maxWidth = 10;
+
     function TREE() {
         this.__namespace__ = 'graphit/test/movingpaint';
     }
@@ -36,7 +39,7 @@ define(function(require) {
         return line;
     }
 
-    function mutePrimitive(node, max, prevNode) {
+    function mutePrimitive(node, width, height, max) {
         var step = 0.5;
         function randValue(value) {
             var sign = true;
@@ -48,32 +51,29 @@ define(function(require) {
             if (!sign) { return value - add; };
             return value + add;
         }
+        var nl = [];
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
             p.lineWidth = randValue(p.lineWidth);
-            //            p.strokeStyle = tool.randomColor();
-//            var fs = p.fillStyle !== undefined? p.fillStyle: tool.randomColor();
-//            if (prevNode != null) {
-//                p.strokeStyle = prevNode.strokeStyle;
-//                p.fillStyle = prevNode.fillStyle;
-//            } else {
-//                p.strokeStyle = tool.randomColor();
-//                p.fillStyle = tool.randomColor();
-//            }
+            if (p.lineWidth > maxWidth || p.lineWidth < minWidth) {
+                p = genLine(width, height);
+            }
             if (p instanceof Line) {
                 p.a.x = randValue(p.a.x);
                 p.a.y = randValue(p.a.y);
                 p.b.x = randValue(p.b.x);
                 p.b.y = randValue(p.b.y);
             }
+            nl.push(p);
         }
+        node.primitive = nl;
     };
-    function muteTree(pool, max) {
+    function muteTree(pool, width, height, max) {
         var prevNode = null;
         for (var i = 0; i < pool.length; i++) {
             var node = pool[i];
             if (node instanceof Primitive) {
-                mutePrimitive(node, max, prevNode);
+                mutePrimitive(node, width, height, max);
             }
             prevNode = node;
         }
@@ -110,12 +110,10 @@ define(function(require) {
         console.log('Root', root);
         var renderer = new Renderer({
             root : root,
-            ctx : canvas.getCtx()
+            ctx : buffer.back.getCtx(),
         });
         renderer.renderInit = function(r) {
-            r.ctx = buffer.back.getCtx();
-            //r.ctx.translate(width / 2, height / 2);
-            //r.root.transform.translate(width / 2, height, 2);
+//            r.ctx = buffer.front.getCtx();
         };
         var that = this;
         this.timeout = 500;
@@ -127,21 +125,21 @@ define(function(require) {
         var startTime = Date.now();
         var endTime = undefined;
         var delta = 0;
-
+        var max = width; //Math.max(width, height);
         renderer.pre_render = function(node) {
+            /* HOOK: PRE Render */
             buffer.clearBackBuffer();
+            muteTree(pool, width, height, max);
         };
-
         renderer.render = function(node) {
+            /* HOOK: Render */
             if ('render' in node) {
                 node.render(renderer);
             }
         };
-        
         renderer.post_render = function(node) {
-//            renderer.root.transform.rotate(0.1 * Math.PI / 180);
+            /* HOOK POST Render */
             buffer.flip();
-            muteTree(pool, that.width);
             that.frames++;
             if (count >= numCount) {
                 endTime = Date.now();
@@ -153,7 +151,6 @@ define(function(require) {
                 count++;
             };
         };
-        
         /* Main Loop */
         function loop() {
             renderer.step();
