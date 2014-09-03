@@ -53,7 +53,9 @@ define(function(require) {
     VECTOR2D.prototype.test_copy = function() {
         test_fn('copy');
     };
-
+    VECTOR2D.prototype.test_clone = function() {
+        test_fn('clone');
+    };
     VECTOR2D.prototype.test_fromPoints = function() {
         var a = new graphit.math.vector2d();
         a.randomize();
