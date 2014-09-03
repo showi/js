@@ -4,10 +4,10 @@ define(function(require) {
     var Node = require('graphit/tree/node/node');
     var TransMixin = require('graphit/tree/mixin/transform');
     var DoubleBuffer = require('graphit/draw/doublebuffer');
-    var shape = require('graphit/draw/shape');
+//    var shape = require('graphit/draw/shape');
     var Line = require('graphit/math/line');
     var util = require('graphit/util');
-    var tool = require('graphit/draw/tool');
+//    var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
     var Renderer = require('graphit/tree/renderer');
     require('graphit/extend/jquery');
@@ -52,7 +52,7 @@ define(function(require) {
             var p = node.primitive[i];
             p.lineWidth = randValue(p.lineWidth);
             //            p.strokeStyle = tool.randomColor();
-            var fs = p.fillStyle !== undefined? p.fillStyle: tool.randomColor();
+//            var fs = p.fillStyle !== undefined? p.fillStyle: tool.randomColor();
 //            if (prevNode != null) {
 //                p.strokeStyle = prevNode.strokeStyle;
 //                p.fillStyle = prevNode.fillStyle;

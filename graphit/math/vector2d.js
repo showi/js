@@ -63,6 +63,10 @@ define(function(require) {
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     };
 
+    VECTOR2D.prototype.lengthSlow = function() {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    };
+
     ns[_ns_] = VECTOR2D;
     return ns[_ns_];
 });

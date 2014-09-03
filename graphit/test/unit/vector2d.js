@@ -48,6 +48,10 @@ define(function(require) {
 
     VECTOR2D.prototype.test_length = function() {
         test_fn('length');
+        test_fn('lengthSlow');
+        var a = new graphit.math.vector2d();
+        a.randomize();
+        console.log('Length norm/slow', a.length(), a.lengthSlow());
     };
     VECTOR2D.prototype.test_randomize = function() {
         test_fn('randomize');
