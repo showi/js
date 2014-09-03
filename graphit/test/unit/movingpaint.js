@@ -7,7 +7,7 @@ define(function(require) {
 //    var shape = require('graphit/draw/shape');
     var Line = require('graphit/math/line');
     var util = require('graphit/util');
-//    var tool = require('graphit/draw/tool');
+    var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
     var Renderer = require('graphit/tree/renderer');
     require('graphit/extend/jquery');
