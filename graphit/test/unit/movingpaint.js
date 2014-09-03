@@ -1,15 +1,30 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+ */
 define(function(require) {
+
+    'use strict';
 
     var Primitive = require('graphit/tree/node/primitive');
     var Node = require('graphit/tree/node/node');
     var TransMixin = require('graphit/tree/mixin/transform');
     var DoubleBuffer = require('graphit/draw/doublebuffer');
-//    var shape = require('graphit/draw/shape');
     var Line = require('graphit/math/line');
     var util = require('graphit/util');
     var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
     var Renderer = require('graphit/tree/renderer');
+    var eCap = require('graphit/tree/enum/capability');
+    var tutil = require('graphit/tree/util');
     require('graphit/extend/jquery');
 
     var minWidth = 0.01;
@@ -68,6 +83,7 @@ define(function(require) {
         }
         node.primitive = nl;
     };
+
     function muteTree(pool, width, height, max) {
         var prevNode = null;
         for (var i = 0; i < pool.length; i++) {
@@ -133,8 +149,8 @@ define(function(require) {
         };
         renderer.render = function(node) {
             /* HOOK: Render */
-            if ('render' in node) {
-                node.render(renderer);
+            if (tutil.hasCapability(node, eCap.draw)) {
+                node.draw(this);
             }
         };
         renderer.post_render = function(node) {

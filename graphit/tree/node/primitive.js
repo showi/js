@@ -1,5 +1,19 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+*/
 define(function(require) {
-    
+
+    'use strict';
+
     var Node = require('./node');
     var Line = require('graphit/math/line');
     var ns = require('graphit/namespace');
@@ -7,33 +21,27 @@ define(function(require) {
     var util = require('graphit/tree/util');
     var eCap = require('graphit/tree/enum/capability');
     var _ns_ = 'primitive';
-     
-//    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {
-//        return ns.tree.node[_ns_];
-//    }
-    
+
     var CTX_PROPERTIES = {
-            'fillStyle':true,
-            'strokeStyle':true,
-            'lineWidth':true,
-            'lineCap': true,
-            'lineJoin': true,
+        'fillStyle' : true,
+        'strokeStyle' : true,
+        'lineWidth' : true,
+        'lineCap' : true,
+        'lineJoin' : true,
     };
 
     function PRIMITIVE() {
         Node.call(this, arguments);
         this.__namespace__ = 'graphit/tree/node/primitive';
-        util.setCapability(this, eCap.render);
+        util.setCapability(this, eCap.draw);
         this.traversable(false);
         this.primitive = [];
     };
 
     PRIMITIVE.prototype = Object.create(Node.prototype);
-    
+
     PRIMITIVE.prototype.addPrimitive = function(primitive) {
-        if (primitive === undefined) {
-            throw 'UndefinedPrimitive';
-        }
+        if (primitive === undefined) { throw 'UndefinedPrimitive'; }
         this.primitive.push(primitive);
     };
 
@@ -43,13 +51,13 @@ define(function(require) {
         }
     };
 
-    PRIMITIVE.prototype.render = function(renderer) {
+    PRIMITIVE.prototype.draw = function(renderer) {
         for (var i = 0; i < this.primitive.length; i++) {
             renderer.ctx.save();
             try {
                 var primitive = this.primitive[i];
-                for (var p in CTX_PROPERTIES) {
-                    if(p in primitive) {
+                for ( var p in CTX_PROPERTIES) {
+                    if (p in primitive) {
                         renderer.ctx[p] = primitive[p];
                     }
                 }
@@ -58,17 +66,16 @@ define(function(require) {
                 } else if (primitive instanceof Circle) {
                     this.drawCircle(renderer, primitive);
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error('Exception while rendering');
             } finally {
-                renderer.ctx.restore();    
+                renderer.ctx.restore();
             }
         }
     };
 
     PRIMITIVE.prototype.drawLine = function(renderer, line) {
-        shape.line(renderer.ctx, line.a.x, line.a.y,
-                                         line.b.x, line.b.y);
+        shape.line(renderer.ctx, line.a.x, line.a.y, line.b.x, line.b.y);
     };
 
     PRIMITIVE.prototype.drawCircle = function(renderer, circle) {
@@ -76,6 +83,6 @@ define(function(require) {
     };
 
     ns.tree.node[_ns_] = PRIMITIVE;
-//    return ns.tree.node[_ns_];
+    //    return ns.tree.node[_ns_];
     return PRIMITIVE;
 });

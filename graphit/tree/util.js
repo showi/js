@@ -10,7 +10,7 @@ define(function(require) {
             obj.capability &= (obj.capability & ~capability);
         },
         hasCapability : function(obj, capability) {
-            if (obj.capability & capability) { return true; }
+            if ((obj.capability & capability) == capability) { return true; }
             return false;
         },
     };
