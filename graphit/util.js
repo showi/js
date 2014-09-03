@@ -34,6 +34,21 @@ define(function(require) {
             }
             return true;
         },
+        injectProperties : function(obj, properties) {
+            for (var i = 0; i < properties.length; i++) {
+                var meth = properties[i];
+                var key = '_' + meth;
+                if (!(key in obj)) {
+                    obj[key] = undefined;
+                }
+                //            console.log('getter/setter for ' + key);
+                obj.prototype[meth] = function(value) {
+                    if (value === undefined) { return obj[key]; }
+                    obj[key] = value;
+                    return this;
+                };
+            }
+        },
         windowSize : function() {
             return new Vector2d(windowElement.width(), windowElement.height());
         },
@@ -121,18 +136,24 @@ define(function(require) {
             }
             return min;
         },
-
-        centerElement : function(elm) {
-            elm.css("position", "absolute");
-            elm.css("top", Math.max(0, ((windowElement.height() - elm
-                    .outerHeight()) / 2)
-                    + windowElement.scrollTop())
-                    + "px");
-            elm.css("left", Math.max(0, ((windowElement.width() - elm
-                    .outerWidth()) / 2)
-                    + windowElement.scrollLeft())
-                    + "px");
-        },
+//        centerElement : function(elm) {
+//            /*
+//             *@bug: Fail to align element vertically
+//             */
+//            console.log('Center');
+//            console.log('height', windowElement.height());
+//            console.log('outerHeight', elm.outerHeight());
+//            console.log('scrollTop', windowElement.scrollTop());
+//            elm.css("position", "absolute");
+//            elm.css("top", 
+//               Math.max(0, ((windowElement.height() - elm.outerHeight()) / 2)
+//                    + windowElement.scrollTop())
+//                    + "px");
+//            elm.css("left", 
+//               Math.max(0, ((windowElement.width() - elm.outerWidth()) / 2)
+//                    + windowElement.scrollLeft())
+//                    + "px");
+//        },
         catchException : function(obj, meth) {
             try {
                 return obj[meth].call(obj);

@@ -7,10 +7,8 @@ define(function(require) {
     
     var FACTORY = {
             node: function(cls, opts, mixin) {
-              console.log('Factory', cls, opts, mixin);
               if (mixin !== undefined) {
                   for (var i = 0; i < mixin.length; i++) {
-                      console.log('Injecting mixin', mixin[i]);
                       util.injectMixin(cls, mixin[i]);
                   }
               }
@@ -23,7 +21,6 @@ define(function(require) {
               if (mixin !== undefined) {
                   for (var i = 0; i < mixin.length; i++) {
                       if ('constructor' in mixin[i]) {
-                          console.log('Constructor');
                           mixin[i].call(node);
                       }
                   }

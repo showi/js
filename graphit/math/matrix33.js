@@ -57,7 +57,17 @@ define(function(require) {
         return new MATRIX33(this);
     };
 
-    MATRIX33.prototype.fillSlow = function(value) {
+    MATRIX33.prototype.equal = function(matrix) {
+        for (var i = 0; i < 9; i++) {
+            if (this._data[i] != matrix._data[i]) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    
+    MATRIX33.prototype.fill = function(value) {
         /* Fill matrix with some value
          * 
          * @param value: used to fill matrix cell, if not defined default to 0
@@ -78,7 +88,7 @@ define(function(require) {
         return this;
     };
 
-    MATRIX33.prototype.fillMedium = function(value) {
+    MATRIX33.prototype.fillSlow = function(value) {
         /* Fill matrix with some value
          * 
          * @param value: used to fill matrix cell, if not defined default to 0
@@ -92,16 +102,7 @@ define(function(require) {
         return this;
     };
 
-    MATRIX33.prototype.equal = function(matrix) {
-        for (var i = 0; i < 9; i++) {
-            if (this._data[i] != matrix._data[i]) {
-                return false;
-            }
-        }
-        return true;
-    };
-
-    MATRIX33.prototype.fill = function(value) {
+    MATRIX33.prototype.fillMedium = function(value) {
         /* Fill matrix with some value
          * 
          * @param value: used to fill matrix cell, if not defined default to 0
@@ -114,14 +115,14 @@ define(function(require) {
         return this;
     };
 
-    MATRIX33.prototype.identitySlow = function() {
+    MATRIX33.prototype.identityMedium = function() {
         /* Reset matrix to identity
          */
         this._data[m12] = this._data[m13] = this._data[m21] = this._data[m23] = this._data[m31] = this._data[m32] = 0;
         this._data[m11] = this._data[m22] = this._data[m33] = 1;
         return this;
     };
-    MATRIX33.prototype.identityMedium = function() {
+    MATRIX33.prototype.identitySlow = function() {
         this.fill(0);
         this._data[m11] = this._data[m22] = this._data[m33] = 1;
         return this;

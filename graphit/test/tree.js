@@ -102,7 +102,7 @@ define(function(require) {
         jQuery(elm).center();
 
         var pool = [];
-        var root = factory.tree.node('primitive', {
+        var root = factory.tree.node(Primitive, {
             pool : pool
         });
         for (var i = 0; i < 256; i++) {
@@ -139,6 +139,7 @@ define(function(require) {
                 ctimeout = that.pauseTimeout;
             } else {
                 db.clearBackBuffer();
+                renderer.update();
                 renderer.render();
                 db.flip();
                 muteTree(pool, that.width);

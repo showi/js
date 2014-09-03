@@ -1,21 +1,10 @@
 define(function(require) {
 
+    var util = require('graphit/util');
     var ns = require('graphit/namespace');
     var _ns_ = 'node';
 
     if (_ns_ in ns.tree.node && ns.tree.node !== undefined) { return ns.tree.node[_ns_]; }
-    function injectProperties(obj, properties) {
-        for (var i = 0; i < properties.length; i++) {
-            var meth = properties[i];
-            var key = '_' + meth;
-            //            console.log('getter/setter for ' + key);
-            obj.prototype[meth] = function(value) {
-                if (value === undefined) { return obj[key]; }
-                obj[key] = value;
-                return this;
-            };
-        }
-    }
 
     function NODE(parent) {
         this.__namespace__ = 'graphit/tree/node/node';
@@ -24,7 +13,7 @@ define(function(require) {
         this.capability = 0;
         if (!(this instanceof NODE)) { return new NODE(parent); }
         if (!NODE.prototype.parent) {
-            injectProperties(NODE, ['parent', 'traversable']);
+            util.injectProperties(NODE, ['parent', 'traversable']);
         }
         this.parent(parent);
         this.traversable(true);

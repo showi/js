@@ -9,17 +9,7 @@ define(function(require) {
     var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
     var Renderer = require('graphit/tree/renderer');
-
-    jQuery.fn.center = function() {
-        console.log('height:', $(document).height());
-        console.log('outerHeight:', this.outerHeight());
-        this.css({
-            "position" : "fixed",
-            "top" : ($(document).height() / 2) - (this.height() / 2),
-            "left" : ($(document).width() / 2) - (this.outerWidth() / 2),
-        });
-        return this;
-    };
+    require('graphit/extend/jquery');
 
     function TREE() {
         this.__namespace__ = 'graphit/test/movingpaint';
@@ -89,7 +79,7 @@ define(function(require) {
     TREE.prototype.run = function() {
         console.log('----- Testing tree -----');
         var size = util.documentSize();
-        var scale = 0.50;
+        var scale = 0.80;
         var width = size.x * scale;
         var height = size.y * scale;
         var db = new DoubleBuffer({
@@ -98,9 +88,11 @@ define(function(require) {
         });
         var canvas = db.front;
         var body = jQuery('body');
+        var container = jQuery('<div class="graphit-test"></div>');
         var elm = canvas.getElement();
-        body.append(elm);
-        jQuery(elm).center().draggable();
+        container.append(elm);
+        body.append(container);
+        container.width(width).height(height).center();
 
         var pool = [];
         var root = factory.tree.node(Primitive, {pool : pool}, [TransMixin]);

@@ -7,7 +7,7 @@ define(function(require) {
 
     var element = jQuery('<div id="graphit-test-matrix33" class="test-container"></div>');
     var body = jQuery('body');
-    var PASS = 10000000;
+    var PASS = 1000;
 
     function pageScroll() {
         window.scrollBy(0,100);
@@ -24,6 +24,7 @@ define(function(require) {
     var rex_nl = new RegExp("\\n");
     rex_nl.global = true;
     function log() {
+        console.log.apply(console, arguments);
         var msg = '';
         for (var i = 0; i < arguments.length; i++) {
             var a = arguments[i] + '';
@@ -60,89 +61,73 @@ define(function(require) {
         m.identity();
         l();
     };
+
     MATH.prototype.test_rotate = function() {
         var m = new Matrix33();
         function l() {
             log(m.toString());
         }
-        l();
         var angle = 10;
         for (var i = 0; i < 3; i++) {
-            log('Rotation with angle', angle);
             m.rotate(angle);
         }
-        log('Identity');
-        m.identity();
         l();
     };
+
     MATH.prototype.test_determinant = function() {
         var m = new Matrix33();
         function l() {
             log(m.toString());
         }
-        l();
         var angle = 10;
         for (var i = 0; i < 3; i++) {
             m.rotate(angle);
         }
         var d = m.determinant();
-        log(m, 'determinant', d);
-        log('Identity');
-        m.identity();
         l();
     };
+
     function testfn(m, name, value) {
         var pass = PASS;
         var st = new Date();
-        log(name, '> Testing function with', pass, 'pass');
         function async() {
             var f = m[name];
             var res = undefined;
             for (var i = 0; i < pass; i++) {
                 res = f.call(m, value);
             }
-            log(name, 'last result', res);
             var et = new Date();
             var diff = et - st;
-            log(name, '> Time', diff, 'ms');
+            log('[', PASS, '] Speed for', name, '>', diff, 'ms');
         }
         async();
-//        setTimeout(async, 0);
     }
 
     MATH.prototype.test_rotateSpeed = function() {
         var m = new Matrix33();
         testfn(m, 'rotate', 10);
-        log(m, m.toString());
     };
 
     MATH.prototype.test_rotateSpeed = function() {
         var m = new Matrix33();
         testfn(m, 'determinant');
-        log(m, m.toString());
     };
 
     MATH.prototype.test_fillSpeed = function() {
         var m = new Matrix33();
         testfn(m, 'fill', 43);
-        log(m);
         testfn(m, 'fillMedium', 44);
-        log(m);
         testfn(m, 'fillSlow', 44);
-        log(m);
     };
 
     MATH.prototype.test_identitySpeed = function() {
         var m = new Matrix33();
         m.fill(44);
         testfn(m, 'identity');
-        log(m);
         m.fill(45);
         testfn(m, 'identityMedium');
-        log(m);
         m.fill(46);
         testfn(m, 'identitySlow');
-        log(m);
     };
 
     MATH.prototype.test_speedMul = function() {
@@ -153,7 +138,7 @@ define(function(require) {
             A.mul(B);
         }
         var diff = new Date() - st;
-        log('mul', 'pass', PASS, 'time', diff, 'ms');
+        log('[', PASS, '] Speed for', 'mul', '>', diff, 'ms');
     };
 
     MATH.prototype.test_mul = function() {

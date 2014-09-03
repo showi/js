@@ -19,6 +19,15 @@ define(function(require) {
         console.log('root', this.root);
     }
     
+    RENDERER.prototype.update = function() {
+        var that = this;
+        this.root.preTraverse(function(node) {
+            if (tutil.hasCapability(node, eCap.transform)) {
+                node.updateTransform(that);
+            }
+        });
+    };
+
     RENDERER.prototype.render = function() {
         var that = this;
         that.ctx.save();
@@ -30,8 +39,14 @@ define(function(require) {
                 node.update();
             }
             if (tutil.hasCapability(node, eCap.transform)) {
+                if(node._parent) {
+                    //console.log('WorldTransform')
+                    node.worldTransform = 
+                        node.transform.mul(node.parent.worldTransform);
+                }
                 that.ctx.rotate(node.transform.angle());
-                that.ctx.translate(node.transform._data[eMat.m13], node.transform._data[eMat.m23]);
+                that.ctx.translate(node.transform._data[eMat.m13], 
+                                   node.transform._data[eMat.m23]);
             }
             if('render' in node) {
                 node.render(that);

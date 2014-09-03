@@ -11,7 +11,6 @@ define(function(require) {
                 this.checkParameters(options, validators);
             }
             for (key in options) {
-                console.log('Key/Value', key, options[key]);
                 this[key] = options[key];
             }
         },
