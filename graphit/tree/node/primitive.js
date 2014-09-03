@@ -15,7 +15,9 @@ define(function(require) {
     var CTX_PROPERTIES = {
             'fillStyle':true,
             'strokeStyle':true,
-            'lineWidth':true 
+            'lineWidth':true,
+            'lineCap': true,
+            'lineJoin': true,
     };
 
     function PRIMITIVE() {

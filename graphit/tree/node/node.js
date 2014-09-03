@@ -1,17 +1,19 @@
 define(function(require) {
 
     var util = require('graphit/util');
-    var ns = require('graphit/namespace');
+    var namespace = require('graphit/namespace');
+    var ns = namespace.tree.node;
     var _ns_ = 'node';
+    
+    if (_ns_ in ns && ns !== undefined) { return ns[_ns_]; }
 
-    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) { return ns.tree.node[_ns_]; }
-
-    function NODE(parent) {
+    function NODE() {
         this.__namespace__ = 'graphit/tree/node/node';
-        this.uid = ns.genuid();
-        this.childs = [];
+        this.uid = namespace.genuid();
+        this.child = [];
         this.capability = 0;
-        if (!(this instanceof NODE)) { return new NODE(parent); }
+        var parent = arguments[0] === undefined? undefined: arguments[0];
+//        if (!(this instanceof NODE)) { return new NODE(parent); }
         if (!NODE.prototype.parent) {
             util.injectProperties(NODE, ['parent', 'traversable']);
         }
@@ -21,28 +23,31 @@ define(function(require) {
 
     NODE.prototype.appendChild = function(child) {
         child.parent = this;
-        this.childs.push(child);
+        this.child.push(child);
     };
 
     NODE.prototype.preTraverse = function(fn) {
         fn(this);
-        if (!this.traversable()) { return; }
-        for (var i = 0; i < this.childs.length; i++) {
-            this.childs[i].preTraverse(fn);
+        for (var i = 0; i < this.child.length; i++) {
+            this.child[i].preTraverse(fn);
         }
     };
 
     NODE.prototype.postTraverse = function(fn) {
-        for (var i = 0; i < this.childs.length; i++) {
-            var child = this.childs[i];
+        for (var i = 0; i < this.child.length; i++) {
+            var child = this.child[i];
             child.postTraverse(fn);
         }
         fn(this);
     };
+
     NODE.prototype.log = function(msg) {
         console.log(this.__namespace__, this.uid, msg);
     };
-    
-    ns.tree.node[_ns_] = NODE;
-    return ns.tree.node[_ns_];
+
+    NODE.prototype.toString = function() {
+        return '<Node uid="'+this.uid+'" childs="'+this.child.length+'">';
+    }
+    ns[_ns_] = NODE;
+    return ns[_ns_];
 });

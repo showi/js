@@ -19,44 +19,33 @@ define(function(require) {
         console.log('root', this.root);
     }
     
-    RENDERER.prototype.update = function() {
-        var that = this;
-        this.root.preTraverse(function(node) {
-            if (tutil.hasCapability(node, eCap.transform)) {
-                node.updateTransform(that);
-            }
-        });
+    RENDERER.prototype.hookExec = function(name, node) {
+        if (name in this) {
+            this[name].call(this, node);
+        }
+        if (name in node) {
+            node[name].call(node, this);
+        }
     };
 
-    RENDERER.prototype.render = function() {
+    RENDERER.prototype.step = function() {
         var that = this;
-        that.ctx.save();
-        if ('pre_render' in this) {
-            this.pre_render(this);
+        if ('renderInit' in this) {
+            this.renderInit(this);
         }
         this.root.preTraverse(function(node) {
-            if('update' in node) {
-                node.update();
-            }
-            if (tutil.hasCapability(node, eCap.transform)) {
-                if(node._parent) {
-                    //console.log('WorldTransform')
-                    node.worldTransform = 
-                        node.transform.mul(node.parent.worldTransform);
-                }
-                that.ctx.rotate(node.transform.angle());
-                that.ctx.translate(node.transform._data[eMat.m13], 
-                                   node.transform._data[eMat.m23]);
-            }
-            if('render' in node) {
-                node.render(that);
-            }
+                that.hookExec('pre_update', node);
+                that.hookExec('update', node);
+                that.hookExec('post_update', node);
+                that.hookExec('pre_render', node);
+                that.hookExec('render', node);
+                that.hookExec('post_render', node);
         });
-        if ('post_render' in this) {
+        if ('renderEnd' in this) {
             this.post_render(this);
         }
-        that.ctx.restore();
     };
+
     util.injectMixin(RENDERER, ParameterMixin);
     return RENDERER;
 });

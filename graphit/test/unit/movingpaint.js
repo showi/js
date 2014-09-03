@@ -1,6 +1,7 @@
 define(function(require) {
 
     var Primitive = require('graphit/tree/node/primitive');
+    var Node = require('graphit/tree/node/node');
     var TransMixin = require('graphit/tree/mixin/transform');
     var DoubleBuffer = require('graphit/draw/doublebuffer');
     var shape = require('graphit/draw/shape');
@@ -29,11 +30,13 @@ define(function(require) {
         });
         line.fillStyle = tool.randomColor();
         line.strokeStyle = tool.randomColor();
-        line.lineWidth = Math.randInt(0, 10);
+        line.lineWidth = Math.randFloat(0.1, 5.0);
+        line.lineCap = util.choice(['butt', 'round', 'squared']);
+        line.lineJoin = util.choice(['bevel', 'round', 'miter']);
         return line;
     }
 
-    function mutePrimitive(node, max) {
+    function mutePrimitive(node, max, prevNode) {
         var step = 0.5;
         function randValue(value) {
             var sign = true;
@@ -47,8 +50,16 @@ define(function(require) {
         }
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
-            // }
-            // node.iterPrimitive(function(p) {
+            p.lineWidth = randValue(p.lineWidth);
+            //            p.strokeStyle = tool.randomColor();
+            var fs = p.fillStyle !== undefined? p.fillStyle: tool.randomColor();
+//            if (prevNode != null) {
+//                p.strokeStyle = prevNode.strokeStyle;
+//                p.fillStyle = prevNode.fillStyle;
+//            } else {
+//                p.strokeStyle = tool.randomColor();
+//                p.fillStyle = tool.randomColor();
+//            }
             if (p instanceof Line) {
                 p.a.x = randValue(p.a.x);
                 p.a.y = randValue(p.a.y);
@@ -56,114 +67,104 @@ define(function(require) {
                 p.b.y = randValue(p.b.y);
             }
         }
-        // });
     };
     function muteTree(pool, max) {
+        var prevNode = null;
         for (var i = 0; i < pool.length; i++) {
             var node = pool[i];
             if (node instanceof Primitive) {
-                mutePrimitive(node, max);
+                mutePrimitive(node, max, prevNode);
             }
+            prevNode = node;
         }
     }
 
-    TREE.prototype.pause = function(v) {
-        if (v === undefined) { return this._pause; }
-        this._pause = (v == true) ? true : false;
-    };
-    TREE.prototype.alive = function(v) {
-        if (v === undefined) { return this._alive; }
-        this._alive = (v == true) ? true : false;
-    };
-
-    TREE.prototype.start = function() {
-        this.run();
-    };
-
     TREE.prototype.run = function() {
         console.log('----- Testing tree -----');
+        var timeout = 10;
         var numPrimitive = 512;
         var size = util.documentSize();
         var scale = 0.80;
         var width = size.x * scale;
         var height = size.y * scale;
-        var db = new DoubleBuffer({
+        var buffer = new DoubleBuffer({
             width : width,
             height : width
         });
-        var canvas = db.front;
+        var canvas = buffer.front;
         var body = jQuery('body');
         var container = jQuery('<div class="graphit-test"></div>');
         var elm = canvas.getElement();
+        container.width(width).height(height).center();
         container.append(elm);
         body.append(container);
-        container.width(width).height(height).center();
         var pool = [];
-        var root = factory.tree.node(Primitive, {
+        var root = factory.tree.node(Node, {pool: pool}, [TransMixin]);
+        var prim = factory.tree.node(Primitive, {
             pool : pool
         }, [TransMixin]);
         for (var i = 0; i < numPrimitive; i++) {
-            root.addPrimitive(genLine(width, height));
+            prim.addPrimitive(genLine(width, height));
         }
+        root.appendChild(prim);
         console.log('Root', root);
         var renderer = new Renderer({
             root : root,
             ctx : canvas.getCtx()
         });
-        renderer.pre_render = function(r) {
-            r.ctx = db.back.getCtx();
-            r.ctx.save();
-            r.ctx.restore();
-            r.root.translate(width / 2, height, 2);
+        renderer.renderInit = function(r) {
+            r.ctx = buffer.back.getCtx();
+            //r.ctx.translate(width / 2, height / 2);
+            //r.root.transform.translate(width / 2, height, 2);
         };
         var that = this;
         this.timeout = 500;
         this.pauseTimeout = 1000;
         this.frames = 0;
         this.fps = 0;
-        this.pause(false);
-        this.alive(true);
         var count = 0;
-        var numCount = 33.0;
+        var numCount = 100;
         var startTime = Date.now();
         var endTime = undefined;
         var delta = 0;
-        function render() {
-            if (!that.alive()) {
-                console.log('Quit...');
-                return;
-            }
-            var ctimeout = that.timeout;
-            if (that.pause()) {
-                ctimeout = that.pauseTimeout;
-            } else {
-                db.clearBackBuffer();
-                renderer.root.rotate(0.1 * Math.PI / 180);
-                renderer.render();
-                db.flip();
-                muteTree(pool, that.width);
-                that.frames++;
-                if (count >= numCount) {
-                    endTime = Date.now();
-                    delta = (endTime - startTime);
-                    console.log('count/numCount/delta',
-                                count, numCount, delta);
-                    that.fps = Math.round((count / delta) * 1000);
 
-                    startTime = endTime;
-                    count = 0;
-                    console.log('fps', that.fps);
-                    if (that.fps > 30) {
-                        setTimeout(render, 500);
-                        return;
-                    }
-                } else {
-                    count++;
-                }
+        renderer.pre_render = function(node) {
+            buffer.clearBackBuffer();
+        };
+
+        renderer.render = function(node) {
+            if ('render' in node) {
+                node.render(renderer);
             }
-            setTimeout(render, that.timeout);
+        };
+        
+        renderer.post_render = function(node) {
+//            renderer.root.transform.rotate(0.1 * Math.PI / 180);
+            buffer.flip();
+            muteTree(pool, that.width);
+            that.frames++;
+            if (count >= numCount) {
+                endTime = Date.now();
+                delta = (endTime - startTime);
+                that.fps = Math.round((count / delta) * 1000);
+                startTime = endTime;
+                count = 0;
+                console.log('fps', that.fps);
+                if (that.fps > 30) {
+                    setTimeout(render, 500);
+                    return;
+                }
+            } else {
+                count++;
+            };
+        };
+        
+        /* Main Loop */
+        function loop() {
+            renderer.step();
+            setTimeout(loop, timeout);
         }
-        setTimeout(render, this.timeout);
+        loop();
     };
     return new TREE();
 });
