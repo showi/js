@@ -2,10 +2,11 @@ define(function(require) {
  
     var Node = require('./node');
     var ns = require('graphit/namespace');
+    ns = ns.tree.node;
     var _ns_ = 'element';
     
-    if (_ns_ in ns.tree.node && ns.tree.node !== undefined) {
-        return ns.tree.node[_ns_];
+    if (_ns_ in ns && ns !== undefined) {
+        return ns[_ns_];
     }
 
     function ELEMENT() {
@@ -14,6 +15,6 @@ define(function(require) {
     };
     ELEMENT.prototype = Object.create(Node.prototype);
 
-    ns.tree.node[_ns_] = ELEMENT;
-    return ns.tree.node[_ns_];
+    ns[_ns_] = ELEMENT;
+    return ns[_ns_];
 });

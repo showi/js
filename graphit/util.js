@@ -154,36 +154,7 @@ define(function(require) {
 //                    + windowElement.scrollLeft())
 //                    + "px");
 //        },
-        catchException : function(obj, meth) {
-            try {
-                return obj[meth].call(obj);
-            } catch (e) {
-                console.error('Exception', e);
-                console.error(e.stack);
-            }
-            return false;
-        },
-        runTest : function(name) {
-            var that = this;
-            require(['graphit/test/' + name], function(test) {
-                console.log('>>>>> Running test', name, '(',
-                            test.__namespace__, ')');
-                if (name in graphit.test) { throw 'TestAlreadyRunning'; }
-                graphit.test[name] = test;
-                for (key in test) {
-                    if (key.startsWith('test_') && !test.hasOwnProperty(key)) {
-                        console.log('>>>', key);
-                        that.catchException(test, key);
-                    }
-                }
-                if ('run' in test) {
-                    if (!test.hasOwnProperty('run')) {
-                        console.log('>>> run');
-                        that.catchException(test, 'run');
-                    }
-                }
-            });
-        }
+
     };
     return UTIL;
 });

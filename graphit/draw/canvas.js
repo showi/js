@@ -69,7 +69,7 @@ define(function(require) {
         ctx.save();
         ctx.fillStyle = color;
         ctx.rect(0,0, this.width(), this.height());
-        ctx.stroke();
+        ctx.fill();
         ctx.restore();
     };
     

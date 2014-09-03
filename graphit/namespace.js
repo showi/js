@@ -1,24 +1,25 @@
 define(function(require) {
-    /*
-     * Creating global namespace
-     */
-    var NAMESPACE = 'graphit';
-    if (NAMESPACE in window) { /* Already defined */
+    /* Creating global namespace */
+    var _ns_ = 'graphit';
+    /* Testing existence of namespace */
+    if (_ns_ in window) { /* Already defined */
         console.log('>>> Global namespace already defined');
-        return window[NAMESPACE];
+        return window[_ns_];
     }
-
+    /* Extending javascript object */
     require('graphit/extend/string');
     require('graphit/extend/math');
 
-    console.log('>>> Creating global namespace');
-    window[NAMESPACE] = {
-        __MODULE__ : 'graphit',
+    /* injecting our base data */
+    window[_ns_] = {
         __VERSION__ : '0.0.1',
+        __NAMESPACE__: _ns_,
         __UID__: 0,
         tool: null,
         util: null,
         shape: null,
+        math: {},
+        enum: {},
         genuid: function () {
             return this.__UID__++;
         },
@@ -27,6 +28,6 @@ define(function(require) {
         },
         test: {}
     };
-    console.log('> graphit', window[NAMESPACE]);
-    return window[NAMESPACE];
+    console.log('>>> Namespace', _ns_, window[_ns_]);
+    return window[_ns_];
 });

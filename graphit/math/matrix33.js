@@ -1,8 +1,11 @@
 define(function(require) {
 
     var ns = require('graphit/namespace');
+    ns = ns.math;
     var _ns_ = 'matrix33';
+    
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+
     var m11 = 0;
     var m12 = 1;
     var m13 = 2;

@@ -45,14 +45,18 @@ define(function(require) {
             if (!sign) { return value - add; };
             return value + add;
         }
-        node.iterPrimitive(function(p) {
+        for (var i = 0; i < node.primitive.length; i++) {
+            var p = node.primitive[i];
+            // }
+            // node.iterPrimitive(function(p) {
             if (p instanceof Line) {
                 p.a.x = randValue(p.a.x);
                 p.a.y = randValue(p.a.y);
                 p.b.x = randValue(p.b.x);
                 p.b.y = randValue(p.b.y);
             }
-        });
+        }
+        // });
     };
     function muteTree(pool, max) {
         for (var i = 0; i < pool.length; i++) {
@@ -78,6 +82,7 @@ define(function(require) {
 
     TREE.prototype.run = function() {
         console.log('----- Testing tree -----');
+        var numPrimitive = 512;
         var size = util.documentSize();
         var scale = 0.80;
         var width = size.x * scale;
@@ -93,10 +98,11 @@ define(function(require) {
         container.append(elm);
         body.append(container);
         container.width(width).height(height).center();
-
         var pool = [];
-        var root = factory.tree.node(Primitive, {pool : pool}, [TransMixin]);
-        for (var i = 0; i < 256; i++) {
+        var root = factory.tree.node(Primitive, {
+            pool : pool
+        }, [TransMixin]);
+        for (var i = 0; i < numPrimitive; i++) {
             root.addPrimitive(genLine(width, height));
         }
         console.log('Root', root);
@@ -107,50 +113,57 @@ define(function(require) {
         renderer.pre_render = function(r) {
             r.ctx = db.back.getCtx();
             r.ctx.save();
-//            r.ctx.fillStyle = 'rgba(0.0, 0.0, 0.0, 0.0)';
-//            shape.rectangle(r.ctx, 0, 0, width, height);
             r.ctx.restore();
             r.root.translate(width / 2, height, 2);
-
         };
         var that = this;
-        this.timeout = 100;
-        this.startTime = new Date();
+        this.timeout = 500;
         this.pauseTimeout = 1000;
         this.frames = 0;
         this.fps = 0;
         this.pause(false);
         this.alive(true);
         var count = 0;
-        var numCount = 128;
-
+        var numCount = 33.0;
+        var startTime = Date.now();
+        var endTime = undefined;
+        var delta = 0;
         function render() {
             if (!that.alive()) {
                 console.log('Quit...');
+                return;
             }
             var ctimeout = that.timeout;
             if (that.pause()) {
                 ctimeout = that.pauseTimeout;
             } else {
                 db.clearBackBuffer();
-                renderer.root.rotate(0.1 * Math.PI/180);
+                renderer.root.rotate(0.1 * Math.PI / 180);
                 renderer.render();
                 db.flip();
                 muteTree(pool, that.width);
                 that.frames++;
-                if (count > numCount) {
-                    var endTime = new Date();
-                    that.delta = (endTime - that.startTime) / 1000;
-                    that.fps = (count / that.delta);
-                    that.startTime = new Date();
+                if (count >= numCount) {
+                    endTime = Date.now();
+                    delta = (endTime - startTime);
+                    console.log('count/numCount/delta',
+                                count, numCount, delta);
+                    that.fps = Math.round((count / delta) * 1000);
+
+                    startTime = endTime;
                     count = 0;
+                    console.log('fps', that.fps);
+                    if (that.fps > 30) {
+                        setTimeout(render, 500);
+                        return;
+                    }
                 } else {
                     count++;
                 }
             }
-            setTimeout(render, ctimeout);
+            setTimeout(render, that.timeout);
         }
-        render();
+        setTimeout(render, this.timeout);
     };
     return new TREE();
 });
