@@ -149,11 +149,6 @@ define(function(require) {
                 that.fps = Math.round((count / delta) * 1000);
                 startTime = endTime;
                 count = 0;
-                console.log('fps', that.fps);
-                if (that.fps > 30) {
-                    setTimeout(render, 500);
-                    return;
-                }
             } else {
                 count++;
             };
