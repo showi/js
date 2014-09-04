@@ -20,10 +20,10 @@ define(function(require) {
     return function() {
         this.setParameters = function(options, validators) {
             if (options === undefined) { return; }
-            if (options.lengtht < 1) { return; }
-            options = options[0];
-            if (options === undefined) { return; }
-           var opts = this.checkParameters(options, validators);
+            if (options.lengtht < 2) { return; }
+            var opts = options[0];
+            if (opts === undefined) { return; }
+            opts = this.checkParameters(opts, validators);
             for (var key in opts) {
                 this[key] = opts[key];
             }
@@ -31,8 +31,11 @@ define(function(require) {
         this.checkParameters = function(options, validators) {
             var opts = {};
             for (name in options) {
+                if (!options.hasOwnProperty(name)){
+                    continue;
+                }
                 if (!(name in validators)) {
-                    log.error('Invalid Field', name, this);
+                    //log.error('Invalid Field', name, this);
                     continue; //throw new InvalidParameterException(name);
                 }
                 opts[name] = options[name];

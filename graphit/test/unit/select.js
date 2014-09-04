@@ -35,7 +35,6 @@ define(function(require) {
         var size = Math.randInt(0, max);
         var line = new ShapeElm({kind: eShape.line, 
             size: size});
-        console.log('Line created');
         line.strokeStyle = draw.randomColor();
         line.fillStyle = draw.randomColor();
         return line;
@@ -43,8 +42,13 @@ define(function(require) {
     function genRectangle(obj) {
         var max = Math.max(obj.width, obj.height);
         var size = Math.randInt(0, max);
-        var rectangle = new ShapeElm({kind: eShape.rectangle, 
-            size: {x: Math.randInt(0, obj.width), y: Math.randInt(0, obj.height)}});
+        var rectangle = new ShapeElm({
+            kind: eShape.rectangle, 
+            size: {
+                    width: Math.randInt(0, obj.width), 
+                    height: Math.randInt(0, obj.height)
+            },
+        });
         rectangle.strokeStyle = draw.randomColor();
         rectangle.fillStyle = draw.randomColor();
         rectangle.positionX(Math.randInt(0, obj.width));
@@ -54,16 +58,12 @@ define(function(require) {
     SELECT.prototype.run = function() {
         var test = this;
         this.setUp();
-        var root = new Node(); //factory.node(Node);
-        console.log('root created')
+        var root = new Node({traversable: true}); //factory.node(Node);
         for (var i = 0; i < 100; i++) {
-            root.appendChild(genLine(this));
+//            root.appendChild(genLine(this));
             root.appendChild(genRectangle(this));
         }
-        root.render = function(renderer) {
-            renderer.ctx.fillStyle = 'red';
-            shape.rectangle(renderer.ctx, 100, 100, 200, 200, 0, 0);
-        };
+
         var renderer = new Renderer({
             root : root,
             ctx : test.buffer.back.getCtx(),
@@ -72,20 +72,39 @@ define(function(require) {
                 globalCompositionOperation : 'source-over',
             },
         });
-        console.log(renderer);
-        renderer.ctx.translate(this.width / 2, this.height / 2);
         var that = this;
-        renderer.renderInit = function(renderer) {
+        renderer.ctx.translate(this.width / 2, this.height / 2);
+        var count = 0;
+        renderer.pre_render = function() {
             test.buffer.clearBackBuffer();
+            this.ctx.fillStyle = 'red';
+            count = 0;
         };
+
         renderer.render = function(node) {
+            count++;
             if (tree.hasCapability(node, eCap.draw)) {
-                node.draw(renderer);
+//                console.log('drawing', node)
+                node.draw(this);
             }
         };
-        renderer.renderEnd = function() {
+        renderer.post_render = function() {
             test.buffer.flip();
         };
+        function updateWidget() {
+            function l() { 
+                console.log.apply(console, arguments);
+            }
+            function inner() {
+                l('*----- --- -----*');
+                l(' - count   :', count);
+                l(' - fps     :', renderer.getFps());
+                l(' - ups     :', renderer.getUps());
+                l(' - renderer:', renderer);
+            }
+            setTimeout(inner, 1000);
+        }
+        updateWidget.call(this);
         function loop() {
             renderer.step();
             setTimeout(loop, 10);

@@ -55,16 +55,18 @@ define(function(require) {
             this.position = new Vector2d(0, 0);
         }
         var meth = 'setUp_' + kind;
-        console.log('exec', meth);
         return this[meth]();
     };
 
     SHAPE.prototype.setUp_line = function() {
-        console.log('Setting up line:');
+        //console.log('Setting up line:');
+        this.a = this.size.a;
+        this.b = this.size.b;
     };
 
     SHAPE.prototype.setUp_rectangle = function() {
-        console.log('Setting up rectangle:');
+        this.width = this.size.width;
+        this.height = this.size.height;
     };
 
     SHAPE.prototype.draw = function(renderer) {

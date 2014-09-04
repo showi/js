@@ -34,8 +34,8 @@ define(function(require) {
     };
 
     function NODE() {
-        this.__namespace__ = 'graphit/tree/node/node';
         this.setParameters(arguments, VALIDATORS);
+        this.__namespace__ = 'graphit/tree/node/node';
         this.uid = namespace.genuid();
         this.child = [];
         this.capability = 0;

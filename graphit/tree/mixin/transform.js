@@ -42,7 +42,7 @@ define(function(require) {
         };
 
         this.positionX = function(x) {
-            console.log('Transform', this);
+//            console.log('Transform', this);
             return this.transform.positionX(x);
         };
 

@@ -91,12 +91,9 @@ define(function(require) {
     };
 
     function muteNode(node, width, height, delta) {
-        // console.log('delta', delta);
         if (node instanceof Primitive) {
             mutePrimitive(node, width, height, delta);
         }
-        // prevNode = node;
-
     }
 
     TREE.prototype.run = function() {
@@ -173,7 +170,9 @@ define(function(require) {
             renderer.step.call(renderer);
             setTimeout(loop, that.timeout);
         }
-        loop();
+        loop.call(this);
     };
+    
+
     return new TREE();
 });
