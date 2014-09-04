@@ -43,7 +43,7 @@ define(function(require) {
         this.delta = 0;
         this.fpsAvg = [];
         this.upsAvg = [];
-        this.avgMax = 5;
+        this.avgMax = 20;
         this.fixedDelta = Math.round(1000 / 66);
         this.fixedDraw = Math.round(1000 / 33);
         console.log(this.fixedDelta, this.fixedDraw);
@@ -111,6 +111,10 @@ define(function(require) {
             this.ups = (1 / (delta + this.deltaAdder)) * 1000;
             this.addUps(this.ups);
             this.deltaAdder -= this.fixedDelta;
+        }
+        if (!update && !draw) {
+            console.log('skip');
+            return;
         }
         this.delta = this.fixedDelta;
         var that = this;

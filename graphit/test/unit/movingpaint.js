@@ -75,8 +75,6 @@ define(function(require) {
             return value + add;
         }
         var nl = [];
-        var maxWidth = 50;
-        var minWidth = 0.01;
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
             p.lineWidth = randValue(p.lineWidth, 0.025);
@@ -106,7 +104,7 @@ define(function(require) {
     TREE.prototype.run = function() {
         console.log('----- MovingPaint -----');
         var timeout = 1000 / 120;
-        var numPrimitive = 128;
+        var numPrimitive = 256;
         var size = util.documentSize();
 // size.x = Math.min(320, size.x);
 // size.y = Math.min(240, size.y);
