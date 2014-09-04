@@ -95,11 +95,7 @@ define(function(require) {
     };
 
     function muteNode(node, width, height, delta) {
-
-        //        var prevNode = null;
-//        for (var i = 0; i < pool.length; i++) {
-//            var node = pool[i];
-        
+//        console.log('delta', delta);
         if (node instanceof Primitive) {
                 mutePrimitive(node, width, height, delta);
             }
@@ -109,7 +105,7 @@ define(function(require) {
 
     TREE.prototype.run = function() {
         console.log('----- MovingPaint -----');
-        var timeout = 10;
+        var timeout = 1000 / 120;
         var numPrimitive = 128;
         var size = util.documentSize();
 // size.x = Math.min(320, size.x);

@@ -44,10 +44,10 @@ define(function(require) {
         this.fpsAvg = [];
         this.upsAvg = [];
         this.avgMax = 5;
-        this.fixedDelta = 1000 / 60;
-        this.fixedDraw = 1000 / 30;
+        this.fixedDelta = Math.round(1000 / 66);
+        this.fixedDraw = Math.round(1000 / 33);
+        console.log(this.fixedDelta, this.fixedDraw);
         this.drawAdder = 0;
-        console.log('FixedDelta', this.fixedDelta);
         this.deltaAdder = 0;
     }
     ParameterMixin.call(RENDERER.prototype);
@@ -59,19 +59,6 @@ define(function(require) {
         if (name in node) {
             node[name].call(node, this);
         }
-    };
-
-    RENDERER.prototype._renderInit = function() {
-        this.ctx.save();
-        if ('_compositing' in this) {
-            for (key in this._compositing) {
-                this.ctx[key] = this._compositing[key];
-            }
-        }
-    };
-
-    RENDERER.prototype._renderEnd = function() {
-
     };
 
     RENDERER.prototype.getFps = function(fps) {
@@ -90,18 +77,18 @@ define(function(require) {
     };
 
     RENDERER.prototype.getUps = function(fps) {
-        var fps = 0;
+        var ups = 0;
         for (var i = 0; i < this.upsAvg.length; i++) {
-            fps = (fps + this.upsAvg[i]) / 2;
+            ups = (ups + this.upsAvg[i]) / 2;
         }
-        return fps;
+        return ups;
     };
 
-    RENDERER.prototype.addUps = function(fps) {
+    RENDERER.prototype.addUps = function(ups) {
         if (this.upsAvg.length > this.avgMax) {
             this.upsAvg.shift();
         }
-        this.upsAvg.push(fps);
+        this.upsAvg.push(ups);
     };
 
     RENDERER.prototype.step = function() {
@@ -125,38 +112,31 @@ define(function(require) {
             this.addUps(this.ups);
             this.deltaAdder -= this.fixedDelta;
         }
-        if (!update) { return; }
         this.delta = this.fixedDelta;
         var that = this;
-        this._renderInit();
-        // if ('renderInit' in this) {
-        // this.renderInit.call(this);
-        // }
-        // console.log('step', draw);
         this.root.preTraverse(function(node) {
-            that.hookExec('pre_update', node);
-            that.hookExec('update', node);
-            that.hookExec('post_update', node);
-            if (!draw) { return; }
-            that.ctx.save();
-            for ( var prop in eCtx) {
-                if (prop in node) {
-                    that.ctx[prop] = node[prop];
+            if (update) {
+                that.hookExec('pre_update', node);
+                that.hookExec('update', node);
+                that.hookExec('post_update', node);
+            }
+            if (draw) {
+                that.ctx.save();
+                for ( var prop in eCtx) {
+                    if (prop in node) {
+                        that.ctx[prop] = node[prop];
+                    }
                 }
+                if (tree.hasCapability(node, eCap.transform)) {
+                    that.ctx.translate(node.transform._data[eMat.mX],
+                                       node.transform._data[eMat.mY]);
+                }
+                that.hookExec('pre_render', node);
+                that.hookExec('render', node);
+                that.hookExec('post_render', node);
+                that.ctx.restore();
             }
-            if (tree.hasCapability(node, eCap.transform)) {
-                that.ctx.translate(node.transform._data[eMat.mX],
-                                   node.transform._data[eMat.mY]);
-            }
-            that.hookExec('pre_render', node);
-            that.hookExec('render', node);
-            that.hookExec('post_render', node);
-            that.ctx.restore();
         });
-        // if ('renderEnd' in this) {
-        // this.renderEnd.call(this);
-        // }
-        this._renderEnd();
         this.frames++;
     };
     return RENDERER;
