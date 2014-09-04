@@ -31,8 +31,12 @@ define(function(require) {
     var minWidth = 0.1;
     var maxWidth = 5;
 
-    var WidgetFps = jQuery('<div class="graphit-widget">fps:<div class="value"></div></div>').draggable();
-    var WidgetUps = jQuery('<div class="graphit-widget">ups:<div class="value"></div></div>').draggable();
+    var WidgetFps = jQuery(
+                           '<div class="graphit-widget">fps:<div class="value"></div></div>')
+            .draggable();
+    var WidgetUps = jQuery(
+                           '<div class="graphit-widget">ups:<div class="value"></div></div>')
+            .draggable();
     function TREE() {
         this.__namespace__ = 'graphit/test/movingpaint';
     }
@@ -93,12 +97,12 @@ define(function(require) {
     };
 
     function muteNode(node, width, height, delta) {
-//        console.log('delta', delta);
+        // console.log('delta', delta);
         if (node instanceof Primitive) {
-                mutePrimitive(node, width, height, delta);
-            }
-//            prevNode = node;
-        
+            mutePrimitive(node, width, height, delta);
+        }
+        // prevNode = node;
+
     }
 
     TREE.prototype.run = function() {
@@ -106,8 +110,8 @@ define(function(require) {
         var timeout = 1000 / 120;
         var numPrimitive = 256;
         var size = util.documentSize();
-// size.x = Math.min(320, size.x);
-// size.y = Math.min(240, size.y);
+        size.x = Math.min(800, size.x);
+        size.y = Math.min(600, size.y);
         var scale = 0.80;
         var width = size.x * scale;
         var height = size.y * scale;
@@ -118,15 +122,19 @@ define(function(require) {
         var canvas = buffer.front;
         var body = jQuery('body');
         body.append(WidgetFps);
-        body.append(WidgetUps); 
+        body.append(WidgetUps);
         var container = jQuery('<div class="graphit-test"></div>');
         var elm = buffer.front.getElement();
         container.width(width).height(height).center();
         container.append(elm);
         body.append(container);
         var pool = [];
-        var root = factory.tree.node(Node, {pool: pool});
-        var prim = factory.tree.node(Primitive, {pool: pool});
+        var root = factory.tree.node(Node, {
+            pool : pool
+        });
+        var prim = factory.tree.node(Primitive, {
+            pool : pool
+        });
         for (var i = 0; i < numPrimitive; i++) {
             prim.addPrimitive(genLine(width, height));
         }
@@ -141,8 +149,10 @@ define(function(require) {
         });
         this.renderer = renderer;
         function updateFpsWidget() {
-            WidgetFps.find('.value').text(Math.round(this.getFps()*100)/100);
-            WidgetUps.find('.value').text(Math.round(this.getUps()*100)/100);
+            WidgetFps.find('.value')
+                    .text(Math.round(this.getFps() * 100) / 100);
+            WidgetUps.find('.value')
+                    .text(Math.round(this.getUps() * 100) / 100);
         };
         function updateDisplay() {
             updateFpsWidget.call(renderer);
