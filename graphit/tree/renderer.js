@@ -37,9 +37,6 @@ define(function(require) {
         this.setParameters(arguments, VALIDATOR);
         this.startTime = Date.now();
         this.endTime = null;
-        // this.frames = 0;
-        this.fps = 0;
-        this.ups = 0;
         this.delta = 0;
         this.fpsAvg = [];
         this.upsAvg = [];
@@ -47,17 +44,54 @@ define(function(require) {
         this.lsdraw = [];
         this.skipped = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = Math.round(1000 / 66);
-        this.fixedDraw = Math.round(1000 / 33);
+        this.fixedUpdate = 1000/60;
+        this.fixedDraw = 1000/30;
         this.updateAdder = 0;
         this.drawAdder = 0;
+        this.measure = {
+            fps : {
+                value : 0,
+                count : 0
+            },
+            ups : {
+                value : 0,
+                count : 0
+            },
+            time : {
+                delta : null,
+                stopOn : null,
+                start : Date.now(),
+                end : null
+            },
+        };
     }
     ParameterMixin.call(RENDERER.prototype);
 
+    RENDERER.prototype.measureStart = function() {
+        this.measure.fps.count = 0;
+        this.measure.ups.count = 0;
+        var now = Date.now();
+        this.measure.time.start = now;
+        this.measure.time.stopOn = now + 1000;
+        return this;
+    };
+
+    RENDERER.prototype.measureEnd = function() {
+        var end = Date.now();
+        if (end <= this.measure.time.stopOn) { return false; }
+        this.measure.time.end = end;
+        var delta = (end - this.measure.time.start);
+        var fps = this.measure.fps.count / delta ;
+        var ups = this.measure.ups.count / delta ;
+        this.measure.fps.value = fps;
+        this.measure.ups.value = ups;
+        this.measure.time.delta = delta;
+        return true;
+    };
+
     RENDERER.prototype.log_stats = function() {
-        var keys = ['getFps', 'getUps', 'fixedUpdate', 'fixedDraw',
-                    'drawAdder', 'updateAdder', 'skipped', 'numUpdate',
-                    'avgMax'];
+        var keys = ['ups', 'fps', 'fixedUpdate', 'fixedDraw', 'drawAdder',
+                    'updateAdder', 'skipped', 'numUpdate', 'avgMax'];
         for (var i = 0; i < keys.length; i++) {
             if (typeof this[keys[i]] == 'function') {
                 console.log(keys[i], this[keys[i]].call(this));
@@ -76,34 +110,12 @@ define(function(require) {
         }
     };
 
-    RENDERER.prototype.getFps = function(fps) {
-        var fps = 0;
-        for (var i = 0; i < this.fpsAvg.length; i++) {
-            fps = (fps + this.fpsAvg[i]) / 2;
-        }
-        return fps;
+    RENDERER.prototype.ups = function() {
+        return this.measure.ups.value;
     };
 
-    RENDERER.prototype.addFps = function(fps) {
-        if (this.fpsAvg.length > this.avgMax) {
-            this.fpsAvg.shift();
-        }
-        this.fpsAvg.push(fps);
-    };
-
-    RENDERER.prototype.getUps = function(fps) {
-        var ups = 0;
-        for (var i = 0; i < this.upsAvg.length; i++) {
-            ups = (ups + this.upsAvg[i]) / 2;
-        }
-        return ups;
-    };
-
-    RENDERER.prototype.addUps = function(ups) {
-        if (this.upsAvg.length > this.avgMax) {
-            this.upsAvg.shift();
-        }
-        this.upsAvg.push(ups);
+    RENDERER.prototype.fps = function() {
+        return this.measure.fps.value;
     };
 
     RENDERER.prototype.apply_node_context = function(node) {
@@ -122,24 +134,18 @@ define(function(require) {
         var update = false;
         this.drawAdder += delta;
         this.updateAdder += delta;
-        var diff = 0;
-        if (this.updateAdder >= this.fixedUpdate) {
-            this.numUpdate = Math.round(this.updateAdder / this.fixedUpdate);
+        if (this.updateAdder > this.fixedUpdate) {
+            this.numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
             if (this.numUpdate > 0) {
                 update = true;
             }
-            this.ups = (this.numUpdate / this.updateAdder) * 1000;
-            this.addUps(this.ups);
-            this.updateAdder -= this.fixedUpdate * this.numUpdate;
-        } else if (this.updateAdder < 0) {
-            this.updateAdder = 0;
+            this.updateAdder -= (this.fixedUpdate * this.numUpdate);
         }
-        if (this.drawAdder >= this.fixedDraw) {
+        if (this.drawAdder > this.fixedDraw) {
             draw = true;
-            this.fps = (1 / this.drawAdder) * 1000;
-            this.addFps(this.fps);
-            this.drawAdder -= this.fixedUpdate * this.numUpdate;
-        } else if(this.drawAdder < 0) {
+            this.drawAdder -= (this.fixedUpdate * this.numUpdate);
+        }
+        if (this.drawAdder < 0) {
             this.drawAdder = 0;
         }
         this.delta = this.fixedUpdate;
@@ -148,10 +154,10 @@ define(function(require) {
 
         if (!update) {
             this.skipped++;
-        }
-        if (update) {
+        } else {
             for (var i = 0; i < this.numUpdate; i++) {
                 this.lsdraw = [];
+                this.measure.ups.count++;
                 this.root.preTraverse(function(node) {
                     if (update) {
                         that.hookExec('pre_update', node);
@@ -167,9 +173,8 @@ define(function(require) {
                 });
             }
         }
-        // }
         if (draw) {
-            this.drawAdder -= delta;
+            this.measure.fps.count++;
             for (var i = 0; i < this.lsdraw.length; i++) {
                 var node = this.lsdraw[i];
                 that.ctx.save();

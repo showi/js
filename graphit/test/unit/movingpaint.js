@@ -28,8 +28,8 @@ define(function(require) {
     var Point2d = require('graphit/math/point2d');
     require('graphit/extend/jquery');
 
-    var minWidth = 0.1;
-    var maxWidth = 5;
+    var minWidth = 0.01;
+    var maxWidth = 15;
 
     var WidgetFps = jQuery(
                            '<div class="graphit-widget">fps:<div class="value"></div></div>')
@@ -71,7 +71,7 @@ define(function(require) {
 
     function mutePrimitive(node, width, height, delta) {
         var max = Math.max(width, height);
-        var step = 0.125 * delta;
+        var step = 0.25 * delta;
         var nl = [];
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
@@ -95,11 +95,12 @@ define(function(require) {
             mutePrimitive(node, width, height, delta);
         }
     }
-
+    
+    
     TREE.prototype.run = function() {
         var that = this;
         console.log('----- MovingPaint -----');
-        this.timeout = Math.round(1000/66);
+        this.timeout = Math.round(10);
         var numPrimitive = 128;
         var size = util.documentSize();
         size.x = Math.min(640, size.x);
@@ -145,8 +146,11 @@ define(function(require) {
             var wUps = WidgetUps.find('.value');
             var that = this;
             function inner() {
-                wFps.text(Math.round(that.getFps() * 100) / 100);
-                wUps.text(Math.round(that.getUps() * 100) / 100);
+                if(that.measureEnd()) {
+                    that.measureStart();
+                }
+                wFps.text(1/that.fps());
+                wUps.text(1/that.ups());
                 setTimeout(inner, 666);
             };
             inner.call(this);
@@ -170,9 +174,9 @@ define(function(require) {
             renderer.step.call(renderer);
             setTimeout(loop, that.timeout);
         }
+        renderer.measureStart();
         loop.call(this);
     };
     
-
     return new TREE();
 });
