@@ -11,24 +11,24 @@ the Free Software Foundation, either version 3 of the License, or
 See the GNU General Public License for more details.
 */
 define(function(require) {
-    
+
     'use strict';
 
-    var Node = require('./node');
-    var ns = require('graphit/namespace');
-    ns = ns.tree.node;
-    var _ns_ = 'element';
-    
-    if (_ns_ in ns && ns !== undefined) {
-        return ns[_ns_];
+    function ENUM(data) {
+        for (var key in data) {
+            this.add(key, data[key]);
+        }
     }
 
-    function ELEMENT() {
-        Node.call(this, arguments);
-        this.__namespace__ = 'graphit/tree/node/element';
+    ENUM.prototype.add = function(key, value) {
+        if (key in this) { throw 'TryToAddSameKey'; }
+        Object.defineProperty(this, key, {
+            value : value,
+            writable : false,
+            enumerable : true,
+            configurable : false
+        });
     };
-    ELEMENT.prototype = Object.create(Node.prototype);
     
-    ns[_ns_] = ELEMENT;
-    return ns[_ns_];
+    return ENUM;
 });

@@ -1,6 +1,8 @@
 define(function(require) {
 
     var ns = require('graphit/namespace');
+    var Vector2d = require('graphit/math/vector2d');
+
     ns = ns.math;
     var _ns_ = 'matrix33';
     
@@ -15,7 +17,10 @@ define(function(require) {
     var m31 = 6;
     var m32 = 7;
     var m33 = 8;
-
+    
+    var mX = m13;
+    var mY = m23;
+    
     function MATRIX33(matrix) {
         /* Constructor
          * 
@@ -134,14 +139,53 @@ define(function(require) {
         this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         return this;
     };
+
     MATRIX33.prototype.translate = function(vector) {
-        /* Translate using vector2d 
-         */
-        this._data[m13] += vector.x;
-        this._data[m23] += vector.y;
+        if (vector === undefined) {
+            return new Vector2d(this._data[mX],
+                                this._data[mY]);
+        }
+        this._data[mX] += vector.x;
+        this._data[mY] += vector.y;
         return this;
     };
 
+    MATRIX33.prototype.translateX = function(x) {
+        this._data[mX] += vector.x;
+        return this;
+    };
+ 
+    MATRIX33.prototype.translateY = function(y) {
+        this._data[mY] += vector.y;
+        return this;
+    };
+ 
+    MATRIX33.prototype.position = function(vector) {
+        if (vector === undefined) {
+            return new Vector2d(this._data[mX],
+                                this._data[mY]);
+        }
+        this._data[mX] = vector.x;
+        this._data[mY] = vector.y;
+        return this;
+    };
+
+    MATRIX33.prototype.positionX = function(x) {
+        if (x === undefined) {
+            return this._data[mX];
+        }
+        this._data[mX] = x;
+        return this;
+    };
+ 
+    MATRIX33.prototype.positionY = function(y) {
+        if (y === undefined) {
+            return this._data[mY];
+        }
+        this._data[mY] = y;
+        return this;
+    };
+ 
     MATRIX33.prototype.rotate = function(angle) {
         if (angle > (Math.PI / 180)) {
             angle = angle - (Math.PI / 180);
@@ -155,6 +199,7 @@ define(function(require) {
         this._data[m21] += sin;
         this._data[m22] += cos;
         //        console.log(this._data);
+        return this;
     };
 
     MATRIX33.prototype.angle = function() {

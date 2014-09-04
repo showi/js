@@ -32,6 +32,18 @@ define(function(require) {
                     }
                 }
             }
+//            console.log('injecting constructor', mixin.constructor);
+//            if('constructor' in mixin) {
+//                var oc = cls.prototype.constructor;
+//                function nc() {
+//                    console.log('IN constructor');
+//                    mixin.constructor.apply(this, arguments);
+//                    oc.apply(this, arguments);
+//                    return this;
+//                };
+//                cls.prototype.constructor = nc;
+////                cls.prototype = Object.create(cls);
+//            }
             return true;
         },
         injectProperties : function(obj, properties) {

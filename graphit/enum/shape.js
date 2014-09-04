@@ -5,15 +5,15 @@ define(function(require) {
     var ns = require('graphit/namespace');
     var Enum = require('graphit/enum');
     ns = ns.enum;
-    var _ns_ = 'capability';
+    var _ns_ = 'shape';
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_];}
 
-    var CAPABILITY = new Enum({
-        transform : 1 << 1,
-        rigid : 1 << 2,
-        draw: 1 << 3,
+    var SHAPE = new Enum({
+        'rectangle': 'rectangle',
+        'line': 'line',
+        'circle': 'circle',
     });
    
-    ns[_ns_] = CAPABILITY;
+    ns[_ns_] = SHAPE;
     return ns[_ns_];
 });

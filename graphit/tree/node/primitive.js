@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -54,23 +54,23 @@ define(function(require) {
     PRIMITIVE.prototype.draw = function(renderer) {
         for (var i = 0; i < this.primitive.length; i++) {
             renderer.ctx.save();
-            try {
-                var primitive = this.primitive[i];
-                for ( var p in CTX_PROPERTIES) {
-                    if (p in primitive) {
-                        renderer.ctx[p] = primitive[p];
-                    }
+            // try {
+            var primitive = this.primitive[i];
+            for ( var p in CTX_PROPERTIES) {
+                if (p in primitive) {
+                    renderer.ctx[p] = primitive[p];
                 }
-                if (primitive instanceof Line) {
-                    this.drawLine(renderer, primitive);
-                } else if (primitive instanceof Circle) {
-                    this.drawCircle(renderer, primitive);
-                }
-            } catch (e) {
-                console.error('Exception while rendering');
-            } finally {
-                renderer.ctx.restore();
             }
+            if (primitive instanceof Line) {
+                this.drawLine(renderer, primitive);
+            } else if (primitive instanceof Circle) {
+                this.drawCircle(renderer, primitive);
+            }
+            // } catch (e) {
+            // console.error('Exception while rendering');
+            // } finally {
+            renderer.ctx.restore();
+            // }
         }
     };
 
@@ -83,6 +83,6 @@ define(function(require) {
     };
 
     ns.tree.node[_ns_] = PRIMITIVE;
-    //    return ns.tree.node[_ns_];
+    // return ns.tree.node[_ns_];
     return PRIMITIVE;
 });

@@ -35,12 +35,11 @@ define(function(require) {
 
     function CANVAS(options) {
         this.__namespace__ = 'graphit/draw/canvas';
-        this.checkParameters(options, VALIDATORS);
+        this.setParameters(options, VALIDATORS);
         this.element = null;
         this.context = null;
         this._newContext(options.width, options.height, options.id);
-    }
-    ;
+    };
 
     CANVAS.prototype._newContext = function(width, height, id) {
         var elm = undefined;
@@ -251,6 +250,7 @@ define(function(require) {
         }
         return this.element.height;
     };
-    util.injectMixin(CANVAS, MixinParameter);
+    MixinParameter.call(CANVAS.prototype);
+//    util.injectMixin(CANVAS, MixinParameter);
     return CANVAS;
 });

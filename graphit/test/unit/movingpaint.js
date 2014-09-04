@@ -30,6 +30,7 @@ define(function(require) {
     var minWidth = 0.01;
     var maxWidth = 10;
 
+    var WidgetFps = jQuery('<div class="graphit-widget-fps">fps:<div class="value"></div></div>').draggable();
     function TREE() {
         this.__namespace__ = 'graphit/test/movingpaint';
     }
@@ -98,9 +99,11 @@ define(function(require) {
 
     TREE.prototype.run = function() {
         console.log('----- Testing tree -----');
-        var timeout = 10;
-        var numPrimitive = 512;
+        var timeout = 0;
+        var numPrimitive = 128;
         var size = util.documentSize();
+        size.x = Math.min(320, size.x);
+        size.y = Math.min(240, size.y);
         var scale = 0.80;
         var width = size.x * scale;
         var height = size.y * scale;
@@ -110,6 +113,7 @@ define(function(require) {
         });
         var canvas = buffer.front;
         var body = jQuery('body');
+        body.append(WidgetFps);
         var container = jQuery('<div class="graphit-test"></div>');
         var elm = canvas.getElement();
         container.width(width).height(height).center();
@@ -135,19 +139,17 @@ define(function(require) {
                 globalCompositionOperation : 'source-over',
             },
         });
+        this.renderer = renderer;
+        function updateFpsWidget() {
+            WidgetFps.find('.value').text(renderer.fps);
+            setTimeout(updateFpsWidget, 500);
+        };
+        updateFpsWidget();
         renderer.renderInit = function(r) {
             ; // nothing :P
         };
         var that = this;
-        this.timeout = 500;
         this.pauseTimeout = 1000;
-        this.frames = 0;
-        this.fps = 0;
-        var count = 0;
-        var numCount = 100;
-        var startTime = Date.now();
-        var endTime = undefined;
-        var delta = 0;
         var max = width; //Math.max(width, height);
         renderer.pre_render = function(node) {
             /* HOOK: PRE Render */
@@ -160,7 +162,7 @@ define(function(require) {
                 node.draw(this);
             }
         };
-        renderer.post_render = function(node) {
+        renderer.renderEnd = function(node) {
             /* HOOK POST Render */
             buffer.flip();
         };

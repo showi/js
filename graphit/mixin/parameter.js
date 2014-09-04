@@ -5,19 +5,30 @@ define(function(require) {
     var InvalidParameterException = require('graphit/exception/InvalidParameter');
     var MissingParameterException = require('graphit/exception/MissingParameter');
 
-    return {
-        setParameters : function(options, validators) {
+    return function() {
+        this.setParameters = function(options, validators) {
+            if (options === undefined) {
+                return;
+            }
+            if (options.lengtht < 1) {
+                return;
+            }
+            options = options[0];
+            if (options === undefined) {
+                return;
+            }
             if (validators !== undefined) {
                 this.checkParameters(options, validators);
             }
             for (key in options) {
+                console.log('Setting', key, options);
                 this[key] = options[key];
             }
-        },
-        checkParameters : function(options, validators) {
+        };
+        this.checkParameters = function(options, validators) {
             for (name in options) {
                 if (!(name in validators)) {
-                    log.error(this.__MODULE__ + ' / Invalid Field:', name);
+                    log.error('Invalid Field', name, this);
                     throw new InvalidParameterException(name);
                 }
             }
@@ -38,6 +49,7 @@ define(function(require) {
                 } else {
                     value = options[name];
                 }
+                options[name] = value;
             }
         }
     };

@@ -30,6 +30,9 @@ define(function(require) {
         m31 : 6,
         m32 : 7,
         m33 : 8,
+    
+        mX: 2,  // m13,
+        mY: 5,  // m23,
     });
 
     ns[_ns_] = MATRIX33;

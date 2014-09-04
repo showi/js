@@ -10,15 +10,31 @@ define(function(require) {
         util.setCapability(this, eCap.transform);
         this.transform = new Matrix33();
         this.worldTransform = new Matrix33();
-        this.position = new Vector2d();
-    };
+        this.rotate = function(angle) {
+            return this.transform.rotate(angle);
+        };
+        this.translate = function(vector) {
+            return this.transform.translate(vector);
+        };
+        this.translateX = function(x) {
+            return this.transform.translateX(x);
+        };
+        this.translateY = function(y) {
+            return this.transform.translateY(y);
+        };
 
-    TRANSFORM.prototype.rotate = function(angle) {
-        this.transform.rotate(angle);
-    };
+        this.position = function(vector) {
+            return this.transform.position(vector);
+        };
 
-    TRANSFORM.prototype.translate = function(vector) {
-        this.transform.translate(vector);
-    };
+        this.positionX = function(x) {
+            console.log('Transform', this);
+            return this.transform.positionX(x);
+        };
+
+        this.positionY = function(y) {
+            return this.transform.positionY(y);
+        };
+    }
     return TRANSFORM;
 });

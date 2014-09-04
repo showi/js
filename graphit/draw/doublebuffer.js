@@ -23,8 +23,15 @@ define(function(require) {
         this.__MODULE__ = 'graphit/draw/doublebuffer';
         this.front = new Canvas(options);
         this.back = new Canvas(options);
-//        this.back = null;
     }
+
+    CANVAS.prototype.getElement = function() {
+        return this.front.getElement();
+    };
+
+    CANVAS.prototype.getCtx = function(which) {
+        return this.front.getCtx();
+    };
 
     CANVAS.prototype.clearBackBuffer = function(color) {
         this.back.clear(color);

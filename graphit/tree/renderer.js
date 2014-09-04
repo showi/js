@@ -16,9 +16,10 @@ define(function(require) {
 
     var util = require('graphit/util');
     var ParameterMixin = require('graphit/mixin/parameter');    
-    var tutil = require('graphit/tree/util');
+    var tree = require('graphit/tree/util');
     var eCap = require('graphit/enum/capability');
     var eMat = require('graphit/enum/matrix33');
+    var eCtx = require('graphit/enum/context');
 
     var VALIDATOR = {
             'root': {
@@ -35,11 +36,14 @@ define(function(require) {
 
 
     function RENDERER() {
-        this.setParameters(arguments[0], VALIDATOR);
+        this.setParameters(arguments, VALIDATOR);
         console.log('root', this.root);
         this.startTime = Date.now();
         this.endTime = null;
+        this.frames = 0;
+        this.fps = 0;
     }
+    ParameterMixin.call(RENDERER.prototype);
     
     RENDERER.prototype.hookExec = function(name, node) {
         if (name in this) {
@@ -51,6 +55,7 @@ define(function(require) {
     };
 
     RENDERER.prototype._renderInit = function() {
+        this.startTime = Date.now();
         this.ctx.save();
         if ('_compositing' in this) {
             for (key in this._compositing) {
@@ -61,6 +66,13 @@ define(function(require) {
 
     RENDERER.prototype._renderEnd = function() {
         this.ctx.restore();
+        this.endTime = Date.now();
+        this.delta = this.endTime - this.startTime;
+        this.frames++;
+        this.fps = (this.fps + Math.round((1/this.delta) * 1000)) / 2;
+        if(this.fps > 0 && this.fps < 1) {
+            this.fps = 1;
+        }
     };
 
     RENDERER.prototype.step = function() {
@@ -71,23 +83,32 @@ define(function(require) {
         this.startTime = Date.now();
         this._renderInit();
         if ('renderInit' in this) {
-            this.renderInit(this);
+            this.renderInit.call(this);
         }
         this.root.preTraverse(function(node) {
                 that.hookExec('pre_update', node);
                 that.hookExec('update', node);
                 that.hookExec('post_update', node);
+                that.ctx.save();
+                for (var prop in eCtx) {
+                    if (prop in node) {
+                        that.ctx[prop] = node[prop];
+                    }
+                }
+                if (tree.hasCapability(node, eCap.transform)) {
+                    that.ctx.translate(node.transform._data[eMat.mX],
+                                       node.transform._data[eMat.mY]);
+                }
                 that.hookExec('pre_render', node);
                 that.hookExec('render', node);
                 that.hookExec('post_render', node);
+                that.ctx.restore();
         });
         if ('renderEnd' in this) {
-            this.post_render(this);
+            this.renderEnd.call(this);
         }
         this._renderEnd();
     };
-
-    util.injectMixin(RENDERER, ParameterMixin);
     return RENDERER;
 });
     
