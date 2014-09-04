@@ -9,13 +9,13 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
 
     function ENUM(data) {
-        for (var key in data) {
+        for ( var key in data) {
             this.add(key, data[key]);
         }
     }
@@ -29,6 +29,6 @@ define(function(require) {
             configurable : false
         });
     };
-    
+
     return ENUM;
 });

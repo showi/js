@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
- */
+*/
 define(function(require) {
 
     'use strict';
@@ -32,32 +32,36 @@ define(function(require) {
     CONTEXT.prototype.getCtx = function() {
         return this.ctx;
     };
-    
+
     CONTEXT.prototype.copyData = function(src, sX, sY, width, height) {
-        this.ctx.putImageData(src.ctx.getImageData(sX, sY, width, height), 0, 0);
+        this.ctx.putImageData(src.ctx.getImageData(sX, sY, width, height), 0,
+                              0);
     };
 
     CONTEXT.setup = function() {
         var methods = ['arc', 'arcTo', 'beginPath', 'bezierCurveTo',
-                'clearRect', 'clip', 'closePath', 'drawImage', 'fill',
-                'fillRect', 'fillText', 'lineTo', 'moveTo',
-                'quadraticCurveTo', 'rect', 'restore', 'rotate', 'save',
-                'scale', 'setTransform', 'stroke', 'strokeRect', 'strokeText',
-                'transform', 'translate'];
+                       'clearRect', 'clip', 'closePath', 'drawImage', 'fill',
+                       'fillRect', 'fillText', 'lineTo', 'moveTo',
+                       'quadraticCurveTo', 'rect', 'restore', 'rotate',
+                       'save', 'scale', 'setTransform', 'stroke',
+                       'strokeRect', 'strokeText', 'transform', 'translate'];
 
         var getterMethods = ['createPattern', 'drawFocusRing',
-                'isPointInPath', 'measureText', // drawFocusRing not currently
-                // supported
-                // The following might instead be wrapped to be able to chain
-                // their child objects
-                'createImageData', 'createLinearGradient',
-                'createRadialGradient', 'getImageData', 'putImageData'];
+                             'isPointInPath', 'measureText', // drawFocusRing
+                                                                // not currently
+                             // supported
+                             // The following might instead be wrapped to be
+                                // able to chain
+                             // their child objects
+                             'createImageData', 'createLinearGradient',
+                             'createRadialGradient', 'getImageData',
+                             'putImageData'];
 
         var props = ['canvas', 'fillStyle', 'font', 'globalAlpha',
-                'globalCompositeOperation', 'lineCap', 'lineJoin',
-                'lineWidth', 'miterLimit', 'shadowOffsetX', 'shadowOffsetY',
-                'shadowBlur', 'shadowColor', 'strokeStyle', 'textAlign',
-                'textBaseline'];
+                     'globalCompositeOperation', 'lineCap', 'lineJoin',
+                     'lineWidth', 'miterLimit', 'shadowOffsetX',
+                     'shadowOffsetY', 'shadowBlur', 'shadowColor',
+                     'strokeStyle', 'textAlign', 'textBaseline'];
 
         var gmethl, propl;
         for (var i = 0, methl = methods.length; i < methl; i++) {

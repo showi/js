@@ -1,4 +1,18 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+*/
 define(function(require) {
+
+    'use strict';
 
     var graphit = require('./namespace');
     var Vector2d = require('graphit/math/vector2d');
@@ -13,39 +27,39 @@ define(function(require) {
             }
             return graphit.__GENUID__++;
         },
-        injectMixin : function(cls, mixin) {
-            if ('prototype' in mixin) {
-                for (key in mixin.prototype) {
-                    if (key in cls.prototype) {
-                        console.warn('Method already set', key, "exit..");
-                        return false;
-                    }
-                    cls.prototype[key] = mixin.prototype[key];
-                }
-            } else {
-                for (key in mixin) {
-                    var fn = mixin[key];
-                    if (this.isFunction(fn)) {
-                        cls.prototype[key] = fn;
-                    } else {
-                        cls[key] = fn;
-                    }
-                }
-            }
-//            console.log('injecting constructor', mixin.constructor);
-//            if('constructor' in mixin) {
-//                var oc = cls.prototype.constructor;
-//                function nc() {
-//                    console.log('IN constructor');
-//                    mixin.constructor.apply(this, arguments);
-//                    oc.apply(this, arguments);
-//                    return this;
-//                };
-//                cls.prototype.constructor = nc;
-////                cls.prototype = Object.create(cls);
+//        injectMixin : function(cls, mixin) {
+//            if ('prototype' in mixin) {
+//                for (key in mixin.prototype) {
+//                    if (key in cls.prototype) {
+//                        console.warn('Method already set', key, "exit..");
+//                        return false;
+//                    }
+//                    cls.prototype[key] = mixin.prototype[key];
+//                }
+//            } else {
+//                for (key in mixin) {
+//                    var fn = mixin[key];
+//                    if (this.isFunction(fn)) {
+//                        cls.prototype[key] = fn;
+//                    } else {
+//                        cls[key] = fn;
+//                    }
+//                }
 //            }
-            return true;
-        },
+            // console.log('injecting constructor', mixin.constructor);
+            // if('constructor' in mixin) {
+            // var oc = cls.prototype.constructor;
+            // function nc() {
+            // console.log('IN constructor');
+            // mixin.constructor.apply(this, arguments);
+            // oc.apply(this, arguments);
+            // return this;
+            // };
+            // cls.prototype.constructor = nc;
+            // // cls.prototype = Object.create(cls);
+            // }
+//            return true;
+//        },
         injectProperties : function(obj, properties) {
             for (var i = 0; i < properties.length; i++) {
                 var meth = properties[i];
@@ -53,7 +67,7 @@ define(function(require) {
                 if (!(key in obj)) {
                     obj[key] = undefined;
                 }
-                //            console.log('getter/setter for ' + key);
+                console.log('getter/setter', meth, key);
                 obj.prototype[meth] = function(value) {
                     if (value === undefined) { return obj[key]; }
                     obj[key] = value;
@@ -148,24 +162,24 @@ define(function(require) {
             }
             return min;
         },
-//        centerElement : function(elm) {
-//            /*
-//             *@bug: Fail to align element vertically
-//             */
-//            console.log('Center');
-//            console.log('height', windowElement.height());
-//            console.log('outerHeight', elm.outerHeight());
-//            console.log('scrollTop', windowElement.scrollTop());
-//            elm.css("position", "absolute");
-//            elm.css("top", 
-//               Math.max(0, ((windowElement.height() - elm.outerHeight()) / 2)
-//                    + windowElement.scrollTop())
-//                    + "px");
-//            elm.css("left", 
-//               Math.max(0, ((windowElement.width() - elm.outerWidth()) / 2)
-//                    + windowElement.scrollLeft())
-//                    + "px");
-//        },
+    // centerElement : function(elm) {
+    // /*
+    // *@bug: Fail to align element vertically
+    // */
+    // console.log('Center');
+    // console.log('height', windowElement.height());
+    // console.log('outerHeight', elm.outerHeight());
+    // console.log('scrollTop', windowElement.scrollTop());
+    // elm.css("position", "absolute");
+    // elm.css("top",
+    // Math.max(0, ((windowElement.height() - elm.outerHeight()) / 2)
+    // + windowElement.scrollTop())
+    // + "px");
+    // elm.css("left",
+    //               Math.max(0, ((windowElement.width() - elm.outerWidth()) / 2)
+    //                    + windowElement.scrollLeft())
+    //                    + "px");
+    //        },
 
     };
     return UTIL;

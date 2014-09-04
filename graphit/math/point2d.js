@@ -1,14 +1,28 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+*/
 define(function(require) {
- 
+
+    'use strict';
+
     function POINT2D(x, y) {
-        this.x = (x === undefined)? 0: x;
-        this.y = (y === undefined)? 0: y;
+        this.x = (x === undefined) ? 0 : x;
+        this.y = (y === undefined) ? 0 : y;
     }
-    
+
     POINT2D.protoype.clone = function() {
         return new POINT2(this.x, this.y);
     };
-    
+
     POINT2D.prototype.copy = function(v) {
         this.x = v.x;
         this.y = v.y;

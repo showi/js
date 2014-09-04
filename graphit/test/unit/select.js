@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
- */
+*/
 define(function(require) {
 
     'use strict';
@@ -35,6 +35,7 @@ define(function(require) {
         var size = Math.randInt(0, max);
         var line = new ShapeElm({kind: eShape.line, 
             size: size});
+        console.log('Line created');
         line.strokeStyle = draw.randomColor();
         line.fillStyle = draw.randomColor();
         return line;
@@ -53,12 +54,12 @@ define(function(require) {
     SELECT.prototype.run = function() {
         var test = this;
         this.setUp();
-        var root = factory.node(Node);
+        var root = new Node(); //factory.node(Node);
+        console.log('root created')
         for (var i = 0; i < 100; i++) {
             root.appendChild(genLine(this));
             root.appendChild(genRectangle(this));
         }
-        //tree.setCapability(root, eCap.draw);
         root.render = function(renderer) {
             renderer.ctx.fillStyle = 'red';
             shape.rectangle(renderer.ctx, 100, 100, 200, 200, 0, 0);
@@ -99,6 +100,7 @@ define(function(require) {
         this.body.empty();
         this.buffer = new DoubleBuffer({width: this.width, 
                                         height: this.height});
+        console.log('dbuffer created');
         if (this.element !== undefined) {
             this.element.remove();
         }

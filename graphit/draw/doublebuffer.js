@@ -14,43 +14,36 @@ define(function(require) {
 
     'use strict';
 
-    var MissingParameterException = require('../exception/MissingParameter');
-    var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
-
     var Canvas = require('../draw/canvas');
 
-    function CANVAS(options) {
-        this.__MODULE__ = 'graphit/draw/doublebuffer';
+    function DBUFFER(options) {
+        this.__namespace__ = 'graphit/draw/doublebuffer';
         this.front = new Canvas(options);
         this.back = new Canvas(options);
     }
 
-    CANVAS.prototype.getElement = function() {
+    DBUFFER.prototype.getElement = function() {
         return this.front.getElement();
     };
 
-    CANVAS.prototype.getCtx = function(which) {
+    DBUFFER.prototype.getCtx = function(which) {
         return this.front.getCtx();
     };
 
-    CANVAS.prototype.clearBackBuffer = function(color) {
+    DBUFFER.prototype.clearBackBuffer = function(color) {
         this.back.clear(color);
-//        this.back = new Canvas({
-//            width : this.width(),
-//            height : this.height()
-//        });
     };
 
-    CANVAS.prototype.flip = function() {
+    DBUFFER.prototype.flip = function() {
         this.front.copyData(this.back);
     };
 
-    CANVAS.prototype.toString = function() {
+    DBUFFER.prototype.toString = function() {
         return '<canvas width="' + this._width + '" height="' + this._height
                 + ' x="' + this.x + '" y="' + this.y + '">';
     };
 
-    CANVAS.prototype.width = function(value) {
+    DBUFFER.prototype.width = function(value) {
         if (value !== undefined) {
             this.front.width(value);
             this.back.width(value);
@@ -59,7 +52,7 @@ define(function(require) {
         return this.front.width();
     };
 
-    CANVAS.prototype.height = function(value) {
+    DBUFFER.prototype.height = function(value) {
         if (value !== undefined) {
             this.front.height(value);
             this.back.height(value);
@@ -68,5 +61,5 @@ define(function(require) {
         return this.front.height();
     };
 
-    return CANVAS;
+    return DBUFFER;
 });

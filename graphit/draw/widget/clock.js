@@ -1,4 +1,18 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+ */
 define(function(require) {
+
+    'use strict';
 
     var MissingParameterException = require('graphit/exception/MissingParameter');
     var Context = require('../context');
@@ -11,7 +25,7 @@ define(function(require) {
     function CLOCK(width, height, id) {
         this.__MODULE__ = 'graphit/draw/widget/clock';
         if (width === undefined || height === undefined) { throw new MissingParameterException(
-                'width|height'); }
+                                                                                               'width|height'); }
         this.dbuffer = new DoubleBuffer({
             id : id,
             width : width,
@@ -134,7 +148,7 @@ define(function(require) {
         ctx.translate(dWidth, dWidth);
         ctx.lineCap = 'round';
         this.drawBackground(ctx);
-        /* Milliseconds  */
+        /* Milliseconds */
         var s = (this._width / 1000);
         var l = 1;
         if (this.drawMillisecond) {

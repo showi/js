@@ -1,4 +1,19 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+*/
 define(function(require) {
+
+    'use strict';
+
     var log = require('graphit/log');
     var util = require('graphit/util');
 
@@ -7,40 +22,36 @@ define(function(require) {
 
     return function() {
         this.setParameters = function(options, validators) {
-            if (options === undefined) {
-                return;
-            }
-            if (options.lengtht < 1) {
-                return;
-            }
+            if (options === undefined) { return; }
+            if (options.lengtht < 1) { return; }
             options = options[0];
-            if (options === undefined) {
-                return;
-            }
-            if (validators !== undefined) {
-                this.checkParameters(options, validators);
-            }
-            for (key in options) {
+            if (options === undefined) { return; }
+            //if (validators !== undefined) {
+           var opts = this.checkParameters(options, validators);
+            //}
+            for (var key in opts) {
                 console.log('Setting', key, options);
                 this[key] = options[key];
             }
         };
         this.checkParameters = function(options, validators) {
+            var opts = {};
             for (name in options) {
                 if (!(name in validators)) {
                     log.error('Invalid Field', name, this);
-                    throw new InvalidParameterException(name);
+                    continue; //throw new InvalidParameterException(name);
                 }
+                opts[name] = options[name];
             }
             for (name in validators) {
                 var validator = validators[name];
                 var value = undefined;
-                if (!(name in options)) {
+                if (!(name in opts)) {
                     if (validator.required) {
                         if (!('defaultValue' in validator)) {
-                            log.error(
-                                    this.__MODULE__ + ' / Missing parameter',
-                                    name);
+                            log
+                                    .error(this.__MODULE__
+                                            + ' / Missing parameter', name);
                             throw new MissingParameterException(name);
                         } else {
                             value = validator.defaultValue;
@@ -49,8 +60,9 @@ define(function(require) {
                 } else {
                     value = options[name];
                 }
-                options[name] = value;
+                opts[name] = value;
             }
-        }
+            return opts;
+        };
     };
 });

@@ -1,11 +1,26 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+*/
 define(function(require) {
+
+    'use strict';
+
 
     var ns = require('graphit/namespace');
     var Vector2d = require('graphit/math/vector2d');
 
     ns = ns.math;
     var _ns_ = 'matrix33';
-    
+
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var m11 = 0;
@@ -17,10 +32,10 @@ define(function(require) {
     var m31 = 6;
     var m32 = 7;
     var m33 = 8;
-    
+
     var mX = m13;
     var mY = m23;
-    
+
     function MATRIX33(matrix) {
         /* Constructor
          * 
@@ -35,7 +50,7 @@ define(function(require) {
             } else {
                 this._data = [];
                 this.copy(matrix);
-            }    
+            }
         }
     };
 
@@ -67,14 +82,11 @@ define(function(require) {
 
     MATRIX33.prototype.equal = function(matrix) {
         for (var i = 0; i < 9; i++) {
-            if (this._data[i] != matrix._data[i]) {
-                return false;
-            }
+            if (this._data[i] != matrix._data[i]) { return false; }
         }
         return true;
     };
 
-    
     MATRIX33.prototype.fill = function(value) {
         /* Fill matrix with some value
          * 
@@ -141,10 +153,8 @@ define(function(require) {
     };
 
     MATRIX33.prototype.translate = function(vector) {
-        if (vector === undefined) {
-            return new Vector2d(this._data[mX],
-                                this._data[mY]);
-        }
+        if (vector === undefined) { return new Vector2d(this._data[mX],
+                                                        this._data[mY]); }
         this._data[mX] += vector.x;
         this._data[mY] += vector.y;
         return this;
@@ -154,38 +164,32 @@ define(function(require) {
         this._data[mX] += vector.x;
         return this;
     };
- 
+
     MATRIX33.prototype.translateY = function(y) {
         this._data[mY] += vector.y;
         return this;
     };
- 
+
     MATRIX33.prototype.position = function(vector) {
-        if (vector === undefined) {
-            return new Vector2d(this._data[mX],
-                                this._data[mY]);
-        }
+        if (vector === undefined) { return new Vector2d(this._data[mX],
+                                                        this._data[mY]); }
         this._data[mX] = vector.x;
         this._data[mY] = vector.y;
         return this;
     };
 
     MATRIX33.prototype.positionX = function(x) {
-        if (x === undefined) {
-            return this._data[mX];
-        }
+        if (x === undefined) { return this._data[mX]; }
         this._data[mX] = x;
         return this;
     };
- 
+
     MATRIX33.prototype.positionY = function(y) {
-        if (y === undefined) {
-            return this._data[mY];
-        }
+        if (y === undefined) { return this._data[mY]; }
         this._data[mY] = y;
         return this;
     };
- 
+
     MATRIX33.prototype.rotate = function(angle) {
         if (angle > (Math.PI / 180)) {
             angle = angle - (Math.PI / 180);

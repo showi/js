@@ -9,18 +9,15 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
- */
+*/
 define(function(require) {
 
     'use strict';
 
     var Node = require('graphit/tree/node/node');
-    var eShape = require('graphit/enum/shape');
     var eCap = require('graphit/enum/capability');
-    var util = require('graphit/util');
     var tree = require('graphit/tree/util');
     var TransMixin = require('graphit/tree/mixin/transform');
-    var ParamMixin = require('graphit/mixin/parameter');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
 
@@ -34,11 +31,11 @@ define(function(require) {
         kind : {
             required : true
         },
-        position: {
-            required: false,
+        position : {
+            required : false,
         },
-        size: {
-            required: true,
+        size : {
+            required : true,
         },
     };
 
@@ -49,10 +46,10 @@ define(function(require) {
         tree.setCapability(this, eCap.draw);
         this.setUp(this.kind);
     };
-    //ParamMixin.call(SHAPE.prototype);
+
     SHAPE.prototype = Object.create(Node.prototype);
     TransMixin.call(SHAPE.prototype);
-    
+
     SHAPE.prototype.setUp = function(kind) {
         if (this.position === undefined) {
             this.position = new Vector2d(0, 0);
@@ -86,9 +83,6 @@ define(function(require) {
         shape.rectangle(renderer.ctx, -dWidth, -dHeight, dWidth, dHeight);
     };
 
-
-//    util.injectMixin(SHAPE, ParamMixin);
-//    util.injectMixin(SHAPE, TransMixin);
     ns[_ns_] = SHAPE;
     return ns[_ns_];
 });

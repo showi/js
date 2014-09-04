@@ -26,26 +26,23 @@ define(function(require) {
         parent : {
             required : false
         },
+        traversable : {
+            required : true,
+            defaultValue : true,
+        }
     };
+
     function NODE() {
         this.__namespace__ = 'graphit/tree/node/node';
-//        this.setParameters(arguments, VALIDATORS);
+        this.setParameters(arguments, VALIDATORS);
         this.uid = namespace.genuid();
         this.child = [];
         this.capability = 0;
-        var parent = null;
-        if (!NODE.prototype.parent) {
-            util.injectProperties(NODE, ['parent', 'traversable']);
-        }
-        this.parent(parent);
-        this.traversable(true);
     };
     MixinParameter.call(NODE.prototype);
-    
+
     NODE.prototype.appendChild = function(child) {
-        if (child === undefined) {
-            throw 'InvalidValue';
-        }
+        if (child === undefined) { throw 'InvalidValue'; }
         child.parent = this;
         this.child.push(child);
     };
@@ -65,6 +62,18 @@ define(function(require) {
         fn(this);
     };
 
+    NODE.prototype.parent = function(value) {
+        if (value === undefined) { return this._parent; }
+        this._parent = value;
+        return this;
+    };
+
+    NODE.prototype.traversable = function(value) {
+        if (value === undefined) { return this._traverable; }
+        this._traversable = value;
+        return this;
+    };
+
     NODE.prototype.log = function(msg) {
         console.log(this.__namespace__, this.uid, msg);
     };
@@ -73,8 +82,6 @@ define(function(require) {
         return '<Node uid="' + this.uid + '" childs="' + this.child.length
                 + '">';
     };
-
-    util.injectMixin(NODE, MixinParameter);
 
     ns[_ns_] = NODE;
     return ns[_ns_];

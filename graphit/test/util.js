@@ -1,21 +1,34 @@
+/*
+Copyright (c) 2014 Joachim Basmaison
+
+This file is part of graphit <https://github.com/showi/js>
+
+graphit is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+See the GNU General Public License for more details.
+*/
 define(function(require) {
+
+    'use strict';
+
     var ns = require('graphit/namespace');
     ns = ns.test;
-    _ns_ = 'util';
+    var _ns_ = 'util';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
-    
+
     var logElement = jQuery('<div class="graphit-container-log"></div>');
     jQuery('body').append(logElement);
-    
+
     var UTIL = {
         numPass : 10000000,
-        logElement: logElement,
+        logElement : logElement,
         log : function() {
             console.log.apply(console, arguments);
-            if (this.logElement === undefined) {
-                return;
-            }
+            if (this.logElement === undefined) { return; }
             var msg = '';
             for (var i = 0; i < arguments.length; i++) {
                 var a = arguments[i] + '';
@@ -30,16 +43,16 @@ define(function(require) {
             setTimeout(append, 250);
         },
         testFunction : function(module, fName, fn) {
-            this.log('[', this.numPass, '] testFunction >>>',
-                     module.toString(), '/', fName, '--- -- ---');
+            this.log('[', this.numPass, '] testFunction >>>', module
+                    .toString(), '/', fName, '--- -- ---');
             var lastResult = undefined;
             var st = Date.now();
             for (var i = 0; i < this.numPass; i++) {
                 lastResult = fn();
             }
             var diff = Date.now() - st;
-            this.log('[', this.numPass, '] testFunction <<<',
-                     module.toString(), '/', fName, diff, 'ms');
+            this.log('[', this.numPass, '] testFunction <<<', module
+                    .toString(), '/', fName, diff, 'ms');
             return lastResult;
         },
         testMethod : function(m, name, value) {
@@ -71,7 +84,7 @@ define(function(require) {
                             test.__namespace__, ')');
                 if (name in graphit.test) { throw 'TestAlreadyRunning'; }
                 graphit.test[name] = test;
-                for (key in test) {
+                for (var key in test) {
                     if (key.startsWith('test_') && !test.hasOwnProperty(key)) {
                         console.log('>>>', key);
                         that.catchException(test, key);
