@@ -156,7 +156,7 @@ define(function(require) {
         };
         function updateDisplay() {
             updateFpsWidget.call(renderer);
-            setTimeout(updateDisplay, 500);
+            setTimeout(updateDisplay, 1000);
         }
         updateDisplay();
         renderer.update = function(node) {

@@ -113,7 +113,7 @@ define(function(require) {
             this.deltaAdder -= this.fixedDelta;
         }
         if (!update && !draw) {
-            console.log('skip');
+//            console.log('skip');
             return;
         }
         this.delta = this.fixedDelta;
