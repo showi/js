@@ -1,6 +1,6 @@
 define(function(require) {
 
-    var eCap = require('graphit/tree/enum/capability');
+    var eCap = require('graphit/enum/capability');
 
     var UTIL = {
         setCapability : function(obj, capability) {

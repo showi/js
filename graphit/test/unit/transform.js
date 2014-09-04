@@ -3,7 +3,7 @@ define(function(require) {
     var TransformMixin = require('graphit/tree/mixin/transform');
     var Primitive = require('graphit/tree/node/primitive');
     var mainUtil = require('graphit/util');
-    var eCapability = require('graphit/tree/enum/capability');
+    var eCapability = require('graphit/enum/capability');
     var utree = require('graphit/tree/util');
     var factory = require('graphit/tree/factory');
     var Vector2d = require('graphit/math/vector2d');

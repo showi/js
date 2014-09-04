@@ -19,7 +19,7 @@ define(function(require) {
     var ns = require('graphit/namespace');
     var shape = require('graphit/draw/shape');
     var util = require('graphit/tree/util');
-    var eCap = require('graphit/tree/enum/capability');
+    var eCap = require('graphit/enum/capability');
     var _ns_ = 'primitive';
 
     var CTX_PROPERTIES = {

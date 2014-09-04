@@ -23,7 +23,7 @@ define(function(require) {
     var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
     var Renderer = require('graphit/tree/renderer');
-    var eCap = require('graphit/tree/enum/capability');
+    var eCap = require('graphit/enum/capability');
     var tutil = require('graphit/tree/util');
     require('graphit/extend/jquery');
 
@@ -54,8 +54,9 @@ define(function(require) {
         return line;
     }
 
-    function mutePrimitive(node, width, height, max) {
-        var step = 0.5;
+    function mutePrimitive(node, width, height, max, delta) {
+        var step = 10 * 1 / delta;
+        //        console.log('step', step);
         function randValue(value) {
             var sign = true;
             if (Math.random() > 0.5) {
@@ -84,12 +85,12 @@ define(function(require) {
         node.primitive = nl;
     };
 
-    function muteTree(pool, width, height, max) {
+    function muteTree(pool, width, height, max, delta) {
         var prevNode = null;
         for (var i = 0; i < pool.length; i++) {
             var node = pool[i];
             if (node instanceof Primitive) {
-                mutePrimitive(node, width, height, max);
+                mutePrimitive(node, width, height, max, delta);
             }
             prevNode = node;
         }
@@ -115,7 +116,9 @@ define(function(require) {
         container.append(elm);
         body.append(container);
         var pool = [];
-        var root = factory.tree.node(Node, {pool: pool}, [TransMixin]);
+        var root = factory.tree.node(Node, {
+            pool : pool
+        }, [TransMixin]);
         var prim = factory.tree.node(Primitive, {
             pool : pool
         }, [TransMixin]);
@@ -127,9 +130,13 @@ define(function(require) {
         var renderer = new Renderer({
             root : root,
             ctx : buffer.back.getCtx(),
+            compositing : {
+                globalAlpha : 0.1,
+                globalCompositionOperation : 'source-over',
+            },
         });
         renderer.renderInit = function(r) {
-//            r.ctx = buffer.front.getCtx();
+            ; // nothing :P
         };
         var that = this;
         this.timeout = 500;
@@ -145,7 +152,7 @@ define(function(require) {
         renderer.pre_render = function(node) {
             /* HOOK: PRE Render */
             buffer.clearBackBuffer();
-            muteTree(pool, width, height, max);
+            muteTree(pool, width, height, max, this.delta);
         };
         renderer.render = function(node) {
             /* HOOK: Render */
@@ -156,16 +163,6 @@ define(function(require) {
         renderer.post_render = function(node) {
             /* HOOK POST Render */
             buffer.flip();
-            that.frames++;
-            if (count >= numCount) {
-                endTime = Date.now();
-                delta = (endTime - startTime);
-                that.fps = Math.round((count / delta) * 1000);
-                startTime = endTime;
-                count = 0;
-            } else {
-                count++;
-            };
         };
         /* Main Loop */
         function loop() {

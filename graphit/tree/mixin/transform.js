@@ -1,6 +1,6 @@
 define(function(require) {
 
-    var eCap = require('graphit/tree/enum/capability');
+    var eCap = require('graphit/enum/capability');
     var util = require('graphit/tree/util');
     var Matrix33 = require('graphit/math/matrix33');
     var Vector2d = require('graphit/math/vector2d');
