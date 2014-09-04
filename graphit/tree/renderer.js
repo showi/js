@@ -43,9 +43,9 @@ define(function(require) {
         this.delta = 0;
         this.fpsAvg = [];
         this.upsAvg = [];
-        this.avgMax = 20;
-        this.fixedDelta = Math.round(1000 / 66);
-        this.fixedDraw = Math.round(1000 / 33);
+        this.avgMax = 5;
+        this.fixedDelta = Math.round(1000 / 120);
+        this.fixedDraw = Math.round(1000 / 66);
         console.log(this.fixedDelta, this.fixedDraw);
         this.drawAdder = 0;
         this.deltaAdder = 0;
@@ -113,18 +113,27 @@ define(function(require) {
             this.deltaAdder -= this.fixedDelta;
         }
         if (!update && !draw) {
-//            console.log('skip');
             return;
         }
         this.delta = this.fixedDelta;
         var that = this;
+        var lsdraw = [];
         this.root.preTraverse(function(node) {
             if (update) {
                 that.hookExec('pre_update', node);
                 that.hookExec('update', node);
                 that.hookExec('post_update', node);
+               
             }
             if (draw) {
+                if (tree.hasCapability(node, eCap.draw)) {
+                    lsdraw.push(node);
+                }
+            }
+        });
+        if (draw) {
+            for (var i = 0; i < lsdraw.length; i++) {
+                var node = lsdraw[i];
                 that.ctx.save();
                 for ( var prop in eCtx) {
                     if (prop in node) {
@@ -140,8 +149,9 @@ define(function(require) {
                 that.hookExec('post_render', node);
                 that.ctx.restore();
             }
-        });
-        this.frames++;
+            this.frames++;
+        }
+
     };
     return RENDERER;
 });

@@ -106,9 +106,10 @@ define(function(require) {
     }
 
     TREE.prototype.run = function() {
+        var that = this;
         console.log('----- MovingPaint -----');
-        var timeout = 1000 / 120;
-        var numPrimitive = 256;
+        this.timeout = Math.round(10);
+        var numPrimitive = 512;
         var size = util.documentSize();
         size.x = Math.min(800, size.x);
         size.y = Math.min(600, size.y);
@@ -175,7 +176,7 @@ define(function(require) {
         };
         function loop() {
             renderer.step.call(renderer);
-            setTimeout(loop, timeout);
+            setTimeout(loop, that.timeout);
         }
         loop();
     };
