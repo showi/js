@@ -44,8 +44,8 @@ define(function(require) {
         this.fpsAvg = [];
         this.upsAvg = [];
         this.avgMax = 5;
-        this.fixedDelta = Math.round(1000 / 120);
-        this.fixedDraw = Math.round(1000 / 66);
+        this.fixedDelta = Math.round(1000 / 66);
+        this.fixedDraw = Math.round(1000 / 33);
         console.log(this.fixedDelta, this.fixedDraw);
         this.drawAdder = 0;
         this.deltaAdder = 0;
@@ -91,6 +91,15 @@ define(function(require) {
         this.upsAvg.push(ups);
     };
 
+    RENDERER.prototype.apply_node_context = function(node) {
+        for (var i = 0; i < eCtx.keys.length; i++) {
+            var prop = eCtx[eCtx.keys[i]];
+            if (node[prop] != undefined) {
+                this.ctx[prop] = node[prop];
+            }
+        }
+    };
+
     RENDERER.prototype.step = function() {
         var delta = Date.now() - this.startTime;
         this.startTime = Date.now();
@@ -110,11 +119,8 @@ define(function(require) {
             update = true;
             this.ups = (1 / (delta + this.deltaAdder)) * 1000;
             this.addUps(this.ups);
-            this.deltaAdder -= this.fixedDelta;
         }
-        if (!update && !draw) {
-            return;
-        }
+        if (!update && !draw) { return; }
         this.delta = this.fixedDelta;
         var that = this;
         var lsdraw = [];
@@ -123,7 +129,6 @@ define(function(require) {
                 that.hookExec('pre_update', node);
                 that.hookExec('update', node);
                 that.hookExec('post_update', node);
-               
             }
             if (draw) {
                 if (tree.hasCapability(node, eCap.draw)) {
@@ -135,11 +140,8 @@ define(function(require) {
             for (var i = 0; i < lsdraw.length; i++) {
                 var node = lsdraw[i];
                 that.ctx.save();
-                for ( var prop in eCtx) {
-                    if (prop in node) {
-                        that.ctx[prop] = node[prop];
-                    }
-                }
+                that.apply_node_context(node);
+                
                 if (tree.hasCapability(node, eCap.transform)) {
                     that.ctx.translate(node.transform._data[eMat.mX],
                                        node.transform._data[eMat.mY]);
@@ -151,7 +153,6 @@ define(function(require) {
             }
             this.frames++;
         }
-
     };
     return RENDERER;
 });

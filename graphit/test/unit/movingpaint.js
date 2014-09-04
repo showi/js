@@ -58,38 +58,32 @@ define(function(require) {
         return line;
     }
 
+    function randValue(max, value, step) {
+        var sign = true;
+        if (Math.random() > 0.5) {
+            sign = false;
+        }
+        var add = Math.randFloat(0.0, step);
+        if (value + add > max) { return value - add; }
+        if (!sign) { return value - add; };
+        return value + add;
+    }
+
     function mutePrimitive(node, width, height, delta) {
-        if (delta == 0) {
-            delta = 0.001;
-        }
         var max = Math.max(width, height);
-        var step = 0.25;
-        function randValue(value, s) {
-            if (s === undefined) {
-                s = step;
-            }
-            s = s * delta;
-            var sign = true;
-            if (Math.random() > 0.5) {
-                sign = false;
-            }
-            var add = Math.randFloat(0.0, s);
-            if (value + add > max) { return value - add; }
-            if (!sign) { return value - add; };
-            return value + add;
-        }
+        var step = 0.125 * delta;
         var nl = [];
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
-            p.lineWidth = randValue(p.lineWidth, 0.01);
+            p.lineWidth = randValue(max, p.lineWidth, 0.025 * delta);
             if (p.lineWidth > maxWidth || p.lineWidth < minWidth) {
                 p = genLine(width, height);
             }
             if (p instanceof Line) {
-                p.a.x = randValue(p.a.x);
-                p.a.y = randValue(p.a.y);
-                p.b.x = randValue(p.b.x);
-                p.b.y = randValue(p.b.y);
+                p.a.x = randValue(max, p.a.x, step);
+                p.a.y = randValue(max, p.a.y, step);
+                p.b.x = randValue(max, p.b.x, step);
+                p.b.y = randValue(max, p.b.y, step);
             }
             nl.push(p);
         }
@@ -108,11 +102,11 @@ define(function(require) {
     TREE.prototype.run = function() {
         var that = this;
         console.log('----- MovingPaint -----');
-        this.timeout = Math.round(10);
-        var numPrimitive = 512;
+        this.timeout = Math.round(1000/66);
+        var numPrimitive = 128;
         var size = util.documentSize();
-        size.x = Math.min(800, size.x);
-        size.y = Math.min(600, size.y);
+        size.x = Math.min(640, size.x);
+        size.y = Math.min(480, size.y);
         var scale = 0.80;
         var width = size.x * scale;
         var height = size.y * scale;
@@ -149,17 +143,18 @@ define(function(require) {
             },
         });
         this.renderer = renderer;
-        function updateFpsWidget() {
-            WidgetFps.find('.value')
-                    .text(Math.round(this.getFps() * 100) / 100);
-            WidgetUps.find('.value')
-                    .text(Math.round(this.getUps() * 100) / 100);
+        function updateWidget() {
+            var wFps = WidgetFps.find('.value');
+            var wUps = WidgetUps.find('.value');
+            var that = this;
+            function inner() {
+                wFps.text(Math.round(that.getFps() * 100) / 100);
+                wUps.text(Math.round(that.getUps() * 100) / 100);
+                setTimeout(inner, 666);
+            };
+            inner.call(this);
         };
-        function updateDisplay() {
-            updateFpsWidget.call(renderer);
-            setTimeout(updateDisplay, 1000);
-        }
-        updateDisplay();
+        updateWidget.call(renderer);
         renderer.update = function(node) {
             muteNode(node, width, height, this.delta);
         };
