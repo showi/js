@@ -28,8 +28,8 @@ define(function(require) {
     var Point2d = require('graphit/math/point2d');
     require('graphit/extend/jquery');
 
-    var minWidth = 0.01;
-    var maxWidth = 10;
+    var minWidth = 0.1;
+    var maxWidth = 5;
 
     var WidgetFps = jQuery('<div class="graphit-widget">fps:<div class="value"></div></div>').draggable();
     var WidgetUps = jQuery('<div class="graphit-widget">ups:<div class="value"></div></div>').draggable();
@@ -59,7 +59,7 @@ define(function(require) {
             delta = 0.001;
         }
         var max = Math.max(width, height);
-        var step = 0.05;
+        var step = 0.25;
         function randValue(value, s) {
             if (s === undefined) {
                 s = step;
@@ -77,7 +77,7 @@ define(function(require) {
         var nl = [];
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
-            p.lineWidth = randValue(p.lineWidth, 0.025);
+            p.lineWidth = randValue(p.lineWidth, 0.01);
             if (p.lineWidth > maxWidth || p.lineWidth < minWidth) {
                 p = genLine(width, height);
             }
