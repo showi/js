@@ -44,7 +44,7 @@ define(function(require) {
         this.fpsAvg = [];
         this.upsAvg = [];
         this.avgMax = 5;
-        this.fixedDelta = 1000 / 120;
+        this.fixedDelta = 1000 / 60;
         this.fixedDraw = 1000 / 30;
         this.drawAdder = 0;
         console.log('FixedDelta', this.fixedDelta);

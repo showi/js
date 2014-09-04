@@ -109,7 +109,7 @@ define(function(require) {
 
     TREE.prototype.run = function() {
         console.log('----- MovingPaint -----');
-        var timeout = 1000 / 120;
+        var timeout = 10;
         var numPrimitive = 128;
         var size = util.documentSize();
 // size.x = Math.min(320, size.x);
