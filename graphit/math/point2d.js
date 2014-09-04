@@ -14,13 +14,19 @@ define(function(require) {
 
     'use strict';
 
+    var ns = require('graphit/namespace');
+    ns = ns.math;
+    var _ns_ = 'point2d';
+
+    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+
     function POINT2D(x, y) {
         this.x = (x === undefined) ? 0 : x;
         this.y = (y === undefined) ? 0 : y;
     }
 
-    POINT2D.protoype.clone = function() {
-        return new POINT2(this.x, this.y);
+    POINT2D.prototype.clone = function() {
+        return new POINT2D(this.x, this.y);
     };
 
     POINT2D.prototype.copy = function(v) {
@@ -28,5 +34,14 @@ define(function(require) {
         this.y = v.y;
     };
 
-    return POINT2D;
+    POINT2D.prototype.randomize = function() {
+        this.x = Math.random();
+        this.y = Math.random();
+    };
+
+    POINT2D.prototype.toString = function() {
+        return '<Point2d x=' + this.x + ', y=' + this.y + '>';
+    };
+    ns[_ns_] = POINT2D;
+    return ns[_ns_];
 });

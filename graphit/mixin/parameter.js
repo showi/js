@@ -17,21 +17,15 @@ define(function(require) {
     var log = require('graphit/log');
     var util = require('graphit/util');
 
-    var InvalidParameterException = require('graphit/exception/InvalidParameter');
-    var MissingParameterException = require('graphit/exception/MissingParameter');
-
     return function() {
         this.setParameters = function(options, validators) {
             if (options === undefined) { return; }
             if (options.lengtht < 1) { return; }
             options = options[0];
             if (options === undefined) { return; }
-            //if (validators !== undefined) {
            var opts = this.checkParameters(options, validators);
-            //}
             for (var key in opts) {
-                console.log('Setting', key, options);
-                this[key] = options[key];
+                this[key] = opts[key];
             }
         };
         this.checkParameters = function(options, validators) {

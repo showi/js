@@ -24,7 +24,8 @@ define(function(require) {
 
     var VALIDATORS = {
         parent : {
-            required : false
+            required : true,
+            defaultValue: null,
         },
         traversable : {
             required : true,

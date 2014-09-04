@@ -25,12 +25,14 @@ define(function(require) {
     var Renderer = require('graphit/tree/renderer');
     var eCap = require('graphit/enum/capability');
     var tutil = require('graphit/tree/util');
+    var Point2d = require('graphit/math/point2d');
     require('graphit/extend/jquery');
 
     var minWidth = 0.01;
     var maxWidth = 10;
 
-    var WidgetFps = jQuery('<div class="graphit-widget-fps">fps:<div class="value"></div></div>').draggable();
+    var WidgetFps = jQuery('<div class="graphit-widget">fps:<div class="value"></div></div>').draggable();
+    var WidgetUps = jQuery('<div class="graphit-widget">ups:<div class="value"></div></div>').draggable();
     function TREE() {
         this.__namespace__ = 'graphit/test/movingpaint';
     }
@@ -40,38 +42,44 @@ define(function(require) {
         function randInt(m) {
             return Math.randInt(0, m);
         }
-        var line = new Line({
-            x : randInt(width),
-            y : randInt(height)
-        }, {
-            x : randInt(width),
-            y : randInt(height)
-        });
+        function randPoint() {
+            return new Point2d(randInt(width), randInt(height));
+        }
+        var line = new Line(randPoint(), randPoint());
         line.fillStyle = tool.randomColor();
         line.strokeStyle = tool.randomColor();
-        line.lineWidth = Math.randFloat(0.1, 5.0);
+        line.lineWidth = Math.randFloat(1.0, 10.0);
         line.lineCap = util.choice(['butt', 'round', 'squared']);
         line.lineJoin = util.choice(['bevel', 'round', 'miter']);
         return line;
     }
 
-    function mutePrimitive(node, width, height, max, delta) {
-        var step = 10 * 1 / delta;
-        //        console.log('step', step);
-        function randValue(value) {
+    function mutePrimitive(node, width, height, delta) {
+        if (delta == 0) {
+            delta = 0.001;
+        }
+        var max = Math.max(width, height);
+        var step = 0.05;
+        function randValue(value, s) {
+            if (s === undefined) {
+                s = step;
+            }
+            s = s * delta;
             var sign = true;
             if (Math.random() > 0.5) {
                 sign = false;
             }
-            var add = Math.randFloat(0.0, step);
+            var add = Math.randFloat(0.0, s);
             if (value + add > max) { return value - add; }
             if (!sign) { return value - add; };
             return value + add;
         }
         var nl = [];
+        var maxWidth = 50;
+        var minWidth = 0.01;
         for (var i = 0; i < node.primitive.length; i++) {
             var p = node.primitive[i];
-            p.lineWidth = randValue(p.lineWidth);
+            p.lineWidth = randValue(p.lineWidth, 0.025);
             if (p.lineWidth > maxWidth || p.lineWidth < minWidth) {
                 p = genLine(width, height);
             }
@@ -86,24 +94,26 @@ define(function(require) {
         node.primitive = nl;
     };
 
-    function muteTree(pool, width, height, max, delta) {
-        var prevNode = null;
-        for (var i = 0; i < pool.length; i++) {
-            var node = pool[i];
-            if (node instanceof Primitive) {
-                mutePrimitive(node, width, height, max, delta);
+    function muteNode(node, width, height, delta) {
+
+        //        var prevNode = null;
+//        for (var i = 0; i < pool.length; i++) {
+//            var node = pool[i];
+        
+        if (node instanceof Primitive) {
+                mutePrimitive(node, width, height, delta);
             }
-            prevNode = node;
-        }
+//            prevNode = node;
+        
     }
 
     TREE.prototype.run = function() {
-        console.log('----- Testing tree -----');
-        var timeout = 0;
+        console.log('----- MovingPaint -----');
+        var timeout = 1000 / 120;
         var numPrimitive = 128;
         var size = util.documentSize();
-        size.x = Math.min(320, size.x);
-        size.y = Math.min(240, size.y);
+// size.x = Math.min(320, size.x);
+// size.y = Math.min(240, size.y);
         var scale = 0.80;
         var width = size.x * scale;
         var height = size.y * scale;
@@ -114,61 +124,53 @@ define(function(require) {
         var canvas = buffer.front;
         var body = jQuery('body');
         body.append(WidgetFps);
+        body.append(WidgetUps); 
         var container = jQuery('<div class="graphit-test"></div>');
-        var elm = canvas.getElement();
+        var elm = buffer.front.getElement();
         container.width(width).height(height).center();
         container.append(elm);
         body.append(container);
         var pool = [];
-        var root = factory.tree.node(Node, {
-            pool : pool
-        }, [TransMixin]);
-        var prim = factory.tree.node(Primitive, {
-            pool : pool
-        }, [TransMixin]);
+        var root = factory.tree.node(Node, {pool: pool});
+        var prim = factory.tree.node(Primitive, {pool: pool});
         for (var i = 0; i < numPrimitive; i++) {
             prim.addPrimitive(genLine(width, height));
         }
         root.appendChild(prim);
-        console.log('Root', root);
         var renderer = new Renderer({
             root : root,
             ctx : buffer.back.getCtx(),
             compositing : {
-                globalAlpha : 0.1,
+                globalAlpha : 1.0,
                 globalCompositionOperation : 'source-over',
             },
         });
         this.renderer = renderer;
         function updateFpsWidget() {
-            WidgetFps.find('.value').text(renderer.fps);
-            setTimeout(updateFpsWidget, 500);
+            WidgetFps.find('.value').text(Math.round(this.getFps()*100)/100);
+            WidgetUps.find('.value').text(Math.round(this.getUps()*100)/100);
         };
-        updateFpsWidget();
-        renderer.renderInit = function(r) {
-            ; // nothing :P
+        function updateDisplay() {
+            updateFpsWidget.call(renderer);
+            setTimeout(updateDisplay, 500);
+        }
+        updateDisplay();
+        renderer.update = function(node) {
+            muteNode(node, width, height, this.delta);
         };
-        var that = this;
-        this.pauseTimeout = 1000;
-        var max = width; //Math.max(width, height);
         renderer.pre_render = function(node) {
-            /* HOOK: PRE Render */
             buffer.clearBackBuffer();
-            muteTree(pool, width, height, max, this.delta);
         };
         renderer.render = function(node) {
-            /* HOOK: Render */
             if (tutil.hasCapability(node, eCap.draw)) {
                 node.draw(this);
             }
         };
-        renderer.renderEnd = function(node) {
-            /* HOOK POST Render */
+        renderer.post_render = function(node) {
             buffer.flip();
         };
-        /* Main Loop */
         function loop() {
-            renderer.step();
+            renderer.step.call(renderer);
             setTimeout(loop, timeout);
         }
         loop();

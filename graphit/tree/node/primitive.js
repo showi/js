@@ -66,11 +66,7 @@ define(function(require) {
             } else if (primitive instanceof Circle) {
                 this.drawCircle(renderer, primitive);
             }
-            // } catch (e) {
-            // console.error('Exception while rendering');
-            // } finally {
             renderer.ctx.restore();
-            // }
         }
     };
 

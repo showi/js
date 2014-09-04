@@ -20,8 +20,8 @@ define(function(require) {
     var util = require('graphit/util');
 
     var FACTORY = {
-        node : function(cls, opts) {
-            var node = new cls(opts);
+        node : function(cls, opts, args) {
+            var node = new cls(args);
             if (opts !== undefined) {
                 if (opts.pool !== undefined) {
                     opts.pool.push(node);

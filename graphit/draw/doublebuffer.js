@@ -32,10 +32,12 @@ define(function(require) {
 
     DBUFFER.prototype.clearBackBuffer = function(color) {
         this.back.clear(color);
+        return this;
     };
 
     DBUFFER.prototype.flip = function() {
         this.front.copyData(this.back);
+        return this;
     };
 
     DBUFFER.prototype.toString = function() {

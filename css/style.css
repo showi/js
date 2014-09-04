@@ -15,7 +15,7 @@ html,body {
 .graphit-error: {
 	color: red;
 }
-.graphit-widget-fps {
+.graphit-widget {
 	padding: 0;
 	margin: 0.25em 0.5em;
 	font-size: small;
@@ -24,7 +24,7 @@ html,body {
 	width: 200px;
 }
 
-.graphit-widget-fps .value {
+.graphit-widget .value {
 	display: inline-block;
 	padding: 0 1em;
 }

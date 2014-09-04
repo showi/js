@@ -14,12 +14,24 @@ define(function(require) {
 
     'use strict';
 
- 
+    var ns = require('graphit/namespace');
+    ns = ns.math;
+    var _ns_ = 'line';
+    if (_ns_ in ns && ns[_ns_] !== undefined) {
+        return ns[_ns_];
+    }
+
     function LINE(a, b) {
         this.__namespace__ = 'graphit/math/line';
         this.a = a;
         this.b = b;
     };
 
-    return LINE;
+    LINE.prototype.toString = function() {
+        return '<Line a: ' + this.a.toString() + 
+               ', b: ' + this.b.toString() + '>';
+    };
+
+    ns[_ns_] = LINE;
+    return ns[_ns_];
 });
