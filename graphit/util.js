@@ -21,11 +21,8 @@ define(function(require) {
 
     var UTIL = {
         __MODULE__ : 'graphit/util',
-        genuid : function() {
-            if (graphit.__GENUID__ === undefined) {
-                graphit.__GENUID__ = 0;
-            }
-            return graphit.__GENUID__++;
+        genUID : function() {
+            return graphit.genUID();
         },
 //        injectMixin : function(cls, mixin) {
 //            if ('prototype' in mixin) {

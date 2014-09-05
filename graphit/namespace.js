@@ -29,13 +29,13 @@ define(function(require) {
     window[_ns_] = {
         __VERSION__ : '0.0.1',
         __NAMESPACE__ : _ns_,
-        __UID__ : 0,
         tool : null,
         util : null,
         shape : null,
+        draw: {},
         math : {},
         enum : {},
-        genuid : function() {
+        genUID : function() {
             return this.__UID__++;
         },
         tree : {
@@ -43,6 +43,23 @@ define(function(require) {
         },
         test : {}
     };
+    for(var key in window[_ns_]) {
+        if (!window[_ns_].hasOwnProperty(key)) {
+            console.log('skip', key);
+            continue;
+        }
+        Object.defineProperty(window[_ns_], key, {
+            writable : false,
+            enumerable : true,
+            configurable : false
+        });
+    }
+    Object.defineProperty(window[_ns_], '__UID__', {
+        value: 0,
+        writable: true,
+        enumerable: true,
+        configurable : false
+    });
     console.log('>>> Namespace', _ns_, window[_ns_]);
     return window[_ns_];
 });

@@ -161,12 +161,12 @@ define(function(require) {
     };
 
     MATRIX33.prototype.translateX = function(x) {
-        this._data[mX] += vector.x;
+        this._data[mX] += x;
         return this;
     };
 
     MATRIX33.prototype.translateY = function(y) {
-        this._data[mY] += vector.y;
+        this._data[mY] += y;
         return this;
     };
 

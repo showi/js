@@ -36,7 +36,7 @@ define(function(require) {
     function NODE() {
         this.setParameters(arguments, VALIDATORS);
         this.__namespace__ = 'graphit/tree/node/node';
-        this.uid = namespace.genuid();
+        this.uid = namespace.genUID();
         this.child = [];
         this.capability = 0;
     };

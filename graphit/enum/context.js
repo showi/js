@@ -37,7 +37,11 @@ define(function(require) {
         globalAlpha : true,
         globalCompositeOperation : true,
     });
-
+//    var props = ['canvas', 'fillStyle', 'font', 'globalAlpha',
+//                 'globalCompositeOperation', 'lineCap', 'lineJoin',
+//                 'lineWidth', 'miterLimit', 'shadowOffsetX',
+//                 'shadowOffsetY', 'shadowBlur', 'shadowColor',
+//                 'strokeStyle', 'textAlign', 'textBaseline'];
     ns[_ns_] = Context;
     return ns[_ns_];
 });

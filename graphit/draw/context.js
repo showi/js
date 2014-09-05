@@ -14,7 +14,13 @@ define(function(require) {
 
     'use strict';
 
-    var InvalidDocumentIdException = require('graphit/exception/InvalidDocumentId');
+    var ns = require('graphit/namespace');
+    ns = ns.draw;
+    var _ns_ = 'context';
+
+    var eProp = require('graphit/enum/context');
+
+    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function CONTEXT(canvas) {
         this.__MODULE__ = 'graphit/draw/Context';
@@ -92,5 +98,6 @@ define(function(require) {
             }(p));
         }
     };
-    return CONTEXT;
+    ns[_ns_] = CONTEXT;
+    return ns[_ns_];
 });

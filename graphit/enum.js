@@ -15,42 +15,49 @@ define(function(require) {
     'use strict';
 
     function ENUM(data) {
-        this.keys = [];
+        Object.defineProperty(this, '_keys', {
+            value: [],
+            writable : false,
+            enumerable : true,
+            configurable : true
+        });
         for ( var key in data) {
             this.add(key, data[key]);
-            this._add_key(key);
         }
-        this.lock();
+        this._lock();
     }
 
-    ENUM.prototype.lock = function() {
-        Object.defineProperty(this, 'keys', {
+    ENUM.prototype._lock = function() {
+        Object.defineProperty(this, '_keys', {
             writable : false,
             enumerable : false,
-            configurable : false
+            configurable : true
         });
     };
 
-    ENUM.prototype.unlock = function() {
-        Object.defineProperty(this, 'keys', {
+    ENUM.prototype._unlock = function() {
+        Object.defineProperty(this, '_keys', {
             writable : true,
             enumerable : false,
-            configurable : false
+            configurable : true
         });
     };
 
     ENUM.prototype._add_key = function(key) {
-        this.keys.push(key);
+        this._keys.push(key);
     };
 
     ENUM.prototype.add = function(key, value) {
         if (key in this) { throw 'TryToAddSameKey'; }
+        this._unlock();
+        this._add_key(key);
         Object.defineProperty(this, key, {
             value : value,
             writable : false,
             enumerable : true,
             configurable : false
         });
+        this._lock();
     };
 
     return ENUM;

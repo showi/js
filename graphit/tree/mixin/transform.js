@@ -24,6 +24,11 @@ define(function(require) {
         util.setCapability(this, eCap.transform);
         this.transform = new Matrix33();
         this.worldTransform = new Matrix33();
+        
+        this.applyWorldTransform = function(world) {
+          this.worldTransform.copy(world);
+          this.worldTransform.mul(this.transform);
+        };
         this.rotate = function(angle) {
             return this.transform.rotate(angle);
         };

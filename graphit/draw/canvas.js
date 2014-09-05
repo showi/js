@@ -14,10 +14,15 @@ define(function(require) {
 
     'use strict';
 
+    var namespace = require('graphit/namespace');
+    var ns = namespace.draw;
+    var _ns_ = 'canvas';
     var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
     var Context = require('../draw/context');
     var util = require('graphit/util');
     var MixinParameter = require('../mixin/parameter');
+
+    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var VALIDATORS = {
         width : {
@@ -48,7 +53,7 @@ define(function(require) {
             if (!elm) { throw new InvalidDocumentIdException(id); }
         } else {
             elm = document.createElement('canvas');
-            id = util.genuid();
+            id = namespace.genUID();
         }
         elm.id = 'graphit-canvas-uid-' + id;
         elm.width = width;
@@ -69,13 +74,6 @@ define(function(require) {
         c.copyData(this);
         return c;
     };
-
-    // CANVAS.prototype.resize = function(width, height) {
-    // var copy = this.clone();
-    // this.width(width).height(height);
-    // var ctx = this.getCtx();
-    // this.context.copyData(copy.context, 0, 0, width, height);
-    // };
 
     CANVAS.prototype.clear = function(color) {
         if (color === undefined) {
@@ -280,6 +278,7 @@ define(function(require) {
         return this.element.height;
     };
     MixinParameter.call(CANVAS.prototype);
-    //    util.injectMixin(CANVAS, MixinParameter);
-    return CANVAS;
+    
+    ns[_ns_] = CANVAS;
+    return ns[_ns_];
 });
