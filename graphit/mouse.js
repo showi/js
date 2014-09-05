@@ -17,22 +17,41 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var math = require('graphit/math');
 
+    function MouseProperty() {
+        this.x = 0;
+        this.y = 0;
+        this.mouseDown = false;
+        this.onMouseMove = undefined;
+        this.recording = false;
+        this.element = null;
+        this.onmousemove = null;
+        this.record = [];
+        this.maxRecord = 33;
+    };
+
     function MOUSE() {
         this.trackedElement = {
-            tracking : true,
             element : null,
             onmousemove : null,
-            record : [],
-            maxRecord : 10
         };
-    }
+    };
 
-    MOUSE.prototype.registerMouseClick = function(elm, fn) {
+    MOUSE.prototype.registerMouseUpDown = function(elm, up, down, update) {
         var that = this;
-        elm.addEventListener('click', function(e) {
-            fn.call(that, e);
+        elm.mouseTracker.onMouseDown = update;
+        elm.addEventListener('mouseup', function(e) {
+            console.log('MouseUP');
+            up.call(elm, e);
+            elm.mouseTracker.mouseDown = false;
             return false;
         });
+        elm.addEventListener('mousedown', function(e) {
+            console.log('MouseDown');
+            this.mouseTracker.mouseDown = true;
+            down.call(elm, e);
+            return false;
+        });
+
         return this;
     };
 
@@ -40,10 +59,9 @@ define(function(require) {
         var that = this;
         this.trackedElement.element = elm;
         this.trackedElement.onmousemove = elm.onmousemove;
-        elm.mouseTracker = {
-            x : 0,
-            y : 0
-        };
+        if (elm.mouseTracker === undefined) {
+            elm.mouseTracker = new MouseProperty();
+        }
         elm.addEventListener('mousemove', function(event) {
             var x = math.clamp(event.x - elm.offsetLeft + window.scrollX, 0,
                                this.width);
@@ -51,19 +69,25 @@ define(function(require) {
                                this.height);
             this.mouseTracker.x = x;
             this.mouseTracker.y = y;
-            if (that.trackedElement.tracking) {
-                that.recordXY(x, y);
+            if (this.mouseTracker.recording) {
+                that.recordXY(this, x, y);
+            }
+            if (this.mouseTracker.recording) {
+                if (this.mouseTracker.onMouseDown !== undefined) {
+                    if (typeof this.mouseTracker.onMouseDown == 'function') {
+                        this.mouseTracker.onMouseDown.call(this, event);
+                    }
+                }
             }
         }, true);
         return this;
     };
 
-    MOUSE.prototype.recordXY = function(x, y) {
-        var elm = this.trackedElement.element.mouseTracker;
-        if (this.trackedElement.record.length > 50) {
-            this.trackedElement.record.shift();
+    MOUSE.prototype.recordXY = function(elm, x, y) {
+        if (elm.mouseTracker.record.length > elm.mouseTracker.maxRecord) {
+            elm.mouseTracker.record.shift();
         }
-        this.trackedElement.record.push({
+        elm.mouseTracker.record.push({
             time : Date.now(),
             pos : new Vector2d(x, y)
         });
@@ -71,14 +95,12 @@ define(function(require) {
     };
 
     MOUSE.prototype.iterRecord = function(fn, limit, reverse) {
-        if (!reverse) {
-            throw 'NotImplemented'
-        }
-        var len = this.trackedElement.record.length - 1;
+        if (!reverse) { throw 'NotImplemented'; }
+        var len = this.mouseTracker.record.length - 1;
         var ml = len - limit;
-        ml = (ml < 0)? 0: ml;
+        ml = (ml < 0) ? 0 : ml;
         for (var i = len; i >= ml; i--) {
-            fn.call(this, this.trackedElement.record[i]);
+            fn.call(this.mouseTracker, this.mouseTracker.record.shift());
         }
     };
 
@@ -118,13 +140,13 @@ define(function(require) {
         return '<mouse x=' + this.x + ', y=' + this.y + '>';
     };
 
-    MOUSE.prototype.trackStart = function() {
-        this.trackedElement.tracking = true;
+    MOUSE.prototype.recordStart = function() {
+        this.trackedElement.element.mouseTracker.recording = true;
         return this;
     };
 
-    MOUSE.prototype.trackStop = function() {
-        this.trackedElement.tracking = false;
+    MOUSE.prototype.recordEnd = function() {
+        this.trackedElement.element.mouseTracker.recording = false;
         return this;
     };
 

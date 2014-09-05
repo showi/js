@@ -23,20 +23,20 @@ define(function(require) {
     require('graphit/extend/jquery');
 
     function MOUSE() {
-        
+
     }
-    
+
     MOUSE.prototype.run = function() {
         var body = jQuery('body');
         body.css({
-           'background-color': '#222' 
+            'background-color' : '#222'
         });
         body.empty();
         var size = util.windowSize();
         var ratio = 0.8;
         var canvas = new Canvas({
-            width: size.x * ratio, 
-            height: size.y * ratio
+            width : size.x * ratio,
+            height : size.y * ratio
         });
         canvas.clear('black');
         var ctx = canvas.getCtx();
@@ -47,13 +47,16 @@ define(function(require) {
         jQuery(elm).center();
         var mouse = new Mouse();
         mouse.registerMouseMove(elm);
-        mouse.registerMouseClick(elm, function(e) {
-            console.log('Click', this.getX(), this.getY());
-            var size = 0;
-            this.iterRecord.call(this, function(record) {
+        mouse.registerMouseUpDown(elm, function(event) {
+            mouse.recordEnd.call(mouse);
+        }, function(event) {
+            mouse.recordStart.call(mouse);
+        }, function(event) {
+            var size = 50;
+            mouse.iterRecord.call(this, function(record) {
                 shape.circle(ctx, record.pos.x, record.pos.y, size);
-                size++;
-            }, 50, true);
+                size--;
+            }, 20, true);
         });
         this.mouse = mouse;
         body.append('<div><h2>Click Me!</h2></div>');
