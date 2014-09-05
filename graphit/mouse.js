@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
- */
+*/
 define(function(require) {
 
     'use strict';
@@ -17,7 +17,27 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var math = require('graphit/math');
 
-    function MouseProperty() {
+    function getX(event){
+        if(event.offsetX){
+          return event.offsetX;
+        }
+        if(event.clientX){
+        return event.clientX - event.target.offsetLeft;
+        }
+       return null;
+    }
+
+   function getY(event){
+       if(event.offsetY){//chrome and IE
+           return event.offsetY;
+       }
+       if(event.clientY){// FF
+           return event.clientY- event.target.offsetTop;
+       }
+       return null;    
+   }
+
+   function MouseProperty() {
         this.x = 0;
         this.y = 0;
         this.mouseDown = false;
@@ -37,7 +57,6 @@ define(function(require) {
     };
 
     MOUSE.prototype.registerMouseUpDown = function(elm, up, down, update) {
-        var that = this;
         elm.mouseTracker.onMouseDown = update;
         elm.addEventListener('mouseup', function(e) {
             console.log('MouseUP');
@@ -63,10 +82,8 @@ define(function(require) {
             elm.mouseTracker = new MouseProperty();
         }
         elm.addEventListener('mousemove', function(event) {
-            var x = math.clamp(event.x - elm.offsetLeft + window.scrollX, 0,
-                               this.width);
-            var y = math.clamp(event.y - elm.offsetTop + window.scrollY, 0,
-                               this.height);
+            var x = math.clamp(getX(event), 0, this.width);
+            var y = math.clamp(getY(event), 0, this.height);
             this.mouseTracker.x = x;
             this.mouseTracker.y = y;
             if (this.mouseTracker.recording) {
@@ -100,7 +117,8 @@ define(function(require) {
         var ml = len - limit;
         ml = (ml < 0) ? 0 : ml;
         for (var i = len; i >= ml; i--) {
-            fn.call(this.mouseTracker, this.mouseTracker.record.shift());
+            var elm = this.mouseTracker.record.shift();
+            fn.call(this.mouseTracker, elm);
         }
     };
 

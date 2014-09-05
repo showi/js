@@ -38,11 +38,13 @@ define(function(require) {
             width : size.x * ratio,
             height : size.y * ratio
         });
-        canvas.clear('black');
+        canvas.clear('white');
         var ctx = canvas.getCtx();
+        ctx.save();
         ctx.strokeStyle = 'red';
         ctx.fillStyle = 'white';
         var elm = canvas.getElement();
+        shape.rectangle(ctx, 0, 0, canvas.width(), canvas.height());
         body.append(elm);
         jQuery(elm).center();
         var mouse = new Mouse();
