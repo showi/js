@@ -1,9 +1,9 @@
 define(function(require) {
 
-    var glob = require('../namespace');
-    var ModuleClock = require('../draw/widget/clock');
-    var util = require('../util');
-    var log = require('../log');
+    var glob = require('graphit/namespace');
+    var ModuleClock = require('graphit/draw/widget/clock');
+    var util = require('graphit/util');
+    var log = require('graphit/log');
     
     function MODULE(options) {
         this.__MODULE__ = 'graphit/test/clock';

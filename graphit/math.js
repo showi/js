@@ -14,10 +14,14 @@ define(function(require) {
 
     'use strict';
 
-    var test = require('graphit/test/util');
-    var util = require('graphit/util');
-    var choices = ['randart', 'clock', 'wall', 'movingpaint', 'mouseclick'];
-    var choice = util.choice(choices);
-    console.log('>>> random test:', choice, '(', choices, ')');
-    test.runTest(choice);
+    return {
+        clamp: function (value, min, max) {
+            if (value > max) {
+                return max;
+            } else if (value < min) {
+                return min;
+            }
+            return value;
+        },
+    };
 });

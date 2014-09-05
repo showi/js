@@ -170,6 +170,12 @@ define(function(require) {
         return this;
     };
 
+    MATRIX33.prototype.translateXY = function(x, y) {
+        this._data[mX] += x;
+        this._data[mY] += y;
+        return this;
+    };
+
     MATRIX33.prototype.position = function(vector) {
         if (vector === undefined) { return new Vector2d(this._data[mX],
                                                         this._data[mY]); }

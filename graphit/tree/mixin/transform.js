@@ -36,7 +36,9 @@ define(function(require) {
         this.translateY = function(y) {
             return this.transform.translateY(y);
         };
-
+        this.translateXY = function(x, y) {
+            return this.transform.translateY(y);
+        };
         this.position = function(vector) {
             return this.transform.position(vector);
         };

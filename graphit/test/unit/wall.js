@@ -1,32 +1,11 @@
 define(function(require) {
+    
+    'use strict';
 
-    var api = require('../api');
-
-    var Layer = require('graphit/draw/layer');
     var Canvas = require('graphit/draw/canvas');
+    var shape = require('graphit/draw/shape');
 
-    var Mixin = {
-        mixit : function(value) {
-            return "<mixin>" + value + "</mixin>";
-        }
-    };
-
-    function Mixin2() {
-
-    }
-    Mixin2.prototype.mixit2 = function(value) {
-        return '<mixin2>' + value + '</mixin2>';
-    };
     function MODULE() {
-        this.__namespace__ = 'graphit/test/wall';
-    }
-
-    MODULE.prototype.run = function() {
-        api.log.title(this.__MODULE__);
-
-        var Canvas = graphit.factory.Canvas;
-        api.util.injectMixin(Canvas, Mixin);
-        api.util.injectMixin(Canvas, Mixin2);
 
         var opts = {
             width : 50,
@@ -39,11 +18,11 @@ define(function(require) {
         var ctx = canvas.getCtx();
 
         function stepRectangle(step) {
-            api.shape.rectangle(ctx, step, step, opts.width - (step * 2),
+            shape.rectangle(ctx, step, step, opts.width - (step * 2),
                     opts.height - (step * 2));
         }
         ctx.fillStyle = 'red';
-        api.shape.rectangle(ctx, 0, 0, opts.width, opts.height);
+        shape.rectangle(ctx, 0, 0, opts.width, opts.height);
         ctx.fillStyle = 'white';
         stepRectangle(step * 2);
         ctx.fillStyle = 'red';

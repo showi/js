@@ -20,6 +20,7 @@ define(function(require) {
     var TransMixin = require('graphit/tree/mixin/transform');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
+    var eAxis = require('graphit/enum/axis');
 
     var ns = require('graphit/namespace');
     ns = ns.tree.node;
@@ -51,9 +52,8 @@ define(function(require) {
     TransMixin.call(SHAPE.prototype);
 
     SHAPE.prototype.setUp = function(kind) {
-        if (this.position === undefined) {
-            this.position = new Vector2d(0, 0);
-        }
+//        this.fillStyle = 'red';
+//        this.transform.position(0, 0);
         var meth = 'setUp_' + kind;
         return this[meth]();
     };
@@ -62,11 +62,12 @@ define(function(require) {
         //console.log('Setting up line:');
         this.a = this.size.a;
         this.b = this.size.b;
+
     };
 
     SHAPE.prototype.setUp_rectangle = function() {
-        this.width = this.size.width;
-        this.height = this.size.height;
+        this.u = new Vector2d(this.size.width / 2, 0);
+        this.v = new Vector2d(0, this.size.height / 2);
     };
 
     SHAPE.prototype.draw = function(renderer) {
@@ -80,9 +81,18 @@ define(function(require) {
     };
 
     SHAPE.prototype.draw_rectangle = function(renderer) {
-        var dWidth = this.size.x / 2;
-        var dHeight = this.size.y / 2;
-        shape.rectangle(renderer.ctx, -dWidth, -dHeight, dWidth, dHeight);
+        renderer.ctx.fillStyle = 'red';
+        shape.circle(renderer.ctx, 0, 0, 10);
+        console.log(-this.u.x, -this.v.y, this.u.x, this.v.y);
+        shape.rectangle(renderer.ctx, -this.u.x, -this.v.y, this.u.x, this.v.y);
+        renderer.ctx.strokeStyle = eAxis.uColor;
+        shape.line(renderer.ctx, 0, 0, this.u.x, this.u.y);
+        renderer.ctx.strokeStyle = eAxis.vColor;
+        shape.line(renderer.ctx, 0, 0, this.v.x, this.v.y);
+        
+        //        shape.rectangle(renderer.ctx,
+//                        -this.vx.x, this.vy.y, 
+//                        this.vx.x, -this.vy.y);
     };
 
     ns[_ns_] = SHAPE;

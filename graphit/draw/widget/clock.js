@@ -165,7 +165,7 @@ define(function(require) {
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.strokeStyle = '#71266E';
             ctx.lineWidth = 1 * l;
-            angle = Math.round(that.date.getSeconds()) * that.sPart;
+            var angle = Math.round(that.date.getSeconds()) * that.sPart;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeSecond, 0, 0);
             shape.circle(ctx, 0, -that.sizeSecond, s * 2);
@@ -174,14 +174,14 @@ define(function(require) {
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.strokeStyle = '#FF7600';
             ctx.lineWidth = 2 * l;
-            angle = Math.round(that.date.getMinutes()) * that.mnPart;
+            var angle = Math.round(that.date.getMinutes()) * that.mnPart;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeMinute, 0, 0);
             shape.circle(ctx, 0, -that.sizeMinute, s * 3);
         });
         /* HOUR */
         tool.saveAndRestore(ctx, function(ctx) {
-            angle = Math.round(that.date.getHours()) * that.hPart;
+            var angle = Math.round(that.date.getHours()) * that.hPart;
             ctx.strokeStyle = '#E11D38';
             ctx.lineWidth = 4 * l;
             ctx.rotate(angle);

@@ -76,11 +76,12 @@ define(function(require) {
             }
         },
         windowSize : function() {
-            return new Vector2d(windowElement.width(), windowElement.height());
+            return new Vector2d(windowElement.width(),
+                                windowElement.height());
         },
         documentSize : function() {
-            return new Vector2d(documentElement.width(), documentElement
-                    .height());
+            return new Vector2d(documentElement.width(),
+                                documentElement.height());
         },
         setParameters : function(that, options, validators) {
             this.checkParameters(options, validators);

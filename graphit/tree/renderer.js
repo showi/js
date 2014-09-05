@@ -38,10 +38,7 @@ define(function(require) {
         this.startTime = Date.now();
         this.endTime = null;
         this.delta = 0;
-        this.fpsAvg = [];
-        this.upsAvg = [];
-        this.avgMax = 5;
-        this.lsdraw = [];
+        this.node = [];
         this.skipped = 0;
         this.numUpdate = 0;
         this.fixedUpdate = 1000/60;
@@ -122,6 +119,7 @@ define(function(require) {
         for (var i = 0; i < eCtx.keys.length; i++) {
             var prop = eCtx[eCtx.keys[i]];
             if (node[prop] != undefined) {
+                console.log('Apply', prop, node[prop])
                 this.ctx[prop] = node[prop];
             }
         }
@@ -134,14 +132,14 @@ define(function(require) {
         var update = false;
         this.drawAdder += delta;
         this.updateAdder += delta;
-        if (this.updateAdder > this.fixedUpdate) {
-            this.numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
+        if (this.updateAdder >= this.fixedUpdate) {
+            this.numUpdate = Math.round(this.updateAdder / this.fixedUpdate);
             if (this.numUpdate > 0) {
                 update = true;
             }
             this.updateAdder -= (this.fixedUpdate * this.numUpdate);
         }
-        if (this.drawAdder > this.fixedDraw) {
+        if (this.drawAdder >= this.fixedDraw) {
             draw = true;
             this.drawAdder -= (this.fixedUpdate * this.numUpdate);
         }
@@ -156,7 +154,7 @@ define(function(require) {
             this.skipped++;
         } else {
             for (var i = 0; i < this.numUpdate; i++) {
-                this.lsdraw = [];
+                this.node = [];
                 this.measure.ups.count++;
                 this.root.preTraverse(function(node) {
                     if (update) {
@@ -165,7 +163,7 @@ define(function(require) {
                         that.hookExec('post_update', node);
                         if (draw) {
                             if (tree.hasCapability(node, eCap.draw)) {
-                                that.lsdraw.push(node);
+                                that.node.push(node);
                             }
                         }
                     }
@@ -175,14 +173,13 @@ define(function(require) {
         }
         if (draw) {
             this.measure.fps.count++;
-            for (var i = 0; i < this.lsdraw.length; i++) {
-                var node = this.lsdraw[i];
+            for (var i = 0; i < this.node.length; i++) {
+                var node = this.node[i];
                 that.ctx.save();
                 that.apply_node_context(node);
-
                 if (tree.hasCapability(node, eCap.transform)) {
-                    that.ctx.translate(node.transform._data[eMat.mX],
-                                       node.transform._data[eMat.mY]);
+                    that.ctx.translate(node.worldTransform._data[eMat.mX],
+                                       node.worldTransform._data[eMat.mY]);
                 }
                 that.hookExec('pre_render', node);
                 that.hookExec('render', node);

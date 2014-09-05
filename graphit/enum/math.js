@@ -14,10 +14,17 @@ define(function(require) {
 
     'use strict';
 
-    var test = require('graphit/test/util');
-    var util = require('graphit/util');
-    var choices = ['randart', 'clock', 'wall', 'movingpaint', 'mouseclick'];
-    var choice = util.choice(choices);
-    console.log('>>> random test:', choice, '(', choices, ')');
-    test.runTest(choice);
+    var ns = require('graphit/namespace');
+    var Enum = require('graphit/enum');
+    ns = ns.enum;
+    var _ns_ = 'math';
+    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+
+    var CAPABILITY = new Enum({
+        GOLD: (1/Math.sqrt(5)) / 2,
+        PI: Math.PI,
+    });
+
+    ns[_ns_] = CAPABILITY;
+    return ns[_ns_];
 });

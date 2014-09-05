@@ -14,10 +14,18 @@ define(function(require) {
 
     'use strict';
 
-    var test = require('graphit/test/util');
-    var util = require('graphit/util');
-    var choices = ['randart', 'clock', 'wall', 'movingpaint', 'mouseclick'];
-    var choice = util.choice(choices);
-    console.log('>>> random test:', choice, '(', choices, ')');
-    test.runTest(choice);
+    var ns = require('graphit/namespace');
+    var Enum = require('graphit/enum');
+    ns = ns.enum;
+    var _ns_ = 'axis';
+    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+
+    var CAPABILITY = new Enum({
+        uColor: 'blue',
+        vColor: 'green',
+        wColor: 'red',
+    });
+
+    ns[_ns_] = CAPABILITY;
+    return ns[_ns_];
 });

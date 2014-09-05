@@ -39,6 +39,7 @@ define(function(require) {
         line.fillStyle = draw.randomColor();
         return line;
     }
+
     function genRectangle(obj) {
         var max = Math.max(obj.width, obj.height);
         var size = Math.randInt(0, max);
@@ -50,57 +51,60 @@ define(function(require) {
             },
         });
         rectangle.strokeStyle = draw.randomColor();
-        rectangle.fillStyle = draw.randomColor();
-        rectangle.positionX(Math.randInt(0, obj.width));
-        rectangle.positionY(Math.randInt(0, obj.height));
+        rectangle.fillStyle = 'red'; //draw.randomColor();
+        var dW = obj.width / 2;
+        var dH = obj.height / 2;
+//        rectangle.positionX(Math.randInt(0, obj.width));
+//        rectangle.positionY(Math.randInt(0, obj.height));
         return rectangle;
-    }    
+    }
+
     SELECT.prototype.run = function() {
         var test = this;
         this.setUp();
         var root = new Node({traversable: true}); //factory.node(Node);
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < 1; i++) {
 //            root.appendChild(genLine(this));
             root.appendChild(genRectangle(this));
         }
-
+        console.log('count', root.child.length);
         var renderer = new Renderer({
             root : root,
             ctx : test.buffer.back.getCtx(),
             compositing : {
-                globalAlpha : 0.1,
+                globalAlpha : 0.5,
                 globalCompositionOperation : 'source-over',
             },
         });
         var that = this;
-        renderer.ctx.translate(this.width / 2, this.height / 2);
         var count = 0;
         renderer.pre_render = function() {
-            test.buffer.clearBackBuffer();
-            this.ctx.fillStyle = 'red';
-            count = 0;
+            test.buffer.clearBackBuffer('white');
         };
 
         renderer.render = function(node) {
-            count++;
             if (tree.hasCapability(node, eCap.draw)) {
 //                console.log('drawing', node)
                 node.draw(this);
             }
         };
-        renderer.post_render = function() {
+        renderer.post_render = function(r) {
+            renderer.ctx.translate(that.width / 2, that.height / 2);
             test.buffer.flip();
+            if (this.measureEnd()) {
+                this.measureStart();
+            }
         };
         function updateWidget() {
             function l() { 
                 console.log.apply(console, arguments);
             }
             function inner() {
-                l('*----- --- -----*');
-                l(' - count   :', count);
-                l(' - fps     :', renderer.getFps());
-                l(' - ups     :', renderer.getUps());
-                l(' - renderer:', renderer);
+                console.log('*----- --- -----*');
+                console.log(' - count   :', count);
+                console.log(' - fps     :', renderer.fps());
+                console.log(' - ups     :', renderer.ups());
+                console.log(' - renderer:', renderer);
             }
             setTimeout(inner, 1000);
         }
@@ -109,6 +113,8 @@ define(function(require) {
             renderer.step();
             setTimeout(loop, 10);
         }
+        this.renderer = renderer;
+        renderer.measureStart();
         loop();
     };
 
@@ -120,11 +126,11 @@ define(function(require) {
         this.buffer = new DoubleBuffer({width: this.width, 
                                         height: this.height});
         console.log('dbuffer created');
-        if (this.element !== undefined) {
-            this.element.remove();
-        }
+//        if (this.element !== undefined) {
+//            this.element.remove();
+//        }
         this.element = jQuery(this.buffer.getElement());
-        this.element.append('<div class="graphit-error unsuported">CANVAS NOT SUPPORTED</div>');
+        //this.element.append('<div class="graphit-error unsuported">CANVAS NOT SUPPORTED</div>');
         this.body.append(this.element);
         this.body.append('Testing select!');
     };
