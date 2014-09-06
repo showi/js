@@ -20,9 +20,9 @@ define(function(require) {
     if (jQuery.fn.center === undefined) {
         util.log('jQuery.fn', 'center');
         jQuery.fn.center = function() {
-            var top = (win.height() - this.outerHeight()) / 2
+            var top = ((win.height() - this.outerHeight()) / 2)
                     + win.scrollTop();
-            var left = (win.width() - this.outerWidth()) / 2
+            var left = ((win.width() - this.outerWidth()) / 2)
                     + win.scrollLeft();
             this.css({
                 "position" : "fixed",

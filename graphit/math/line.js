@@ -14,9 +14,9 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
-    ns = ns.math;
+    var ns = require('graphit/math');
     var _ns_ = 'line';
+
     if (_ns_ in ns && ns[_ns_] !== undefined) {
         return ns[_ns_];
     }

@@ -116,8 +116,8 @@ define(function(require) {
     };
 
     RENDERER.prototype.apply_node_context = function(node) {
-        for (var i = 0; i < eCtx.keys.length; i++) {
-            var prop = eCtx[eCtx.keys[i]];
+        for (var i = 0; i < eCtx._keys.length; i++) {
+            var prop = eCtx[eCtx._keys[i]];
             if (node[prop] != undefined) {
                 console.log('Apply', prop, node[prop])
                 this.ctx[prop] = node[prop];

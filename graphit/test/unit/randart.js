@@ -10,7 +10,7 @@ define(function(require) {
         this.__namespace__ = 'graphit/test/randart';
         var size = util.documentSize();
         this.size = size;
-        this.ratio = 2.0;
+        this.ratio = 4.0;
         this.width = Math.round(size.x  / this.ratio);
         this.height = Math.round(size.y / this.ratio);
         console.log('w/h', this.width, this.height);
@@ -43,8 +43,8 @@ define(function(require) {
         var mWidth = this.width / this.ratio;
         var mHeight = this.height / this.ratio;
         console.log('mW/mH', mWidth, mHeight);
-        var row = Math.round(this.size[0] / mWidth);
-        var col = Math.round(this.size[1] / mHeight);
+        var row = Math.round(this.size.x / mWidth);
+        var col = Math.round(this.size.y / mHeight);
         console.log('row/col', row, col);
         var maxMiniature = row * col;
         console.log('MaxMiniature', maxMiniature);

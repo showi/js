@@ -15,12 +15,13 @@ define(function(require) {
     'use strict';
 
     var MissingParameterException = require('graphit/exception/MissingParameter');
-    var Context = require('../context');
-    var DoubleBuffer = require('../doublebuffer');
-    var Canvas = require('../canvas');
-    var tool = require('../tool');
-    var shape = require('../shape');
-    var util = require('../../util');
+    var Context = require('graphit/draw/context');
+    var DoubleBuffer = require('graphit/draw/doublebuffer');
+    var Canvas = require('graphit/draw/canvas');
+    var tool = require('graphit/draw/tool');
+    var shape = require('graphit/draw/shape');
+    var util = require('graphit/util');
+    var math = require('graphit/math');
 
     function CLOCK(width, height, id) {
         this.__MODULE__ = 'graphit/draw/widget/clock';
@@ -49,7 +50,7 @@ define(function(require) {
     }
 
     CLOCK.prototype.init = function() {
-        var w = this._width / 8;
+        var w = math.min(this._width, this.height) / 8;
         this.sizeMillisecond = w * 0.5;
         this.sizeSecond = w * 4;
         this.sizeMinute = w * 3;
@@ -68,7 +69,8 @@ define(function(require) {
         });
         ctx = this.background.getCtx();
         var dWidth = this._width / 2;
-        ctx.translate(dWidth, dWidth);
+        var dHeight = this._height / 2;
+        ctx.translate(dWidth, dHeight);
         var that = this;
         var tw = null;
         /* Background */
@@ -139,13 +141,20 @@ define(function(require) {
 
     CLOCK.prototype.draw = function() {
         var that = this;
+        var ctx = this.dbuffer.back.getCtx();
+        tool.saveAndRestore(ctx, function(ctx) {
+            that._draw(ctx);
+        });
+    };
+    CLOCK.prototype._draw = function(ctx) {
+        var that = this;
         if (this.needRefresh) {
             this.init();
         }
         this.dbuffer.clearBackBuffer();
-        var ctx = this.dbuffer.back.getCtx();
         var dWidth = this._width / 2;
-        ctx.translate(dWidth, dWidth);
+        var dHeight = this._height / 2;
+        ctx.translate(dWidth, dHeight);
         ctx.lineCap = 'round';
         this.drawBackground(ctx);
         /* Milliseconds */

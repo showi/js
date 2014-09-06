@@ -43,7 +43,7 @@ define(function(require) {
         },
         saveAndRestore : function(ctx, callback) {
             ctx.save();
-            callback(ctx);
+            callback.call(callback, ctx);
             ctx.restore();
         }
     };

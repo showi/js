@@ -14,49 +14,23 @@ define(function(require) {
 
     'use strict';
 
-    var graphit = require('./namespace');
+    var ns = require('graphit/namespace');
+    var _ns_ = 'util';
+    
+    console.log('Namespace', _ns_, ns);
+
     var Vector2d = require('graphit/math/vector2d');
+    
+    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+    
     var documentElement = jQuery(document);
     var windowElement = jQuery(window);
 
     var UTIL = {
-        __MODULE__ : 'graphit/util',
+        __namespace__ : 'graphit/util',
         genUID : function() {
             return graphit.genUID();
         },
-//        injectMixin : function(cls, mixin) {
-//            if ('prototype' in mixin) {
-//                for (key in mixin.prototype) {
-//                    if (key in cls.prototype) {
-//                        console.warn('Method already set', key, "exit..");
-//                        return false;
-//                    }
-//                    cls.prototype[key] = mixin.prototype[key];
-//                }
-//            } else {
-//                for (key in mixin) {
-//                    var fn = mixin[key];
-//                    if (this.isFunction(fn)) {
-//                        cls.prototype[key] = fn;
-//                    } else {
-//                        cls[key] = fn;
-//                    }
-//                }
-//            }
-            // console.log('injecting constructor', mixin.constructor);
-            // if('constructor' in mixin) {
-            // var oc = cls.prototype.constructor;
-            // function nc() {
-            // console.log('IN constructor');
-            // mixin.constructor.apply(this, arguments);
-            // oc.apply(this, arguments);
-            // return this;
-            // };
-            // cls.prototype.constructor = nc;
-            // // cls.prototype = Object.create(cls);
-            // }
-//            return true;
-//        },
         injectProperties : function(obj, properties) {
             for (var i = 0; i < properties.length; i++) {
                 var meth = properties[i];
@@ -73,6 +47,7 @@ define(function(require) {
             }
         },
         windowSize : function() {
+            
             return new Vector2d(windowElement.width(),
                                 windowElement.height());
         },
@@ -128,8 +103,8 @@ define(function(require) {
             return choices[Math.randInt(0, choices.length)];
         },
         isArray : function(value) {
-            return Object.prototype.toString.call(value) === Object.prototype.toString
-                    .call([]);
+            return (Object.prototype.toString.call(value) === 
+                '[object Array]');
         },
         isString : function(value) {
             return (typeof value) === "string";
@@ -148,37 +123,7 @@ define(function(require) {
         isFunction : function(value) {
             return (typeof value) === 'function';
         },
-        getMin : function(values) {
-            if (!this.isArray(values)) {
-                values = [values];
-            }
-            var min = values[0];
-            for (var i = 1; i < values.length; i++) {
-                if (values[i] < min) {
-                    min = values[i];
-                }
-            }
-            return min;
-        },
-    // centerElement : function(elm) {
-    // /*
-    // *@bug: Fail to align element vertically
-    // */
-    // console.log('Center');
-    // console.log('height', windowElement.height());
-    // console.log('outerHeight', elm.outerHeight());
-    // console.log('scrollTop', windowElement.scrollTop());
-    // elm.css("position", "absolute");
-    // elm.css("top",
-    // Math.max(0, ((windowElement.height() - elm.outerHeight()) / 2)
-    // + windowElement.scrollTop())
-    // + "px");
-    // elm.css("left",
-    //               Math.max(0, ((windowElement.width() - elm.outerWidth()) / 2)
-    //                    + windowElement.scrollLeft())
-    //                    + "px");
-    //        },
-
     };
-    return UTIL;
+    ns[_ns_] = UTIL;
+    return ns[_ns_];
 });

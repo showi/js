@@ -15,10 +15,9 @@ define(function(require) {
     'use strict';
 
 
-    var ns = require('graphit/namespace');
+    var ns = require('graphit/math');
     var Vector2d = require('graphit/math/vector2d');
 
-    ns = ns.math;
     var _ns_ = 'matrix33';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }

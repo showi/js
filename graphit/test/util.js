@@ -14,16 +14,20 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
-    ns = ns.test;
+    var namespace = require('graphit/namespace');
+    var ns = namespace.test;
     var _ns_ = 'util';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+    
+    console.log('Creating util ns');
 
-    var logElement = jQuery('<div class="graphit-container-log"></div>');
+    var logElement = jQuery('<div class="graphit-container log"></div>');
     jQuery('body').append(logElement);
 
+    console.log('after jQuery');
     var UTIL = {
+        __namespace__: 'graphit/test/util',
         numPass : 10000000,
         logElement : logElement,
         log : function() {
@@ -100,5 +104,6 @@ define(function(require) {
         }
     };
     ns[_ns_] = UTIL;
+    console.log('ns', ns, _ns_)
     return ns[_ns_];
 });

@@ -15,8 +15,9 @@ define(function(require) {
     'use strict';
 
     var util = require('graphit/test/util');
-    var kinds_visual = ['clock', 'randart', 'movingpaint'];
-    var kinds = ['mouseclick'];
+    var kinds_visual = ['clock', 'randart', 'movingpaint', 'mouseclick'];
+    var kinds = ['clock'];
+
     for (var i = 0; i < kinds.length; i++) {
         util.runTest(kinds[i]);
     }

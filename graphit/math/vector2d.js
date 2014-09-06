@@ -14,9 +14,8 @@ define(function(require) {
 
     'use strict';
 
-
-    var ns = require('graphit/namespace');
-    ns = ns.math;
+    var ns = require('graphit/math');
+    console.log('Namespace/math', ns);
     var _ns_ = 'vector2d';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }

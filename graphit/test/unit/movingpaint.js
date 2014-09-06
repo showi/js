@@ -22,7 +22,7 @@ define(function(require) {
     var util = require('graphit/util');
     var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
-    var Renderer = require('graphit/tree/renderer');
+    var Renderer = require('graphit/renderer/renderer');
     var eCap = require('graphit/enum/capability');
     var tutil = require('graphit/tree/util');
     var Point2d = require('graphit/math/point2d');
@@ -102,7 +102,7 @@ define(function(require) {
         console.log('----- MovingPaint -----');
         this.timeout = Math.round(10);
         var numPrimitive = 128;
-        var size = util.documentSize();
+        var size = util.windowSize();
         size.x = Math.min(640, size.x);
         size.y = Math.min(480, size.y);
         var scale = 0.80;
