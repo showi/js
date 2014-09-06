@@ -183,7 +183,7 @@ define(function(require) {
                 if (tree.hasCapability(node, eCap.transform)) {
 //                    console.log(node.worldTransform.toString());
                     this.ctx.translate(node.worldTransform.positionX(), 
-                                       node.worldTransform.positionX());
+                                       node.worldTransform.positionY());
                 }
                 that.hookExec('pre_render', node);
                 if (tree.hasCapability(node, eCap.render)) {

@@ -25,11 +25,7 @@ define(function(require) {
         this.worldTransform = new Matrix33();
         
         this.applyWorldTransform = function(world) {
-          var m = world.clone();
-          //this.worldTransform.copy(world);
-          m.mul(this.transform);
-//          console.log(world.toString(), this.transform.toString());
-          this.worldTransform = m;
+          this.worldTransform = world.clone().mul(this.transform);
           return this.worldTransform;
         };
         this.getWorldTransform = function () {
