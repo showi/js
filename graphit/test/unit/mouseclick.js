@@ -117,11 +117,11 @@ define(function(require) {
             if (!tree.hasCapability(node, eCap.render)) {
                 return;
             }
-            if (Math.randInt(0, 10) > 1) {
-                tree.setCapability(node, eCap.draw);
-            } else {
-                tree.unsetCapability(node, eCap.draw);
-            }
+//            if (Math.randInt(0, 10) > 1) {
+//                tree.setCapability(node, eCap.draw);
+//            } else {
+//                tree.unsetCapability(node, eCap.draw);
+//            }
         };
         this.renderer.update = function(node) {
             if (tree.hasCapability(node, eCap.transform)) {
