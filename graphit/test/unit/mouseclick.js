@@ -37,6 +37,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
+        this.numRectangle = 100;
         this.size = size;
         this.ratio = 0.8;
         this.buffer = new DBuffer({
@@ -72,7 +73,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.createTree = function() {
-        for (var i = 0; i < 1000; i++) {
+        for (var i = 0; i < this.numRectangle; i++) {
             this.createNode();
         }
     };
@@ -160,7 +161,7 @@ define(function(require) {
         var that = this;
         function loop() {
             that.renderer.step();
-            setTimeout(loop, 33);
+            setTimeout(loop, 1000/66);
         }
         loop();
     };
