@@ -47,6 +47,9 @@ define(function(require) {
         console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
+            compositing: {
+                globalAlpha: 0.5,
+            }
         });
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
@@ -69,7 +72,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.createTree = function() {
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < 1000; i++) {
             this.createNode();
         }
     };

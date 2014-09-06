@@ -43,8 +43,8 @@ define(function(require) {
         this.node = [];
         this.skipped = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 1000 / 60;
-        this.fixedDraw = 1000 / 40;
+        this.fixedUpdate = 1000 / 70;
+        this.fixedDraw = 1000 / 30;
         this.updateAdder = 0;
         this.drawAdder = 0;
         this.measure = {
@@ -176,6 +176,7 @@ define(function(require) {
         if (draw) {
             this.measure.fps.count++;
             that.ctx.save();
+            that.apply_node_context(this.compositing);
             that.hookExec('draw_init');
             for (var i = 0; i < this.node.length; i++) {
                 var node = this.node[i];
