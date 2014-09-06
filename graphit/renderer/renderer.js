@@ -36,6 +36,7 @@ define(function(require) {
     };
 
     function RENDERER() {
+        this.namespace = 'graphit/renderer/renderer';
         this.setParameters(arguments, VALIDATOR);
         this.startTime = Date.now();
         this.endTime = null;

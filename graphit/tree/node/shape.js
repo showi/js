@@ -43,7 +43,6 @@ define(function(require) {
 
     function SHAPE() {
         Node.call(this, arguments);
-        this.__namespace__ = 'graphit/tree/node/shape';
         this.setParameters(arguments, VALIDATORS);
         this.transform = new Matrix33();
         this.worldTransform = new Matrix33();
@@ -52,8 +51,8 @@ define(function(require) {
         tree.setCapability(this, eCap.transform);
         this.setUp(this.kind);
     };
-
     SHAPE.prototype = Object.create(Node.prototype);
+    SHAPE.__namespace__ = 'graphit/tree/node/shape';
     TransMixin.call(SHAPE.prototype);
 
     SHAPE.prototype.setUp = function(kind) {

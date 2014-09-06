@@ -34,7 +34,8 @@ define(function(require) {
         mX : 2, // m13,
         mY : 5, // m23,
     });
-
+    MATRIX33.__namespace__ = 'graphit/enum/matrix33';
+    
     ns[_ns_] = MATRIX33;
     return ns[_ns_];
 });

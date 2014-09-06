@@ -40,7 +40,6 @@ define(function(require) {
          * 
          * @param matrix: If defined we are copying data
          */
-        this.__namespace__ = 'graphit/math/matrix33';
         if (matrix === undefined) {
             this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         } else {
@@ -53,6 +52,8 @@ define(function(require) {
         }
     };
 
+    MATRIX33.__namespace__ = 'graphit/math/matrix33';
+    
     MATRIX33.prototype.setData = function(data) {
         if (data.length != 9) { throw 'InvalidMatrix33DataSize(' + data.length
                 + ')'; }

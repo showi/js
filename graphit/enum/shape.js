@@ -25,7 +25,8 @@ define(function(require) {
         'line' : 'line',
         'circle' : 'circle',
     });
-
+    SHAPE.__namespace__ = 'graphit/enum/shape';
+    
     ns[_ns_] = SHAPE;
     return ns[_ns_];
 });

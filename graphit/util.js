@@ -121,6 +121,8 @@ define(function(require) {
             return (typeof value) === 'function';
         },
     };
+    UTIL.__namespace__ = 'graphit/util';
+
     ns[_ns_] = UTIL;
     return ns[_ns_];
 });

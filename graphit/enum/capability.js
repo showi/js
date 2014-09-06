@@ -26,6 +26,7 @@ define(function(require) {
         render : 1 << 3,
         draw: 1 << 4,
     });
+    CAPABILITY.__namespace__ = 'graphit/enum/capability';
 
     ns[_ns_] = CAPABILITY;
     return ns[_ns_];

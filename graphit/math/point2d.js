@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -24,6 +24,8 @@ define(function(require) {
         this.x = (x === undefined) ? 0 : x;
         this.y = (y === undefined) ? 0 : y;
     }
+
+    POINT2D.__namespace__ = 'graphit/math/namespace';
 
     POINT2D.prototype.clone = function() {
         return new POINT2D(this.x, this.y);

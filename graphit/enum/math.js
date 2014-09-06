@@ -20,11 +20,12 @@ define(function(require) {
     var _ns_ = 'math';
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
-    var CAPABILITY = new Enum({
+    var MATH = new Enum({
         GOLD: (1/Math.sqrt(5)) / 2,
         PI: Math.PI,
     });
-
-    ns[_ns_] = CAPABILITY;
+    MATH.__namespace__ = 'graphit/enum/math';
+    
+    ns[_ns_] = MATH;
     return ns[_ns_];
 });

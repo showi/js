@@ -68,6 +68,8 @@ define(function(require) {
             return max;
         }
     };
+    MATH.__namespace__ = 'graphit/math';
+  
     ns[_ns_] = MATH;
     return ns[_ns_];
 });

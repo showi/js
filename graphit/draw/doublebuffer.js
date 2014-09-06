@@ -17,10 +17,11 @@ define(function(require) {
     var Canvas = require('../draw/canvas');
 
     function DBUFFER(options) {
-        this.__namespace__ = 'graphit/draw/doublebuffer';
         this.front = new Canvas(options);
         this.back = new Canvas(options);
     }
+
+    DBUFFER.__namespace__ = 'graphit/draw/doublebuffer';
 
     DBUFFER.prototype.getElement = function() {
         return this.front.getElement();

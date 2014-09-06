@@ -17,7 +17,7 @@ define(function(require) {
     var graphit = window.graphit;
 
     var TOOL = {
-        __MODULE__ : 'graphit/draw/tool',
+        __namespace__ : 'graphit/draw/tool',
         randInt : function(max) {
             return Math.floor((Math.random() * max) + 1);
         },

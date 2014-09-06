@@ -35,11 +35,11 @@ define(function(require) {
 
     function NODE() {
         this.setParameters(arguments, VALIDATORS);
-        this.__namespace__ = 'graphit/tree/node/node';
         this.uid = namespace.genUID();
         this.child = [];
         this.capability = 0;
     };
+    NODE.__namespace__ = 'graphit/tree/node/node';
     MixinParameter.call(NODE.prototype);
 
     NODE.prototype.appendChild = function(child) {

@@ -23,10 +23,10 @@ define(function(require) {
 
     function ELEMENT() {
         Node.call(this, arguments);
-        this.__namespace__ = 'graphit/tree/node/element';
     };
     ELEMENT.prototype = Object.create(Node.prototype);
-
+    ELEMENT.__namespace__ = 'graphit/tree/node/element';
+    
     ns[_ns_] = ELEMENT;
     return ns[_ns_];
 });

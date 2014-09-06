@@ -26,6 +26,7 @@ define(function(require) {
         }
         this._lock();
     }
+    ENUM.__namespace__ = 'graphit/enum';
 
     ENUM.prototype._lock = function() {
         Object.defineProperty(this, '_keys', {

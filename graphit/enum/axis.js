@@ -20,12 +20,13 @@ define(function(require) {
     var _ns_ = 'axis';
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
-    var CAPABILITY = new Enum({
+    var AXIS = new Enum({
         uColor: 'blue',
         vColor: 'green',
         wColor: 'red',
     });
-
-    ns[_ns_] = CAPABILITY;
+    AXIS.__namespace__ = 'graphit/enum/axis';
+    
+    ns[_ns_] = AXIS;
     return ns[_ns_];
 });

@@ -28,5 +28,6 @@ define(function(require) {
             return false;
         },
     };
+    UTIL.__namespace__ = 'graphit/tree/util';
     return UTIL;
 });

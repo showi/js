@@ -32,14 +32,13 @@ define(function(require) {
 
     function PRIMITIVE() {
         Node.call(this, arguments);
-        this.__namespace__ = 'graphit/tree/node/primitive';
         util.setCapability(this, eCap.draw);
         this.traversable = false;
         this.primitive = [];
     };
-
     PRIMITIVE.prototype = Object.create(Node.prototype);
-
+    PRIMITIVE.__namespace__ = 'graphit/tree/node/primitive';
+    
     PRIMITIVE.prototype.addPrimitive = function(primitive) {
         if (primitive === undefined) { throw 'UndefinedPrimitive'; }
         this.primitive.push(primitive);

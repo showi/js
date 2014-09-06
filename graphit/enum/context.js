@@ -20,7 +20,7 @@ define(function(require) {
     var _ns_ = 'context';
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
-    var Context = new Enum({
+    var CONTEXT = new Enum({
         fillStyle : true,
         strokeStyle : true,
         shadowColor : true,
@@ -37,11 +37,12 @@ define(function(require) {
         globalAlpha : true,
         globalCompositeOperation : true,
     });
+    CONTEXT.__namespace__ = 'graphit/enum/context';
 //    var props = ['canvas', 'fillStyle', 'font', 'globalAlpha',
 //                 'globalCompositeOperation', 'lineCap', 'lineJoin',
 //                 'lineWidth', 'miterLimit', 'shadowOffsetX',
 //                 'shadowOffsetY', 'shadowBlur', 'shadowColor',
 //                 'strokeStyle', 'textAlign', 'textBaseline'];
-    ns[_ns_] = Context;
+    ns[_ns_] = CONTEXT;
     return ns[_ns_];
 });

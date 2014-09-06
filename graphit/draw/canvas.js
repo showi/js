@@ -39,13 +39,14 @@ define(function(require) {
     };
 
     function CANVAS(options) {
-        this.__namespace__ = 'graphit/draw/canvas';
         this.setParameters(options, VALIDATORS);
         this.element = null;
         this.context = null;
         this._newContext(options.width, options.height, options.id);
     };
 
+    CANVAS.__namespace__ = 'graphit/draw/canvas';
+    
     CANVAS.prototype._newContext = function(width, height, id) {
         var elm = undefined;
         if (id !== undefined) {

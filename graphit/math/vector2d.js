@@ -25,6 +25,8 @@ define(function(require) {
         this.y = (y === undefined) ? 0 : y;
     }
 
+    VECTOR2D.__namespace__ = 'graphit/math/vector2d';
+        
     VECTOR2D.prototype.clone = function() {
         return new VECTOR2D(this.x, this.y);
     };

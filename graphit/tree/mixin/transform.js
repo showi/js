@@ -46,9 +46,8 @@ define(function(require) {
         this.translateXY = function(x, y) {
             return this.transform.translateXY(x, y);
         };
-        this.position = function() {
-            return this.transform.position(arguments);
-//            return this.transform.position(vector);
+        this.position = function(vector) {
+            return this.transform.position(vector);
         };
         this.positionX = function(x) {
             return this.transform.positionX(x);
@@ -60,5 +59,7 @@ define(function(require) {
             return this.transform.positionXY(x, y);
         };
     }
+    TRANSFORM.__namespace__ = 'graphit/tree/mixin/transform';
+
     return TRANSFORM;
 });
