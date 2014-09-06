@@ -43,8 +43,8 @@ define(function(require) {
         this.node = [];
         this.skipped = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 1000 / 70;
-        this.fixedDraw = 1000 / 30;
+        this.fixedUpdate = 1000 / 33;
+        this.fixedDraw = 1000 / 66;
         this.updateAdder = 0;
         this.drawAdder = 0;
         this.measure = {

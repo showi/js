@@ -37,7 +37,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 100;
+        this.numRectangle = 50;
         this.size = size;
         this.ratio = 0.8;
         this.buffer = new DBuffer({
@@ -52,6 +52,9 @@ define(function(require) {
                 globalAlpha: 0.5,
             }
         });
+        this.renderer.fixedUpdate = 1000 / 33;
+        this.renderer.fixedDraw = 1000 / 66;
+        this.timeout = this.renderer.fixedUpdate / 2;
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
                 .height() / 2);
@@ -109,8 +112,8 @@ define(function(require) {
         if (Math.random() > 0.5) {
             node.orientation.inverseY();
         }
-        node.velocity = new Vector2d();
-        node.velocity.randomize().clamp(0.1, 20);
+        node.velocity = new Vector2d(1, 0);
+        node.velocity.randomize().smul(Math.randInt(0, 10));
         this.renderer.root.appendChild(node);
     };
 
@@ -132,10 +135,8 @@ define(function(require) {
         this.renderer.update = function(node) {
             if (tree.hasCapability(node, eCap.transform)) {
                 var p = node.transform.position();
-                var step = 0.9 * this.delta;
-//                var o = node.orientation.clone().normalize().smul(step);
                 var speed = node.orientation.clone().mul(node.velocity);
-                p.add(speed);//.clamp(0.001, 1.0);
+                p.add(speed);
                 var w = (that.canvas.width() / 2) - (node.size.width / 2);
                 var h = (that.canvas.height() /2) - (node.size.height / 2);
                 if (p.x < -w || p.x > w) {
@@ -150,7 +151,7 @@ define(function(require) {
         };
         this.renderer.draw_init = function() {
             that.buffer.back.clear('white');
-//            this.ctx.translate(that.width / 2, this.height / 2);
+            this.ctx.translate(that.width / 2, this.height / 2);
         };
         this.renderer.render = function(node) {
             node.draw(this);
@@ -158,14 +159,27 @@ define(function(require) {
         this.renderer.draw_end = function() {
             that.buffer.flip();
         };
-        var that = this;
         function loop() {
             that.renderer.step();
-            setTimeout(loop, 1000/66);
+            setTimeout(loop, that.timeout);
         }
         loop();
     };
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     MOUSE.prototype._OLD = function() {
         canvas.clear('white');
         var ctx = canvas.getCtx();
