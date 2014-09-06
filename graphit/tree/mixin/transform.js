@@ -20,14 +20,20 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
 
     function TRANSFORM() {
-        console.log('Setting tranform capability', this);
         util.setCapability(this, eCap.transform);
         this.transform = new Matrix33();
         this.worldTransform = new Matrix33();
         
         this.applyWorldTransform = function(world) {
-          this.worldTransform.copy(world);
-          this.worldTransform.mul(this.transform);
+          var m = world.clone();
+          //this.worldTransform.copy(world);
+          m.mul(this.transform);
+//          console.log(world.toString(), this.transform.toString());
+          this.worldTransform = m;
+          return this.worldTransform;
+        };
+        this.getWorldTransform = function () {
+            return this.worldTransform;
         };
         this.rotate = function(angle) {
             return this.transform.rotate(angle);
@@ -42,19 +48,20 @@ define(function(require) {
             return this.transform.translateY(y);
         };
         this.translateXY = function(x, y) {
-            return this.transform.translateY(y);
+            return this.transform.translateXY(x, y);
         };
-        this.position = function(vector) {
-            return this.transform.position(vector);
+        this.position = function() {
+            return this.transform.position(arguments);
+//            return this.transform.position(vector);
         };
-
         this.positionX = function(x) {
-//            console.log('Transform', this);
             return this.transform.positionX(x);
         };
-
         this.positionY = function(y) {
             return this.transform.positionY(y);
+        };
+        this.positionXY = function(x, y) {
+            return this.transform.positionXY(x, y);
         };
     }
     return TRANSFORM;

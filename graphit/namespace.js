@@ -26,42 +26,28 @@ define(function(require) {
     require('graphit/extend/math');
 
     /* injecting our base data */
-    window[_ns_] = {
+    var NAMESPACE = {
         __version__ : '0.0.1',
         __namespace__ : _ns_,
         tool : null,
         shape : null,
         draw: {},
         enum : {},
+        __uid__: 0,
         genUID : function() {
-            return this.__UID__++;
+            return this.__uid__++;
         },
         tree : {
             node : [],
         },
-        test : {}
+        test : {},
+        toString: function() {
+            return '<' + this.__namespace__ + 
+                ' version=' + this.__version__ + '>';
+        }
     };
-//    for(var key in window[_ns_]) {
-//        if (!window[_ns_].hasOwnProperty(key)) {
-//            continue;
-//        }
-//        Object.defineProperty(window[_ns_], key, {
-//            writable : false,
-//            enumerable : true,
-//            configurable : true
-//        });
-//    }
-//    Object.defineProperty(window[_ns_], '__UID__', {
-//        value: 0,
-//        writable: true,
-//        enumerable: true,
-//        configurable : false
-//    });
-//    Object.defineProperty(window, _ns_, {
-//        writable: false,
-//        enumerable: true,
-//        configurable: false,
-//    });
-    console.log('>>> Namespace', _ns_, window[_ns_]);
+
+    window[_ns_] = NAMESPACE;
+    console.log(NAMESPACE.toString());
     return window[_ns_];
 });

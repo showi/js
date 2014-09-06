@@ -15,7 +15,7 @@ define(function(require) {
     'use strict';
 
     var ns = require('graphit/namespace');
-    console.log(ns);
+
     var _ns_ = 'math';
     //    var util = require('graphit/util');
 

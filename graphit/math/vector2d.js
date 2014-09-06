@@ -15,8 +15,8 @@ define(function(require) {
     'use strict';
 
     var ns = require('graphit/math');
-    console.log('Namespace/math', ns);
     var _ns_ = 'vector2d';
+    var math = require('graphit/math');
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
@@ -34,6 +34,13 @@ define(function(require) {
         this.y = vector.y;
         return this;
     };
+    
+    VECTOR2D.prototype.normalize = function() {
+        var l = this.length();
+        this.x /= l;
+        this.y /= l;
+        return this;
+    };
 
     VECTOR2D.prototype.add = function(vector) {
         this.x += vector.x;
@@ -44,6 +51,18 @@ define(function(require) {
     VECTOR2D.prototype.sub = function(vector) {
         this.x -= vector.x;
         this.y -= vector.y;
+        return this;
+    };
+
+    VECTOR2D.prototype.smul = function(value) {
+        this.x *= value;
+        this.y *= value;
+        return this;
+    };
+
+    VECTOR2D.prototype.inverse = function() {
+        this.x = -this.x;
+        this.y = -this.y;
         return this;
     };
 
@@ -63,6 +82,22 @@ define(function(require) {
         var vector = b.clone().sub(a);
         this.x = vector.x;
         this.y = vector.y;
+        return this;
+    };
+    VECTOR2D.prototype.floor = function() {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+        return this;
+    };
+    VECTOR2D.prototype.round = function() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+        return this;
+    };
+    
+    VECTOR2D.prototype.clamp = function(min, max) {
+        this.x = math.clamp(this.x, min, max);
+        this.y = math.clamp(this.y, min, max);
         return this;
     };
 

@@ -20,10 +20,12 @@ define(function(require) {
     var eCap = require('graphit/enum/capability');
     var eMat = require('graphit/enum/matrix33');
     var eCtx = require('graphit/enum/context');
+    var Node = require('graphit/tree/node/node');
 
     var VALIDATOR = {
         'root' : {
             required : true,
+            defaultValue : new Node(),
         },
         'ctx' : {
             required : true,
@@ -41,8 +43,8 @@ define(function(require) {
         this.node = [];
         this.skipped = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 1000/60;
-        this.fixedDraw = 1000/30;
+        this.fixedUpdate = 1000 / 60;
+        this.fixedDraw = 1000 / 30;
         this.updateAdder = 0;
         this.drawAdder = 0;
         this.measure = {
@@ -78,8 +80,8 @@ define(function(require) {
         if (end <= this.measure.time.stopOn) { return false; }
         this.measure.time.end = end;
         var delta = (end - this.measure.time.start);
-        var fps = this.measure.fps.count / delta ;
-        var ups = this.measure.ups.count / delta ;
+        var fps = this.measure.fps.count / delta;
+        var ups = this.measure.ups.count / delta;
         this.measure.fps.value = fps;
         this.measure.ups.value = ups;
         this.measure.time.delta = delta;
@@ -102,7 +104,7 @@ define(function(require) {
         if (name in this) {
             this[name].call(this, node);
         }
-        if (name in node) {
+        if (node !== undefined && name in node) {
             node[name].call(node, this);
         }
     };
@@ -116,11 +118,11 @@ define(function(require) {
     };
 
     RENDERER.prototype.apply_node_context = function(node) {
+        var key = null;
         for (var i = 0; i < eCtx._keys.length; i++) {
-            var prop = eCtx[eCtx._keys[i]];
-            if (node[prop] != undefined) {
-                console.log('Apply', prop, node[prop])
-                this.ctx[prop] = node[prop];
+            key = eCtx._keys[i];
+            if (node[key] !== undefined) {
+                this.ctx[key] = node[key];
             }
         }
     };
@@ -173,19 +175,26 @@ define(function(require) {
         }
         if (draw) {
             this.measure.fps.count++;
+            that.ctx.save();
+            that.hookExec('draw_init');
             for (var i = 0; i < this.node.length; i++) {
                 var node = this.node[i];
                 that.ctx.save();
-                that.apply_node_context(node);
                 if (tree.hasCapability(node, eCap.transform)) {
-                    that.ctx.translate(node.worldTransform._data[eMat.mX],
-                                       node.worldTransform._data[eMat.mY]);
+//                    console.log(node.worldTransform.toString());
+                    this.ctx.translate(node.worldTransform.positionX(), 
+                                       node.worldTransform.positionX());
                 }
                 that.hookExec('pre_render', node);
+                if (tree.hasCapability(node, eCap.render)) {
+                    that.apply_node_context(node);
+                }
                 that.hookExec('render', node);
                 that.hookExec('post_render', node);
                 that.ctx.restore();
             }
+            that.hookExec('draw_end');
+            that.ctx.restore();
         }
     };
 

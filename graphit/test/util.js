@@ -19,13 +19,10 @@ define(function(require) {
     var _ns_ = 'util';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
-    
-    console.log('Creating util ns');
 
     var logElement = jQuery('<div class="graphit-container log"></div>');
     jQuery('body').append(logElement);
 
-    console.log('after jQuery');
     var UTIL = {
         __namespace__: 'graphit/test/util',
         numPass : 10000000,
@@ -78,6 +75,7 @@ define(function(require) {
             } catch (e) {
                 console.error('Exception', e);
                 console.error(e.stack);
+                console.error(new Error().stack);
             }
             return false;
         },
@@ -104,6 +102,5 @@ define(function(require) {
         }
     };
     ns[_ns_] = UTIL;
-    console.log('ns', ns, _ns_)
     return ns[_ns_];
 });

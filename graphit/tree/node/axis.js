@@ -20,7 +20,6 @@ define(function(require) {
     var TransMixin = require('graphit/tree/mixin/transform');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
-    var Matrix33 = require('graphit/math/matrix33');
     var eAxis = require('graphit/enum/axis');
 
     var ns = require('graphit/namespace');
@@ -33,7 +32,7 @@ define(function(require) {
         kind : {
             required : true
         },
-        pos : {
+        position : {
             required : false,
         },
         size : {
@@ -45,11 +44,7 @@ define(function(require) {
         Node.call(this, arguments);
         this.__namespace__ = 'graphit/tree/node/shape';
         this.setParameters(arguments, VALIDATORS);
-        this.transform = new Matrix33();
-        this.worldTransform = new Matrix33();
-        tree.setCapability(this, eCap.render);
         tree.setCapability(this, eCap.draw);
-        tree.setCapability(this, eCap.transform);
         this.setUp(this.kind);
     };
 
@@ -57,45 +52,12 @@ define(function(require) {
     TransMixin.call(SHAPE.prototype);
 
     SHAPE.prototype.setUp = function(kind) {
-        var meth = 'setUp_' + kind;
-        this.transform.positionX(this.pos.x);
-        this.transform.positionY(this.pos.y);
-        return this[meth]();
-    };
-
-    SHAPE.prototype.setUp_line = function() {
-        // console.log('Setting up line:');
-        this.a = this.size.a;
-        this.b = this.size.b;
-
-    };
-
-    SHAPE.prototype.setUp_rectangle = function() {
-        this.u = new Vector2d(this.size.width / 2, 0);
-        this.v = new Vector2d(0, this.size.height / 2);
-    };
-
-    SHAPE.prototype.draw = function(renderer) {
-        var meth = 'draw_' + this.kind;
-        return this[meth](renderer);
-    };
-
-    SHAPE.prototype.draw_line = function(renderer) {
-        var dSize = this.size / 2;
-        shape.line(renderer.ctx, -dSize, 0, dSize, 0);
+        this.u = new Vector2d(1, 0);
+        this.v = new Vector2d(0, 1);
     };
 
     SHAPE.prototype.draw_rectangle = function(renderer) {
-        if (this.fillStyle !== undefined) {
-//            console.log('fillRect Drawing rectangle');
-            renderer.ctx
-                .fillRect(-this.u.x, -this.v.y, this.u.x * 2, this.v.y * 2);
-        }
-        if (this.strokeStyle !== undefined) {
-//            console.log('strokeRect Drawing rectangle');
-            renderer.ctx
-            .strokeRect(-this.u.x, -this.v.y, this.u.x * 2, this.v.y * 2);
-        }
+        
     };
 
     ns[_ns_] = SHAPE;

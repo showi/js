@@ -23,7 +23,8 @@ define(function(require) {
     var CAPABILITY = new Enum({
         transform : 1 << 1,
         rigid : 1 << 2,
-        draw : 1 << 3,
+        render : 1 << 3,
+        draw: 1 << 4,
     });
 
     ns[_ns_] = CAPABILITY;
