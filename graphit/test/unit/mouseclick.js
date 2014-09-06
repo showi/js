@@ -139,7 +139,7 @@ define(function(require) {
                 if (p.y > h || p.y < -h) {
                     node.orientation.y = -node.orientation.y;
                 }
-                node.orientation.normalize();
+//                node.orientation.normalize();
 //                o = node.orientation.clone().normalize().smul(step);
 //                p.add(o);
                 node.transform.translate(o);
