@@ -33,6 +33,7 @@ define(function(require) {
         shape : null,
         draw: {},
         enum : {},
+        dt: {},
         __uid__: 0,
         genUID : function() {
             return this.__uid__++;

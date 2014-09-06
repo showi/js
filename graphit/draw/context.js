@@ -23,7 +23,7 @@ define(function(require) {
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function CONTEXT(canvas) {
-        this.__MODULE__ = 'graphit/draw/Context';
+        this.__namespace__ = 'graphit/draw/context';
         if (!(this instanceof CONTEXT)) { return new CONTEXT(canvas); }
         if (!CONTEXT.prototype.arc) {
             CONTEXT.setup.call(this, this.ctx);
