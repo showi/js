@@ -44,7 +44,7 @@ define(function(require) {
         this.skipped = 0;
         this.numUpdate = 0;
         this.fixedUpdate = 1000 / 60;
-        this.fixedDraw = 1000 / 30;
+        this.fixedDraw = 1000 / 40;
         this.updateAdder = 0;
         this.drawAdder = 0;
         this.measure = {

@@ -65,6 +65,14 @@ define(function(require) {
         this.y = -this.y;
         return this;
     };
+    VECTOR2D.prototype.inverseX = function() {
+        this.x = -this.x;
+        return this;
+    };
+    VECTOR2D.prototype.inverseY = function() {
+        this.y = -this.y;
+        return this;
+    };
 
     VECTOR2D.prototype.mul = function(vector) {
         this.x *= vector.x;

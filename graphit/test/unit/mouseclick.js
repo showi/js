@@ -98,7 +98,7 @@ define(function(require) {
         node.fillStyle = tool.randomColor();
         node.strokeStyle = tool.randomColor();
         node.orientation = new Vector2d();
-        node.orientation.randomize().normalize().smul(Math.randFloat(0.1, 5));
+        node.orientation.randomize().normalize().smul(Math.random());
 //        console.log('orientation', node.uid, node.orientation.toString());
         this.renderer.root.appendChild(node);
     };
@@ -114,50 +114,30 @@ define(function(require) {
     MOUSE.prototype.run = function() {
         var that = this;
         this.renderer.post_update = function(node) {
-            if (!tree.hasCapability(node, eCap.render)) {
-                return;
-            }
-//            if (Math.randInt(0, 10) > 1) {
-//                tree.setCapability(node, eCap.draw);
-//            } else {
-//                tree.unsetCapability(node, eCap.draw);
-//            }
+            ;
         };
         this.renderer.update = function(node) {
             if (tree.hasCapability(node, eCap.transform)) {
                 var p = node.transform.position();
                 var step = 0.1 * this.delta;
-                var o = node.orientation.clone().smul(step);
+                var o = node.orientation.clone().normalize().smul(step);
                 p.add(o);//.clamp(0.001, 1.0);
                 var w = that.canvas.width() / 2;
                 var h = that.canvas.height() /2;
-                var x = 0;
-                var y = 0;
-                if (p.x > w || p.x < -w) {
-                    node.orientation.x = -node.orientation.x; //inverse();
+                if (p.x < -w || p.x > w) {
+                    node.orientation.inverseX();
                 }
-                if (p.y > h || p.y < -h) {
-                    node.orientation.y = -node.orientation.y;
+                if (p.y < -h || p.y > h) {
+                    node.orientation.inverseY();
                 }
-//                node.orientation.normalize();
-//                o = node.orientation.clone().normalize().smul(step);
-//                p.add(o);
                 node.transform.translate(o);
-//                console.log('translate', o.x, o.y, p.x, p.y);
-                node.applyWorldTransform(that.screenTransform);
-//                this.ctx.translate(m.positionX(), m.positionY());
+                node.applyWorldTransform(new Matrix33());
             }
         };
         this.renderer.draw_init = function() {
             that.buffer.back.clear('white');
         };
         this.renderer.render = function(node) {
-//            if (tree.hasCapability(node, eCap.transform)) {
-//                var m = node.applyWorldTransform(that.screenTransform);
-//                 this.ctx.translate(m.positionX(), m.positionY());
-//            } else {
-//                console.log('render no transform', node);
-//            }
             node.draw(this);
         };
         this.renderer.draw_end = function() {
@@ -166,7 +146,7 @@ define(function(require) {
         var that = this;
         function loop() {
             that.renderer.step();
-            setTimeout(loop, 1000/60);
+            setTimeout(loop, 1000/120);
         }
         loop();
     };
