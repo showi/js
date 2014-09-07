@@ -89,6 +89,8 @@ define(function(require) {
         elm.id = id;
         elm.slider({
             value: 500,
+            min: min,
+            max: max,
             change: fnChange,
             slide: fnSlide,
             range: 'min',
@@ -165,7 +167,7 @@ define(function(require) {
         function updateNumElement(value) {
             that.setNumRectangle.call(that, that.wSlider.slider('value'));
         }
-        this.wSlider = wSlider('numElement', 1, 1000, undefined,
+        this.wSlider = wSlider('numElement', 1, 5000, undefined,
                                updateNumElement);
         this.wSlider.width(this.wRenderer.element.width());
         this.wRenderer.element.append(this.wSlider);
