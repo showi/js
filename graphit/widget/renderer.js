@@ -18,12 +18,26 @@ define(function(require) {
         this.renderer = renderer;
     }
 
+    function wKeyValue(key) {
+        var element = {
+            root : jQuery('<div class="field"></div>'),
+            key : jQuery('<div class="value"></div>'),
+            value : jQuery('<div class="key">fps</div>'),
+        };
+        element.key.text(key);
+        var elm = element.root;
+        elm.append(element.key);
+        elm.append(element.value);
+        element.element = elm;
+        return element;
+    }
+
     WIDGET.prototype.build = function(parent) {
         parent = (parent !== undefined) ? parent : jQuery('body');
         var id = this.renderer.uid;
         var namespace = 'graphit/renderer/renderer';
 
-        var root = jQuery('<div id="'+id+'"></div>');
+        var root = jQuery('<div id="' + id + '"></div>');
         root.id = id;
         root.addClass('graphit-container renderer');
         root.css({
@@ -33,36 +47,13 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.html('<h2>' + namespace + '/' + root.id + '</h2>');
 
-        this.fps = jQuery('<div class="field-value"></div>');
-        elm = jQuery('<div class="field-key">fps</div>');
-        elm.append(this.fps);
-        root.append(elm);
-
-        this.ups = jQuery('<div class="field-value"></div>');
-        elm = jQuery('<div class="field-key">ups</div>');
-        elm.append(this.ups);
-        root.append(elm);
-
-        this.delta = jQuery('<div class="field-value"></div>');
-        elm = jQuery('<div class="field-key">delta</div>');
-        elm.append(this.delta);
-        root.append(elm);
-        
-        this.skipped = jQuery('<div class="field-value"></div>');
-        elm = jQuery('<div class="field-key">skip</div>');
-        elm.append(this.skipped);
-        root.append(elm);
-
-        this.skippedDraw = jQuery('<div class="field-value"></div>');
-        elm = jQuery('<div class="field-key">skip draw</div>');
-        elm.append(this.skippedDraw);
-        root.append(elm);
-
-        this.numUpdate = jQuery('<div class="field-value"></div>');
-        elm = jQuery('<div class="field-key">num. update</div>');
-        elm.append(this.numUpdate);
-        root.append(elm);
-        
+        var keys = ['fps', 'ups', 'delta', 'skipped', 'skippedDraw',
+                    'numUpdate', 'nodeRendered'];
+        var key = undefined;
+        for (var i = 0; i < keys.length, key = keys[i]; i++) {
+            this[key] = wKeyValue(key);
+            root.append(this[key].element);
+        }
         root.draggable();
         this.element = root;
         parent.append(root);
@@ -73,12 +64,13 @@ define(function(require) {
         var ups = Math.floor(this.renderer.ups() * 1000);
         var delta = Math.floor(this.renderer.delta * 100) / 100;
         console.log('fps', fps);
-        this.fps.text(fps);
-        this.ups.text(ups);
-        this.delta.text(delta);
-        this.skipped.text(this.renderer.skipped);
-        this.skippedDraw.text(this.renderer.skippedDraw);
-        this.numUpdate.text(this.renderer.numUpdate);
+        this.fps.value.text(fps);
+        this.ups.value.text(ups);
+        this.delta.value.text(delta);
+        this.skipped.value.text(this.renderer.skipped);
+        this.skippedDraw.value.text(this.renderer.skippedDraw);
+        this.numUpdate.value.text(this.renderer.numUpdate);
+        this.nodeRendered.value.text(this.renderer.nodeRendered);
     };
 
     return WIDGET;

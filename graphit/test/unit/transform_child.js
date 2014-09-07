@@ -30,19 +30,15 @@ define(function(require) {
     var tree = require('graphit/tree/util');
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
-    var math = require('graphit/math');
 
     require('graphit/extend/jquery');
 
     function MOUSE() {
-        var size = util.windowSize();
-        size.x = math.clamp(size.x, 100, 640);
-        size.y = math.clamp(size.y, 100, 480);
-        this.setUp(size, 0.8);
+        this.setUp(util.windowSize(), 0.8);
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 500;
+        this.numRectangle = 10;
         this.size = size;
         this.ratio = 0.8;
         this.buffer = new DBuffer({
@@ -54,13 +50,12 @@ define(function(require) {
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
             compositing : {
-//                globalAlpha : 1.0,
+                globalAlpha : 0.5,
             }
         });
-        this.renderer.fixedUpdate = 1/66;
-        this.renderer.fixedDraw = 1/33;
-        this.timeout = 10;
-        this.renderer.limitUpdate = 2;
+        this.renderer.fixedUpdate = 10;
+        this.renderer.fixedDraw = 20;
+        this.timeout = 3;
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
                 .height() / 2);
@@ -79,22 +74,6 @@ define(function(require) {
         root.append(colorPicker);
         return root;
 
-    }
-    
-    function wSlider(id, min, max, fnSlide, fnChange) {
-        if (id === undefined) {
-            id = util.genUID();
-        }
-        var elm = jQuery('<div></div>');
-        elm.id = id;
-        elm.slider({
-            value: 500,
-            change: fnChange,
-            slide: fnSlide,
-            range: 'min',
-            orientation: 'horizontal'
-        });
-        return elm;
     }
 
     MOUSE.prototype.createTree = function() {
@@ -135,22 +114,9 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(1.0);
+        node.velocity.randomize().smul(Math.randInt(0, 5));
         this.renderer.root.appendChild(node);
     };
-
-    MOUSE.prototype.setNumRectangle = function(value) {
-        console.log('set num rectangle', value);
-        this.numRectangle = value;
-        var root = this.renderer.root;
-        console.log(this, root);
-        while(root.child.length > value) {
-            root.child.shift();
-        }
-        while(root.child.length<value) {
-            this.createNode();
-        }
-    }
 
     MOUSE.prototype.createHTML = function() {
         this.body.empty();
@@ -161,14 +127,6 @@ define(function(require) {
         this.body.append(elm);
         this.wRenderer = new WRenderer(this.renderer);
         this.wRenderer.build(this.body);
-        var that = this;
-        function updateNumElement(value) {
-            that.setNumRectangle.call(that, that.wSlider.slider('value'));
-        }
-        this.wSlider = wSlider('numElement', 1, 1000, undefined,
-                               updateNumElement);
-        this.wSlider.width(this.wRenderer.element.width());
-        this.wRenderer.element.append(this.wSlider);
         elm.center();
     };
 
@@ -203,7 +161,7 @@ define(function(require) {
 
     MOUSE.prototype.run = function() {
         var that = this;
-        this.startMeasureLoop(1000);
+        this.startMeasureLoop(100);
         this.renderer.post_update = function(node) {
             ;
         };
@@ -225,7 +183,7 @@ define(function(require) {
             }
         };
         this.renderer.draw_init = function() {
-            that.buffer.back.clear('black');
+            that.buffer.back.clear('white');
             this.ctx.translate(that.width / 2, this.height / 2);
         };
         this.renderer.render = function(node) {

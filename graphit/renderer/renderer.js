@@ -41,16 +41,17 @@ define(function(require) {
         this.startTime = Date.now();
         this.endTime = null;
         this.delta = 0;
-        this.node = [];
         this.skipped = 0;
         this.skippedDraw = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 1000 / 33;
-        this.fixedDraw = 1000 / 66;
+        this.fixedUpdate = 1000 / 120;
+        this.fixedDraw = 1000 / 33;
         this.delta = this.fixedUpdate;
         this.updateAdder = 0;
         this.drawAdder = 0;
-        this.limitUpdate = 3;
+        this.limitUpdate = 4;
+        this.nodeRendered = 0;
+        this.maxUps = 120;
         this.measure = {
             fps : {
                 value : 0,
@@ -135,13 +136,18 @@ define(function(require) {
     RENDERER.prototype.step = function() {
         var delta = (Date.now() - this.startTime);
         this.startTime = Date.now();
-        var draw = false;
-        var update = false;
+        var doDraw = false;
+        var doUpdate = false;
+        var nodes = undefined;
         this.drawAdder += delta;
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
-            update = true;
-            var numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
+            var numUpdate = 0;
+            doUpdate = true;
+            numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
+            if (this.ups() > this.maxUps) {
+                numUpdate--;
+            }
             if (numUpdate < 1) {
                 numUpdate = 1;
             } else if (numUpdate > this.limitUpdate) {
@@ -150,41 +156,42 @@ define(function(require) {
             this.numUpdate = numUpdate;
         }
         if (this.drawAdder >= this.fixedDraw) {
-            draw = true;
+            doDraw = true;
         }
         var that = this;
-        if (!update) {
+        if (doUpdate == false) {
             this.skipped++;
         } else {
             this.skipped = 0;
             for (var i = 0; i < this.numUpdate; i++) {
-                this.node = [];
+                nodes = [];
                 this.measure.ups.count++;
                 this.updateAdder -= (this.fixedUpdate);
                 this.root.preTraverse(function(node) {
                     that.hookExec('pre_update', node);
                     that.hookExec('update', node);
                     that.hookExec('post_update', node);
-                    if (draw) {
+                    if (doDraw) {
                         if (tree.hasCapability(node, eCap.draw)) {
-                            that.node.push(node);
+                            nodes.push(node);
                         }
                     }
 
                 });
             }
         }
-        if (!draw) {
+        if (doDraw == false) {
             this.skippedDraw++;
         } else {
             this.skippedDraw = 0;
-            this.drawAdder -= this.fixedUpdate;
+            this.drawAdder -= (this.fixedDraw * this.numUpdate);
             this.measure.fps.count++;
             that.ctx.save();
             that.apply_node_context(this.compositing);
             that.hookExec('draw_init');
-            for (var i = 0; i < this.node.length; i++) {
-                var node = this.node[i];
+            this.nodeRendered = nodes.length;
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
                 that.ctx.save();
                 if (tree.hasCapability(node, eCap.transform)) {
                     this.ctx.translate(node.worldTransform.positionX(),

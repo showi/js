@@ -26,13 +26,13 @@ html,body {
 
 .graphit-container, .renderer {
 	width: auto;
-	max-width: 120px;
+	max-width: 160px;
 	min-width: 60px;
 	background-color: #000;
 	font-size: x-small;
 }
 
-.field-key {
+.field .key {
 	display: inline-block;
 	padding: 0 1em;
 	max-size: 80px;
@@ -42,7 +42,7 @@ html,body {
 	text-align: right;
 }
 
-.field-value {
+.field .value {
 	display: inline;
 	padding: 0 1em;
 	text-decoration: none;
