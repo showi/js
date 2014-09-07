@@ -25,6 +25,7 @@ define(function(require) {
         rigid : 1 << 2,
         render : 1 << 3,
         draw: 1 << 4,
+        prune: 1 << 5,
     });
     CAPABILITY.__namespace__ = 'graphit/enum/capability';
 

@@ -22,6 +22,7 @@ define(function(require) {
     var eCtx = require('graphit/enum/context');
     var Node = require('graphit/tree/node/node');
     var Matrix33 = require('graphit/math/matrix33');
+    var Dlist = require('graphit/datatype/dlist');
 
     var VALIDATOR = {
         'root' : {
@@ -34,9 +35,9 @@ define(function(require) {
         'compositing' : {
             required : false,
         },
-        'worldTransform': {
-            required: true,
-            defaultValue: new Matrix33(),
+        'worldTransform' : {
+            required : true,
+            defaultValue : new Matrix33(),
         }
     };
 
@@ -58,8 +59,9 @@ define(function(require) {
         this.limitUpdate = 4;
         this.nodeRendered = 0;
         this.maxUps = 120;
-        this.transforms = [];
+        this.transforms = new Dlist();
         this.transform = undefined;
+        this.node = new Dlist();
         this.measure = {
             fps : {
                 value : 0,
@@ -85,7 +87,7 @@ define(function(require) {
         this.transform = transform;
         return this;
     };
-    
+
     RENDERER.prototype.popTransform = function() {
         this.transform = this.transforms.pop();
         return this;
@@ -158,6 +160,9 @@ define(function(require) {
         var doDraw = false;
         var doUpdate = false;
         var nodes = undefined;
+        var child = null;
+        var node = null;
+
         this.drawAdder += delta;
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
@@ -183,26 +188,35 @@ define(function(require) {
         } else {
             this.skipped = 0;
             for (var i = 0; i < this.numUpdate; i++) {
-                nodes = [];
+                this.node.empty();
                 this.measure.ups.count++;
                 this.transforms = [];
                 this.pushTransform(this.worldTransform);
                 this.updateAdder -= (this.fixedUpdate);
-                this.root.preTraverse(function(node) {
-                    that.hookExec('pre_update', node);
-                    if (tree.hasCapability(node, eCap.transform)) {
-                        that.pushTransform(node.applyWorldTransform(that.transform));
-                    }
-                    that.hookExec('update', node);
-                    that.hookExec('post_update', node);
-                    that.popTransform();
-                    if (doDraw) {
-                        if (tree.hasCapability(node, eCap.draw)) {
-                            nodes.push(node);
-                        }
-                    }
-
-                });
+                this.render_node(this.root);
+                // child = this.root.child.first;
+                // node = null;
+                // while(child != null) {
+                // node = child.element;
+                // if (tree.hasCapability(node, eCap.prune)) {
+                // var rnode = node;
+                // node = element.next;
+                // this.root.child.remove(rnode);
+                // }
+                // this.hookExec('pre_update', node);
+                // if (tree.hasCapability(node, eCap.transform)) {
+                // this.pushTransform(node.applyWorldTransform(this.transform));
+                // }
+                // this.hookExec('update', node);
+                // this.hookExec('post_update', node);
+                // this.popTransform();
+                // if (doDraw) {
+                // if (tree.hasCapability(node, eCap.draw)) {
+                // nodes.push(node);
+                // }
+                // }
+                // child = child.next;
+                // }
             }
         }
         if (doDraw == false) {
@@ -214,9 +228,10 @@ define(function(require) {
             that.ctx.save();
             that.apply_node_context(this.compositing);
             that.hookExec('draw_init');
-            this.nodeRendered = nodes.length;
-            for (var i = 0; i < nodes.length; i++) {
-                var node = nodes[i];
+            this.nodeRendered = this.node.length;
+            child = this.node.first;
+            while(child!=null) {
+                node = child.content;
                 that.ctx.save();
                 if (tree.hasCapability(node, eCap.transform)) {
                     this.ctx.translate(node.worldTransform.positionX(),
@@ -229,10 +244,38 @@ define(function(require) {
                 that.hookExec('render', node);
                 that.hookExec('post_render', node);
                 that.ctx.restore();
+                child = child.next;
             }
             that.hookExec('draw_end');
             that.ctx.restore();
         }
+    };
+
+    RENDERER.prototype.render_node = function(node) {
+        var child = null;
+ 
+        this.hookExec('pre_update', node);
+        if (tree.hasCapability(node, eCap.transform)) {
+            this.pushTransform(node.applyWorldTransform(this.transform));
+        }
+        this.hookExec('update', node);
+        this.hookExec('post_update', node);
+        child = node.child.first;
+        while (child != null) {
+            if (tree.hasCapability(child.content, eCap.prune)) {
+                node.child.remove(child.content);
+                continue;
+            }
+            if (this.render_node(child.content)) {
+                this.node.push(child.content);
+            }
+            child = child.next;
+        }
+        this.popTransform();
+        if(!tree.hasCapability(node, eCap.draw)) {
+            return false;
+        }
+        return true;
     };
 
     return RENDERER;

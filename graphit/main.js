@@ -20,6 +20,7 @@ define(function(require) {
                    'movingpaint', 
                    'movingpaint2'];
     var choice = util.choice(choices);
+    choice = 'movingpaint2';
     console.log('>>> random test:', choice, '(', choices, ')');
     test.runTest(choice);
 });

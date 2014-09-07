@@ -92,6 +92,11 @@ define(function(require) {
     
     DLIST.prototype.shift = function() {
         return this.remove(this.first);
+    };
+    
+    DLIST.prototype.empty = function() {
+        var elm = null
+        while(elm = this.pop());
     }
 
     return DLIST;
