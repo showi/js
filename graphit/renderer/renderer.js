@@ -23,6 +23,7 @@ define(function(require) {
     var Node = require('graphit/tree/node/node');
     var Matrix33 = require('graphit/math/matrix33');
     var Dlist = require('graphit/datatype/dlist');
+    var math = require('graphit/math');
 
     var VALIDATOR = {
         'root' : {
@@ -57,6 +58,9 @@ define(function(require) {
         this.updateAdder = 0;
         this.drawAdder = 0;
         this.limitUpdate = 4;
+        this.limitDrawSkipped = 2;
+        this.limitRenderSkipped = 2;
+        this.limitFps = 20;
         this.nodeRendered = 0;
         this.maxUps = 120;
         this.transforms = new Dlist();
@@ -83,13 +87,14 @@ define(function(require) {
     ParameterMixin.call(RENDERER.prototype);
 
     RENDERER.prototype.pushTransform = function(transform) {
-        this.transforms.push(transform);
+        this.transforms.append(transform);
         this.transform = transform;
         return this;
     };
 
     RENDERER.prototype.popTransform = function() {
-        this.transform = this.transforms.pop();
+        var elm = this.transforms.pop();
+        this.transform = elm.content;
         return this;
     };
 
@@ -163,26 +168,27 @@ define(function(require) {
         var child = null;
         var node = null;
 
+        this.elapsedTime = 0;
         this.drawAdder += delta;
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
             var numUpdate = 0;
             doUpdate = true;
             numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
-            if (this.ups() > this.maxUps) {
-                numUpdate--;
-            }
-            if (numUpdate < 1) {
-                numUpdate = 1;
-            } else if (numUpdate > this.limitUpdate) {
-                numUpdate = this.limitUpdate;
-            }
+            numUpdate = math.clamp(numUpdate, 1, this.limitUpdate);
             this.numUpdate = numUpdate;
+            this.elapsedTime = numUpdate * this.fixedUpdate;
+            this.updateAdder -= this.elapsedTime;
         }
         if (this.drawAdder >= this.fixedDraw) {
             doDraw = true;
+            this.drawAdder -= (this.fixedDraw * this.numUpdate);
         }
         var that = this;
+        if (this.fps() < this.limitFps && this.ups() > 60
+                && this.skipped < this.limitRenderSkipped) {
+            doUpdate = false;
+        }
         if (doUpdate == false) {
             this.skipped++;
         } else {
@@ -190,47 +196,31 @@ define(function(require) {
             for (var i = 0; i < this.numUpdate; i++) {
                 this.node.empty();
                 this.measure.ups.count++;
-                this.transforms = [];
-                this.pushTransform(this.worldTransform);
+                this.transforms.empty();
                 this.updateAdder -= (this.fixedUpdate);
-                this.render_node(this.root);
-                // child = this.root.child.first;
-                // node = null;
-                // while(child != null) {
-                // node = child.element;
-                // if (tree.hasCapability(node, eCap.prune)) {
-                // var rnode = node;
-                // node = element.next;
-                // this.root.child.remove(rnode);
-                // }
-                // this.hookExec('pre_update', node);
-                // if (tree.hasCapability(node, eCap.transform)) {
-                // this.pushTransform(node.applyWorldTransform(this.transform));
-                // }
-                // this.hookExec('update', node);
-                // this.hookExec('post_update', node);
-                // this.popTransform();
-                // if (doDraw) {
-                // if (tree.hasCapability(node, eCap.draw)) {
-                // nodes.push(node);
-                // }
-                // }
-                // child = child.next;
-                // }
+                this.pushTransform(this.worldTransform);
+                // this.worldTransform.copy(this.worldTransform);
+                if (this.render_node(this.root)) {
+                    this.node.append(this.root);
+                }
+
             }
+        }
+        if (this.fps() < this.limitFps
+                && this.skippedDraw < this.limitDrawSkipped) {
+            doDraw = false;
         }
         if (doDraw == false) {
             this.skippedDraw++;
         } else {
             this.skippedDraw = 0;
-            this.drawAdder -= (this.fixedDraw * this.numUpdate);
             this.measure.fps.count++;
             that.ctx.save();
             that.apply_node_context(this.compositing);
             that.hookExec('draw_init');
             this.nodeRendered = this.node.length;
             child = this.node.first;
-            while(child!=null) {
+            while (child != null) {
                 node = child.content;
                 that.ctx.save();
                 if (tree.hasCapability(node, eCap.transform)) {
@@ -253,7 +243,16 @@ define(function(require) {
 
     RENDERER.prototype.render_node = function(node) {
         var child = null;
- 
+
+//        if (tree.hasCapability(node, eCap.prune)) {
+//            if (node.parent === undefined || !node.parent) {
+//                console.error('Cannot prune root node');
+//                return false;
+//            } else {
+//                node.parent.child.remove(node);
+//            }
+//            return false;
+//        }
         this.hookExec('pre_update', node);
         if (tree.hasCapability(node, eCap.transform)) {
             this.pushTransform(node.applyWorldTransform(this.transform));
@@ -262,19 +261,15 @@ define(function(require) {
         this.hookExec('post_update', node);
         child = node.child.first;
         while (child != null) {
-            if (tree.hasCapability(child.content, eCap.prune)) {
-                node.child.remove(child.content);
-                continue;
-            }
             if (this.render_node(child.content)) {
                 this.node.push(child.content);
             }
             child = child.next;
         }
-        this.popTransform();
-        if(!tree.hasCapability(node, eCap.draw)) {
-            return false;
+        if (tree.hasCapability(node, eCap.transform)) {
+            this.popTransform();
         }
+        if (!tree.hasCapability(node, eCap.draw)) { return false; }
         return true;
     };
 

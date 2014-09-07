@@ -60,9 +60,9 @@ define(function(require) {
             },
             worldTransform: this.screenTransform,
         });
-        this.renderer.fixedUpdate = 1/66;
-        this.renderer.fixedDraw = 1/33;
-        this.timeout = 10;
+        this.renderer.fixedUpdate = 1/10;
+        this.renderer.fixedDraw = 1/66;
+        this.timeout = 0;
         this.renderer.limitUpdate = 2;
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
