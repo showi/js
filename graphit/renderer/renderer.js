@@ -50,7 +50,7 @@ define(function(require) {
         this.delta = this.fixedUpdate;
         this.updateAdder = 0;
         this.drawAdder = 0;
-        this.limitUpdate = 10;
+        this.limitUpdate = 5;
         this.measure = {
             fps : {
                 value : 0,
