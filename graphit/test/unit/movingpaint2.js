@@ -56,7 +56,7 @@ define(function(require) {
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
             compositing : {
-                //globalAlpha : 1.0,
+                globalAlpha : 0.8,
             },
             worldTransform: this.screenTransform,
         });
@@ -88,7 +88,7 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.id = id;
         elm.slider({
-            value: 500,
+            value: 250,
             min: min,
             max: max,
             change: fnChange,
@@ -163,7 +163,7 @@ define(function(require) {
         function updateNumElement(value) {
             that.setNumRectangle.call(that, that.wSlider.slider('value'));
         }
-        this.wSlider = wSlider('numElement', 1, 5000, undefined,
+        this.wSlider = wSlider('numElement', 1, 1000, updateNumElement,
                                updateNumElement);
         this.wSlider.width(this.wRenderer.element.width());
         this.wRenderer.element.append(this.wSlider);
