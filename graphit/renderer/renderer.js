@@ -47,9 +47,10 @@ define(function(require) {
         this.numUpdate = 0;
         this.fixedUpdate = 1000 / 33;
         this.fixedDraw = 1000 / 66;
+        this.delta = this.fixedUpdate;
         this.updateAdder = 0;
         this.drawAdder = 0;
-        this.limitUpdate = 2;
+        this.limitUpdate = 10;
         this.measure = {
             fps : {
                 value : 0,
@@ -140,12 +141,13 @@ define(function(require) {
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
             update = true;
-            this.numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
+            var numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
             if (this.numUpdate < 1) {
                 this.numUpdate = 1;
             } else if (this.numUpdate > this.limitUpdate) {
                 this.numUpdate = this.limitUpdate;
             }
+            this.numUpdate = numUpdate;
         }
         if (this.drawAdder >= this.fixedDraw) {
             draw = true;
@@ -154,8 +156,7 @@ define(function(require) {
                 this.drawAdder = 0;
             }
         }
-        this.delta = this.fixedUpdate;
-//        this.skipped = 0;
+        //        this.skipped = 0;
         var that = this;
 
         if (!update) {
@@ -165,16 +166,14 @@ define(function(require) {
             for (var i = 0; i < this.numUpdate; i++) {
                 this.node = [];
                 this.measure.ups.count++;
-                this.updateAdder -= (this.fixedUpdate * this.numUpdate);
+                this.updateAdder -= (this.fixedUpdate);
                 this.root.preTraverse(function(node) {
-                    if (update) {
-                        that.hookExec('pre_update', node);
-                        that.hookExec('update', node);
-                        that.hookExec('post_update', node);
-                        if (draw) {
-                            if (tree.hasCapability(node, eCap.draw)) {
-                                that.node.push(node);
-                            }
+                    that.hookExec('pre_update', node);
+                    that.hookExec('update', node);
+                    that.hookExec('post_update', node);
+                    if (draw) {
+                        if (tree.hasCapability(node, eCap.draw)) {
+                            that.node.push(node);
                         }
                     }
 

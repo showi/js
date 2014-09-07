@@ -53,9 +53,9 @@ define(function(require) {
                 globalAlpha : 0.5,
             }
         });
-        this.renderer.fixedUpdate = 1000 / 33;
-        this.renderer.fixedDraw = 1000 / 66;
-        this.timeout = this.renderer.fixedUpdate / 2;
+        this.renderer.fixedUpdate = 1000 / 133;
+        this.renderer.fixedDraw = 1000 / 33;
+        this.timeout = this.renderer.fixedUpdate;
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
                 .height() / 2);
