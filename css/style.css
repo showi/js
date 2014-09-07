@@ -31,7 +31,7 @@ html,body {
 	background-color: #000;
 	font-size: x-small;
 }
-.graphit-container, .log {
+.graphit-container.log {
 	display: none;
 	visibility: hidden;
 }
