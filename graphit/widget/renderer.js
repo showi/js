@@ -69,8 +69,8 @@ define(function(require) {
     };
 
     WIDGET.prototype.update = function() {
-        var fps = Math.floor((1 / this.renderer.fps()) * 100) / 100;
-        var ups = Math.floor((1 / this.renderer.ups()) * 100) / 100;
+        var fps = Math.floor(this.renderer.fps() * 1000);
+        var ups = Math.floor(this.renderer.ups() * 1000);
         var delta = Math.floor(this.renderer.delta * 100) / 100;
         console.log('fps', fps);
         this.fps.text(fps);

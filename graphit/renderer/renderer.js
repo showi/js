@@ -50,7 +50,7 @@ define(function(require) {
         this.delta = this.fixedUpdate;
         this.updateAdder = 0;
         this.drawAdder = 0;
-        this.limitUpdate = 5;
+        this.limitUpdate = 3;
         this.measure = {
             fps : {
                 value : 0,
@@ -142,23 +142,17 @@ define(function(require) {
         if (this.updateAdder >= this.fixedUpdate) {
             update = true;
             var numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
-            if (this.numUpdate < 1) {
-                this.numUpdate = 1;
-            } else if (this.numUpdate > this.limitUpdate) {
-                this.numUpdate = this.limitUpdate;
+            if (numUpdate < 1) {
+                numUpdate = 1;
+            } else if (numUpdate > this.limitUpdate) {
+                numUpdate = this.limitUpdate;
             }
             this.numUpdate = numUpdate;
         }
         if (this.drawAdder >= this.fixedDraw) {
             draw = true;
-            this.drawAdder -= this.fixedDraw;
-            if (this.drawAdder < 0) {
-                this.drawAdder = 0;
-            }
         }
-        //        this.skipped = 0;
         var that = this;
-
         if (!update) {
             this.skipped++;
         } else {
@@ -184,6 +178,7 @@ define(function(require) {
             this.skippedDraw++;
         } else {
             this.skippedDraw = 0;
+            this.drawAdder -= this.fixedUpdate;
             this.measure.fps.count++;
             that.ctx.save();
             that.apply_node_context(this.compositing);

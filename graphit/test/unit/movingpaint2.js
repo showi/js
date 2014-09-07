@@ -53,9 +53,9 @@ define(function(require) {
                 globalAlpha : 0.5,
             }
         });
-        this.renderer.fixedUpdate = 1000 / 133;
-        this.renderer.fixedDraw = 1000 / 33;
-        this.timeout = this.renderer.fixedUpdate;
+        this.renderer.fixedUpdate = 1000/66;
+        this.renderer.fixedDraw = 1000/33;
+        this.timeout = this.renderer.fixedUpdate * 2;
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
                 .height() / 2);
@@ -114,7 +114,7 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(1, 0);
-        node.velocity.randomize().smul(Math.randInt(0, 10));
+        node.velocity.randomize().smul(Math.randInt(0, 5));
         this.renderer.root.appendChild(node);
     };
 
