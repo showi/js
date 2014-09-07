@@ -16,7 +16,7 @@ define(function(require) {
 
     var util = require('graphit/test/util');
     var kinds_visual = ['clock', 'randart', 'movingpaint', 'mouseclick'];
-    var kinds = ['movingpaint2'];
+    var kinds = ['grid'];
 
     for (var i = 0; i < kinds.length; i++) {
         util.runTest(kinds[i]);

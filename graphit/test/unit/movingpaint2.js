@@ -14,7 +14,6 @@ define(function(require) {
 
     'use strict';
 
-    var Mouse = require('graphit/mouse');
     var util = require('graphit/util');
     var eMath = require('graphit/enum/math');
     var Canvas = require('graphit/draw/canvas');
@@ -42,7 +41,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 500;
+        this.numRectangle = 250;
         this.size = size;
         this.ratio = 0.8;
         this.buffer = new DBuffer({
@@ -51,19 +50,20 @@ define(function(require) {
         });
         this.canvas = this.buffer.front;
         console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
+        this.screenTransform = new Matrix33();
+        this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
+                .height() / 2);
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
             compositing : {
-//                globalAlpha : 1.0,
-            }
+                //globalAlpha : 1.0,
+            },
+            worldTransform: this.screenTransform,
         });
         this.renderer.fixedUpdate = 1/66;
         this.renderer.fixedDraw = 1/33;
         this.timeout = 10;
         this.renderer.limitUpdate = 2;
-        this.screenTransform = new Matrix33();
-        this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
-                .height() / 2);
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
         this.createHTML();
@@ -110,10 +110,8 @@ define(function(require) {
         var height = this.canvas.height();
         var dw = width / 2;
         var dh = height / 2;
-        // console.log('dw/dh', dw, dh);
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
-        // console.log('mw/mh', mw, mh);
         var node = new ShapeNode({
             kind : eShape.rectangle,
             size : {
@@ -142,17 +140,15 @@ define(function(require) {
     };
 
     MOUSE.prototype.setNumRectangle = function(value) {
-        console.log('set num rectangle', value);
         this.numRectangle = value;
         var root = this.renderer.root;
-        console.log(this, root);
         while(root.child.length > value) {
             root.child.shift();
         }
         while(root.child.length<value) {
             this.createNode();
         }
-    }
+    };
 
     MOUSE.prototype.createHTML = function() {
         this.body.empty();
@@ -184,7 +180,6 @@ define(function(require) {
         function loop() {
             if (!that._measureLoop) { return; }
             if (that.renderer.measureEnd()) {
-                //                console.log('Measure End/start');
                 that.wRenderer.update();
                 that.renderer.measureStart();
             }
@@ -228,7 +223,6 @@ define(function(require) {
         };
         this.renderer.draw_init = function() {
             that.buffer.back.clear('black');
-            this.ctx.translate(that.width / 2, this.height / 2);
         };
         this.renderer.render = function(node) {
             node.draw(this);

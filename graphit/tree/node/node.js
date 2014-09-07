@@ -16,6 +16,7 @@ define(function(require) {
 
     var util = require('graphit/util');
     var namespace = require('graphit/namespace');
+    var Dlist = require('graphit/datatype/dlist');
     var MixinParameter = require('graphit/mixin/parameter');
     var ns = namespace.tree.node;
     var _ns_ = 'node';
@@ -36,7 +37,7 @@ define(function(require) {
     function NODE() {
         this.setParameters(arguments, VALIDATORS);
         this.uid = namespace.genUID();
-        this.child = [];
+        this.child = new Dlist();
         this.capability = 0;
     };
     NODE.__namespace__ = 'graphit/tree/node/node';
@@ -45,22 +46,16 @@ define(function(require) {
     NODE.prototype.appendChild = function(child) {
         if (child === undefined) { throw 'InvalidValue'; }
         child.parent = this;
-        this.child.push(child);
+        this.child.append(child);
     };
 
     NODE.prototype.preTraverse = function(fn) {
         fn(this);
-        for (var i = 0; i < this.child.length; i++) {
-            this.child[i].preTraverse(fn);
+        var child = this.child.first;
+        while (child != null) {
+            child.content.preTraverse(fn);
+            child = child.next;
         }
-    };
-
-    NODE.prototype.postTraverse = function(fn) {
-        for (var i = 0; i < this.child.length; i++) {
-            var child = this.child[i];
-            child.postTraverse(fn);
-        }
-        fn(this);
     };
 
     NODE.prototype.parent = function(value) {

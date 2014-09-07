@@ -63,7 +63,6 @@ define(function(require) {
         var fps = Math.floor(this.renderer.fps() * 1000);
         var ups = Math.floor(this.renderer.ups() * 1000);
         var delta = Math.floor(this.renderer.delta * 100) / 100;
-        console.log('fps', fps);
         this.fps.value.text(fps);
         this.ups.value.text(ups);
         this.delta.value.text(delta);

@@ -14,15 +14,15 @@ define(function(require) {
 
     'use strict';
 
-    var elementFactory = require('./elementFactory');
+    var elementFactory = require('graphit/datatype/dlist/elementFactory');
 
-    function Module(parameters) {
+    function DLIST(parameters) {
         this.first = null;
         this.last = null;
         this.length = 0;
     };
 
-    Module.prototype.foreach = function(callback, reverse) {
+    DLIST.prototype.foreach = function(callback, reverse) {
         if (reverse === undefined) {
             var current = this.first;
             while (current != null) {
@@ -38,7 +38,7 @@ define(function(require) {
         }
     };
 
-    Module.prototype.insert = function(content) {
+    DLIST.prototype.insert = function(content) {
         var elm = elementFactory(content, null, this.first);
         if (this.first === null) {
             this.first = elm;
@@ -51,7 +51,7 @@ define(function(require) {
         return elm;
     };
 
-    Module.prototype.append = function(content) {
+    DLIST.prototype.append = function(content) {
         if (this.first === null) { return this.insert(content); }
         var elm = elementFactory(content, this.last, null);
         this.last.next = elm;
@@ -59,13 +59,17 @@ define(function(require) {
         this.length += 1;
         return elm;
     };
+    
+    DLIST.prototype.push = function(content) {
+        return this.append(content);
+    };
 
-    Module.prototype.isEmpty = function() {
+    DLIST.prototype.isEmpty = function() {
         if (this.next === this.prev === null) { return true; }
         return false;
     };
 
-    Module.prototype.remove = function(item) {
+    DLIST.prototype.remove = function(item) {
         if (item === null) { return null; }
         if (item == this.first && item == this.last) {
             this.first = this.last = null;
@@ -82,9 +86,13 @@ define(function(require) {
         return item;
     };
 
-    Module.prototype.pop = function() {
-        return this.remove(this.first);
+    DLIST.prototype.pop = function() {
+        return this.remove(this.last);
     };
+    
+    DLIST.prototype.shift = function() {
+        return this.remove(this.first);
+    }
 
-    return Module;
+    return DLIST;
 });

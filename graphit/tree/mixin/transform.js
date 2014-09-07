@@ -31,6 +31,16 @@ define(function(require) {
         this.getWorldTransform = function () {
             return this.worldTransform;
         };
+        this.getParentWorldTransform = function() {
+            if (util.hasCapability(this, eCap.transform)) {
+                return this.worldTransform;
+            }
+            if (this.parent == undefined || this.parent == null) {
+                return new Matrix33();
+            }
+            return this.parent.getParentWorldTransform();
+            
+        },
         this.rotate = function(angle) {
             return this.transform.rotate(angle);
         };

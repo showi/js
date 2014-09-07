@@ -30,35 +30,41 @@ define(function(require) {
     var tree = require('graphit/tree/util');
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
+    var math = require('graphit/math');
 
     require('graphit/extend/jquery');
 
     function MOUSE() {
-        this.setUp(util.windowSize(), 0.8);
+        var size = util.windowSize();
+        size.x = math.clamp(size.x, 100, 800);
+        size.y = math.clamp(size.y, 100, 600);
+        this.setUp(size, 0.8);
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
         this.numRectangle = 10;
         this.size = size;
-        this.ratio = 0.8;
+        this.ratio = 1;
         this.buffer = new DBuffer({
             width : this.size.x * this.ratio,
             height : this.size.y * this.ratio
         });
         this.canvas = this.buffer.front;
         console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
-        this.renderer = new Renderer({
-            ctx : this.buffer.back.getCtx(),
-            compositing : {
-                globalAlpha : 0.5,
-            }
-        });
-        this.renderer.fixedUpdate = 10;
-        this.renderer.fixedDraw = 20;
-        this.timeout = 3;
+
+//        this.renderer.fixedUpdate = 10;
+//        this.renderer.fixedDraw = 20;
+//        this.timeout = 3;
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
                 .height() / 2);
+        this.renderer = new Renderer({
+            ctx : this.buffer.back.getCtx(),
+            compositing : {
+                globalAlpha : 1.0,
+            },
+            worldTransform: this.screenTransform,
+        });
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
         this.createHTML();
@@ -78,15 +84,27 @@ define(function(require) {
 
     MOUSE.prototype.createTree = function() {
         for (var i = 0; i < this.numRectangle; i++) {
-            this.createNode();
+            this.renderer.root.appendChild(this.createNode());
         }
     };
 
-    MOUSE.prototype.createNode = function() {
+    MOUSE.prototype.createNode = function(root) {
+        var subchild = false;
         var width = this.canvas.width();
         var height = this.canvas.height();
+        var pos = new Vector2d(0, 0);
+        if (root === undefined) {
+            root = this.renderer.root;
+        } else {
+            subchild = true;
+            width = root.size.width;
+            height = root.size.height;
+            pos = root.position();
+        }
         var dw = width / 2;
         var dh = height / 2;
+        dw = math.clamp(dw, 0, dw);
+        dh = math.clamp(dh, 0, dh);
         // console.log('dw/dh', dw, dh);
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
@@ -94,12 +112,12 @@ define(function(require) {
         var node = new ShapeNode({
             kind : eShape.rectangle,
             size : {
-                width : Math.randInt(5, mw),
-                height : Math.randInt(5, mh)
+                width : Math.randFloat(1, mw),
+                height : Math.randFloat(1, mh)
             },
             pos : {
-                x : Math.randInt(-dw, dw),
-                y : Math.randInt(-dh, dh)
+                x : Math.randFloat(-dw, dw),
+                y : Math.randFloat(-dh, dh)
             },
 
         });
@@ -114,8 +132,17 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().smul(Math.randInt(0, 5));
-        this.renderer.root.appendChild(node);
+        if (!subchild) {
+            node.velocity.randomize().smul(Math.randFloat(1.0, 10.0));
+            var count = Math.randInt(1, 10);
+            for (var i = 0; i < count; i++) {
+                var n = this.createNode(node);
+                node.appendChild(n);
+            }
+        } else {
+            node.velocity.copy(root.velocity).smul(0.1);
+        }
+        return node;
     };
 
     MOUSE.prototype.createHTML = function() {
@@ -162,16 +189,21 @@ define(function(require) {
     MOUSE.prototype.run = function() {
         var that = this;
         this.startMeasureLoop(100);
-        this.renderer.post_update = function(node) {
-            ;
-        };
         this.renderer.update = function(node) {
             if (tree.hasCapability(node, eCap.transform)) {
                 var p = node.transform.position();
                 var speed = node.orientation.clone().mul(node.velocity);
                 p.add(speed);
-                var w = (that.canvas.width() / 2) - (node.size.width / 2);
-                var h = (that.canvas.height() / 2) - (node.size.height / 2);
+                var pw = that.canvas.width() / 2;   
+                var ph = that.canvas.height() / 2;
+                if (node.parent && node.parent.size) {
+//                    console.log('parent size', node.parent.size);
+                    pw =  (node.parent.size.width / 2); 
+                    ph =  (node.parent.size.height / 2);
+                }
+                var w = pw - (node.size.width / 2);;
+                var h = ph - (node.size.height / 2);;
+//                console.log('w/h', w, h);
                 if (p.x < -w || p.x > w) {
                     node.orientation.inverseX();
                 }
@@ -179,8 +211,7 @@ define(function(require) {
                     node.orientation.inverseY();
                 }
                 node.transform.translate(speed);
-                node.applyWorldTransform(that.screenTransform);
-            }
+                };
         };
         this.renderer.draw_init = function() {
             that.buffer.back.clear('white');

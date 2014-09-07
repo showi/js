@@ -21,6 +21,7 @@ define(function(require) {
     var eMat = require('graphit/enum/matrix33');
     var eCtx = require('graphit/enum/context');
     var Node = require('graphit/tree/node/node');
+    var Matrix33 = require('graphit/math/matrix33');
 
     var VALIDATOR = {
         'root' : {
@@ -32,6 +33,10 @@ define(function(require) {
         },
         'compositing' : {
             required : false,
+        },
+        'worldTransform': {
+            required: true,
+            defaultValue: new Matrix33(),
         }
     };
 
@@ -44,14 +49,17 @@ define(function(require) {
         this.skipped = 0;
         this.skippedDraw = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 1000 / 120;
-        this.fixedDraw = 1000 / 33;
+        this.fixedUpdate = 10;
+        this.fixedDraw = 20;
+        this.timeout = 3;
         this.delta = this.fixedUpdate;
         this.updateAdder = 0;
         this.drawAdder = 0;
         this.limitUpdate = 4;
         this.nodeRendered = 0;
         this.maxUps = 120;
+        this.transforms = [];
+        this.transform = undefined;
         this.measure = {
             fps : {
                 value : 0,
@@ -71,6 +79,17 @@ define(function(require) {
     }
     RENDERER.__namespace__ = 'graphit/renderer/renderer';
     ParameterMixin.call(RENDERER.prototype);
+
+    RENDERER.prototype.pushTransform = function(transform) {
+        this.transforms.push(transform);
+        this.transform = transform;
+        return this;
+    };
+    
+    RENDERER.prototype.popTransform = function() {
+        this.transform = this.transforms.pop();
+        return this;
+    };
 
     RENDERER.prototype.measureStart = function() {
         this.measure.fps.count = 0;
@@ -166,11 +185,17 @@ define(function(require) {
             for (var i = 0; i < this.numUpdate; i++) {
                 nodes = [];
                 this.measure.ups.count++;
+                this.transforms = [];
+                this.pushTransform(this.worldTransform);
                 this.updateAdder -= (this.fixedUpdate);
                 this.root.preTraverse(function(node) {
                     that.hookExec('pre_update', node);
+                    if (tree.hasCapability(node, eCap.transform)) {
+                        that.pushTransform(node.applyWorldTransform(that.transform));
+                    }
                     that.hookExec('update', node);
                     that.hookExec('post_update', node);
+                    that.popTransform();
                     if (doDraw) {
                         if (tree.hasCapability(node, eCap.draw)) {
                             nodes.push(node);
