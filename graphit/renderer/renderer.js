@@ -36,18 +36,20 @@ define(function(require) {
     };
 
     function RENDERER() {
-        this.namespace = 'graphit/renderer/renderer';
+        this.uid = util.genUID();
         this.setParameters(arguments, VALIDATOR);
         this.startTime = Date.now();
         this.endTime = null;
         this.delta = 0;
         this.node = [];
         this.skipped = 0;
+        this.skippedDraw = 0;
         this.numUpdate = 0;
         this.fixedUpdate = 1000 / 33;
         this.fixedDraw = 1000 / 66;
         this.updateAdder = 0;
         this.drawAdder = 0;
+        this.limitUpdate = 2;
         this.measure = {
             fps : {
                 value : 0,
@@ -65,6 +67,7 @@ define(function(require) {
             },
         };
     }
+    RENDERER.__namespace__ = 'graphit/renderer/renderer';
     ParameterMixin.call(RENDERER.prototype);
 
     RENDERER.prototype.measureStart = function() {
@@ -119,10 +122,10 @@ define(function(require) {
     };
 
     RENDERER.prototype.apply_node_context = function(node) {
-        var key = null;
-        for (var i = 0; i < eCtx._keys.length; i++) {
-            key = eCtx._keys[i];
-            if (node[key] !== undefined) {
+        var key = null, i;
+        for (i = 0; i < eCtx._keys.length, key = eCtx._keys[i]; i++) {
+            // key = eCtx._keys[i];
+            if (node[key] !== undefined && node[key] != this.ctx[key]) {
                 this.ctx[key] = node[key];
             }
         }
@@ -136,29 +139,33 @@ define(function(require) {
         this.drawAdder += delta;
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
-            this.numUpdate = Math.round(this.updateAdder / this.fixedUpdate);
-            if (this.numUpdate > 0) {
-                update = true;
+            update = true;
+            this.numUpdate = Math.floor(this.updateAdder / this.fixedUpdate);
+            if (this.numUpdate < 1) {
+                this.numUpdate = 1;
+            } else if (this.numUpdate > this.limitUpdate) {
+                this.numUpdate = this.limitUpdate;
             }
-            this.updateAdder -= (this.fixedUpdate * this.numUpdate);
         }
         if (this.drawAdder >= this.fixedDraw) {
             draw = true;
-            this.drawAdder -= (this.fixedUpdate * this.numUpdate);
-        }
-        if (this.drawAdder < 0) {
-            this.drawAdder = 0;
+            this.drawAdder -= this.fixedDraw;
+            if (this.drawAdder < 0) {
+                this.drawAdder = 0;
+            }
         }
         this.delta = this.fixedUpdate;
-        this.skipped = 0;
+//        this.skipped = 0;
         var that = this;
 
         if (!update) {
             this.skipped++;
         } else {
+            this.skipped = 0;
             for (var i = 0; i < this.numUpdate; i++) {
                 this.node = [];
                 this.measure.ups.count++;
+                this.updateAdder -= (this.fixedUpdate * this.numUpdate);
                 this.root.preTraverse(function(node) {
                     if (update) {
                         that.hookExec('pre_update', node);
@@ -174,7 +181,10 @@ define(function(require) {
                 });
             }
         }
-        if (draw) {
+        if (!draw) {
+            this.skippedDraw++;
+        } else {
+            this.skippedDraw = 0;
             this.measure.fps.count++;
             that.ctx.save();
             that.apply_node_context(this.compositing);
@@ -183,8 +193,7 @@ define(function(require) {
                 var node = this.node[i];
                 that.ctx.save();
                 if (tree.hasCapability(node, eCap.transform)) {
-//                    console.log(node.worldTransform.toString());
-                    this.ctx.translate(node.worldTransform.positionX(), 
+                    this.ctx.translate(node.worldTransform.positionX(),
                                        node.worldTransform.positionY());
                 }
                 that.hookExec('pre_render', node);

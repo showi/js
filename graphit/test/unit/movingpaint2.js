@@ -29,6 +29,7 @@ define(function(require) {
     var Renderer = require('graphit/renderer/renderer');
     var tree = require('graphit/tree/util');
     var DBuffer = require('graphit/draw/doublebuffer');
+    var WRenderer = require('graphit/widget/renderer');
 
     require('graphit/extend/jquery');
 
@@ -124,11 +125,45 @@ define(function(require) {
         });
         var elm = jQuery(this.canvas.getElement());
         this.body.append(elm);
+        this.wRenderer = new WRenderer(this.renderer);
+        this.wRenderer.build(this.body);
         elm.center();
+    };
+
+    MOUSE.prototype.startMeasureLoop = function(timeout) {
+        var that = this;
+        if (this._measureLoop !== undefined) {
+            console.error('measure alreayd started');
+            return false;
+        }
+        this._measureLoop = true;
+        function loop() {
+            if (!that._measureLoop) {
+                return;
+            }
+            if (that.renderer.measureEnd()) {
+                console.log('Measure End/start');
+                that.wRenderer.update();
+                that.renderer.measureStart();
+            }
+            setTimeout(loop, timeout);
+        }
+        loop();
+        return true;
+    };
+    
+    MOUSE.prototype.stopMeasureLoop = function() {
+        if (this._measureLoop === undefined) {
+            console.error('Measure not started');
+            return false;
+        }
+        this._measureLoop = undefined;
+        return true;
     };
 
     MOUSE.prototype.run = function() {
         var that = this;
+        this.startMeasureLoop(1000);
         this.renderer.post_update = function(node) {
             ;
         };
