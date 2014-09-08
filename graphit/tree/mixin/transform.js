@@ -69,6 +69,9 @@ define(function(require) {
         this.positionXY = function(x, y) {
             return this.transform.positionXY(x, y);
         };
+        this.scale = function(scale) {
+            return this.transform.scale(scale);
+        };
     }
     TRANSFORM.__namespace__ = 'graphit/tree/mixin/transform';
 

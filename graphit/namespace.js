@@ -33,9 +33,7 @@ define(function(require) {
         shape : null,
         draw: {},
         enum : {},
-        geom2d: {
-       
-        },
+        geom: {},
         dt: {},
         __uid__: 0,
         genUID : function() {

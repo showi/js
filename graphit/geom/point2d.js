@@ -15,8 +15,8 @@ define(function(require) {
     'use strict';
 
     var ns = require('graphit/namespace');
-    ns = ns.geom2d;
-    var _ns_ = 'point';
+    ns = ns.geom;
+    var _ns_ = 'point2d';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
@@ -25,7 +25,7 @@ define(function(require) {
         this.y = (y === undefined) ? 0 : y;
     }
 
-    POINT2D.__namespace__ = 'graphit/math/namespace';
+    POINT2D.__namespace__ = 'graphit/geom/point2d';
 
     POINT2D.prototype.clone = function() {
         return new POINT2D(this.x, this.y);

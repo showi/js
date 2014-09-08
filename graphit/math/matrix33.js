@@ -33,6 +33,10 @@ define(function(require) {
 
     var mX = m13;
     var mY = m23;
+    
+    var sX = m11;
+    var sY = m22;
+    var sZ = m33;
 
     function MATRIX33(matrix) {
         /*
@@ -314,6 +318,13 @@ define(function(require) {
         r.y = this._data[m21] * vector.x + this._data[m22] * vector.y
                 + this._data[m23];
         return r;
+    };
+
+    MATRIX33.prototype.scale = function(scale) {
+        this._data[sX] = scale;
+        this._data[sY] = scale;
+        this._data[sZ] = 1;
+        return this;
     };
 
     InputFilterMixin.call(MATRIX33.prototype);

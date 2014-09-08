@@ -32,6 +32,10 @@ define(function(require) {
     var math = require('graphit/math');
 
     require('graphit/extend/jquery');
+    
+    function log() {
+        console.log.apply(console, arguments);
+    }
 
     function MOUSE() {
         var size = util.windowSize();
@@ -111,6 +115,7 @@ define(function(require) {
         var dh = height / 2;
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
+        log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
         var node = new ShapeNode({
             kind : math.choice([eShape.rectangle, eShape.circle]),
             size : {
