@@ -21,8 +21,8 @@ define(function(require) {
 
     function TRANSFORM() {
         this.enable_transform = function() {
-            this.transform = new Matrix33();
-            this.worldTransform = new Matrix33();
+//            this.transform = new Matrix33();
+//            this.worldTransform = new Matrix33();
             util.setCapability(this, eCap.transform);
         };
         this.enable_transform = function() {
@@ -31,7 +31,7 @@ define(function(require) {
             delete this.worldTransform;
         };
         this.applyWorldTransform = function(world) {
-            this.worldTransform = world.clone().mul(this.transform);
+            this.worldTransform = this.worldTransform.copy(this.transform).mul(world);
             return this.worldTransform;
         };
         this.getWorldTransform = function() {

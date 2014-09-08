@@ -45,7 +45,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 250;
+        this.numRectangle = 50;
         this.size = size;
         this.ratio = 0.8;
         this.buffer = new DBuffer({
@@ -64,10 +64,10 @@ define(function(require) {
             },
             worldTransform : this.screenTransform,
         });
-        this.renderer.fixedUpdate = 66;
+        this.renderer.fixedUpdate = 15;
         this.renderer.fixedDraw = 30;
-        this.timeout = 0;// this.renderer.fixedUpdate;
-        this.renderer.limitUpdate = 2;
+        this.timeout = 5;// this.renderer.fixedUpdate;
+        this.renderer.limitUpdate = 3;
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
         this.createHTML();
@@ -91,7 +91,7 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.id = id;
         elm.slider({
-            value : 250,
+            value : 100,
             min : min,
             max : max,
             change : fnChange,

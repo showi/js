@@ -44,8 +44,10 @@ define(function(require) {
          * 
          * @param matrix: If defined we are copying data
          */
-        this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-        if (matrix !== undefined) {
+        if (matrix === undefined) {
+            this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+        } else {
+            this._data = [];
             if (matrix instanceof Array) {
                 this.setData(matrix);
             } else {
@@ -59,6 +61,16 @@ define(function(require) {
     MATRIX33.prototype.setData = function(data) {
         if (data.length != 9) { throw 'InvalidMatrix33DataSize(' + data.length
                 + ')'; }
+            this._data[0] = data[0];
+            this._data[1] = data[1];
+            this._data[2] = data[2];
+            this._data[3] = data[3];
+            this._data[4] = data[4];
+            this._data[5] = data[5];
+            this._data[6] = data[6];
+            this._data[7] = data[7];
+            this._data[8] = data[8];
+            return this;
         this._data = data;
     };
 

@@ -51,12 +51,15 @@ define(function(require) {
     };
 
     LAYER.prototype.empty = function() {
-        for (var i = 0; i < this.max; i++) {
-            if (this.data[i] != null) {
-                this.data[i] = [];
+        var i, layer;
+        for (i = 0; i < this.max, layer=this.data[i]; i++) {
+            if (layer!= null) {
+                while(layer.length > 0)
+                    layer.pop();
             }
         }
-        this.data = [];
+        while (this.data.length > 0)
+            this.data.pop();
         this.length = 0;
     };
 

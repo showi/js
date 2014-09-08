@@ -68,7 +68,7 @@ define(function(require) {
         this.maxUps = 120;
         this.transforms = new Dlist();
         this.transform = undefined;
-        this.node = new Dlist();
+//        this.node = new Dlist();
         this.layer = new Layer();
         this.measure = {
             fps : {
@@ -176,13 +176,12 @@ define(function(require) {
         var that = this;
         this.now = Date.now();
         var delta = (this.now - this.startTime);
-        this.startTime = Date.now();
+        this.startTime = this.now;
         var doDraw = false;
         var doUpdate = false;
-        var child = null;
+        var  wt = null;
 
         this.elapsedTime = 0;
-        //this.drawAdder += delta;
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
             var numUpdate = 0;
@@ -222,24 +221,23 @@ define(function(require) {
             that.ctx.save();
             this.draw_init();
             this.nodeRendered = this.layer.length;
-            child = this.node.first;
+//            child = this.node.first;
             var layer, node, lidx, nidx = null;
-            for (lidx = this.layer.data.length - 1; lidx >= 0; lidx--) {
-                layer = this.layer.data[lidx];
+            for (lidx = this.layer.data.length - 1; lidx >= 0, layer = this.layer.data[lidx]; lidx--) {
                 if (layer == undefined) {
                     continue;
                 }
-                for (nidx = 0; nidx < layer.length; nidx++) {
-                    node = layer[nidx];
-                    that.ctx.save();
-                    if (tree.hasCapability(node, eCap.transform)) {
-                        this.ctx.translate(node.worldTransform.positionX(),
-                                           node.worldTransform.positionY());
-                    }
+                for (nidx = 0; nidx < layer.length, node=layer[nidx]; nidx++) {
                     this.pre_render(node);
+                    this.ctx.save();
                     node.pre_render(this);
+                    if (tree.hasCapability(node, eCap.transform)) {
+                        wt = node.worldTransform._data;
+                        this.ctx.setTransform(wt[0], wt[1], wt[3], wt[4], 
+                                           wt[2], wt[5]);
+                    }
                     if (tree.hasCapability(node, eCap.render)) {
-                        that.apply_node_context(node);
+                        this.apply_node_context(node);
                     }
                     this.render(node);
                     node.render(this);
@@ -250,8 +248,8 @@ define(function(require) {
                         this.ctx.stroke();
                     }
                     this.post_render(node);
+                    this.ctx.restore();
                     node.post_render(this);
-                    that.ctx.restore();
                 }
             };
             this.draw_end();
