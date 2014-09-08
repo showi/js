@@ -141,7 +141,7 @@ define(function(require) {
         node.velocity.randomize().normalize().smul(1.0);
         node.zindex = Math.randInt(0, 10);
         node.zindexInc = (Math.random() > 0.5) ? true : false;
-        node.timeout = 0;
+        node.timeout = Date.now() + Math.randInt(100, 10000);
         this.renderer.root.appendChild(node);
     };
 
@@ -213,7 +213,7 @@ define(function(require) {
         this.renderer.update = function(node) {
             if (tree.hasCapability(node, eCap.transform)) {
                 if (node.timeout < this.now) {
-                    node.timeout = this.now + 3000;
+                    node.timeout = this.now + Math.randInt(100, 10000);
                     if (node.zindexInc) {
                         if (node.zindex < 10) {
                             node.zindex++;

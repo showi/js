@@ -243,6 +243,12 @@ define(function(require) {
                         that.apply_node_context(node);
                     }
                     that.hookExec('render', node);
+                    if (this.ctx.fillStyle) {
+                        this.ctx.fill();
+                    }
+                    if (this.ctx.strokeStyle) {
+                        this.ctx.stroke();
+                    }
                     that.hookExec('post_render', node);
                     that.ctx.restore();
                     // child = child.next;
