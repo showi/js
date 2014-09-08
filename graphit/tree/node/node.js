@@ -17,7 +17,9 @@ define(function(require) {
     var util = require('graphit/util');
     var namespace = require('graphit/namespace');
     var Dlist = require('graphit/datatype/dlist');
-    var MixinParameter = require('graphit/mixin/parameter');
+    var ParameterMixin = require('graphit/mixin/parameter');
+    var RenderableMixin = require('graphit/mixin/renderable');
+
     var ns = namespace.tree.node;
     var _ns_ = 'node';
 
@@ -41,7 +43,8 @@ define(function(require) {
         this.capability = 0;
     };
     NODE.__namespace__ = 'graphit/tree/node/node';
-    MixinParameter.call(NODE.prototype);
+    ParameterMixin.call(NODE.prototype);
+    RenderableMixin.call(NODE.prototype);
 
     NODE.prototype.appendChild = function(child) {
         if (child === undefined) { throw 'InvalidValue'; }

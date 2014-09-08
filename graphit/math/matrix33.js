@@ -66,11 +66,19 @@ define(function(require) {
         /*
          * Copying matrix data from source
          * 
-         * @param matrix: Source for copying @return: this for chaining
+         * @param matrix: Source for copying 
+         * @return: this for chaining
          */
-        for (var i = 0; i < 9; i++) {
-            this._data[i] = matrix._data[i];
-        }
+        this._data[0] = matrix._data[0];
+        this._data[1] = matrix._data[1];
+        this._data[2] = matrix._data[2];
+        this._data[3] = matrix._data[3];
+        this._data[4] = matrix._data[4];
+        this._data[5] = matrix._data[5];
+        this._data[6] = matrix._data[6];
+        this._data[7] = matrix._data[7];
+        this._data[8] = matrix._data[8];
+        
         return this;
     };
 
@@ -78,13 +86,13 @@ define(function(require) {
         /*
          * Return new matrix with same data
          * 
-         * @return: Matrix33 object
+         * @return: new Matrix33 object
          */
         return new MATRIX33(this);
     };
 
     MATRIX33.prototype.equal = function(matrix) {
-        this.inputFilterMatrix(matrix);
+//        this.inputFilterMatrix(matrix);
         for (var i = 0; i < 9; i++) {
             if (this._data[i] != matrix._data[i]) { return false; }
         }
@@ -92,7 +100,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fill = function(value) {
-        this.inputFilter(value);
+//        this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -115,7 +123,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fillSlow = function(value) {
-        this.inputFilter(value);
+//        this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -131,7 +139,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fillMedium = function(value) {
-        this.inputFilter(value);
+//        this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -153,37 +161,39 @@ define(function(require) {
         this._data[m11] = this._data[m22] = this._data[m33] = 1;
         return this;
     };
+
     MATRIX33.prototype.identitySlow = function() {
         this.fill(0);
         this._data[m11] = this._data[m22] = this._data[m33] = 1;
         return this;
     };
+
     MATRIX33.prototype.identityMedium = function() {
         this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         return this;
     };
 
     MATRIX33.prototype.translate = function(vector) {
-        this.inputFilterVector(vector);
+//        this.inputFilterVector(vector);
         this._data[mX] += vector.x;
         this._data[mY] += vector.y;
         return this;
     };
 
     MATRIX33.prototype.translateX = function(x) {
-        this.inputFilter(x);
+//        this.inputFilter(x);
         this._data[mX] += x;
         return this;
     };
 
     MATRIX33.prototype.translateY = function(y) {
-        this.inputFilter(y);
+//        this.inputFilter(y);
         this._data[mY] += y;
         return this;
     };
 
     MATRIX33.prototype.translateXY = function(x, y) {
-        this.inputFilter(x, y);
+//        this.inputFilter(x, y);
         this._data[mX] += x;
         this._data[mY] += y;
         return this;
@@ -192,7 +202,7 @@ define(function(require) {
     MATRIX33.prototype.position = function(vector) {
         if (vector === undefined) { return new Vector2d(this._data[mX],
                                                         this._data[mY]); }
-        this.inputFilter(vector);
+//        this.inputFilter(vector);
         this._data[mX] = vector.x;
         this._data[mY] = vector.y;
         return this;
@@ -200,27 +210,27 @@ define(function(require) {
 
     MATRIX33.prototype.positionX = function(x) {
         if (x === undefined) { return this._data[mX]; }
-        this.inputFilter(x);
+//        this.inputFilter(x);
         this._data[mX] = x;
         return this;
     };
 
     MATRIX33.prototype.positionY = function(y) {
         if (y === undefined) { return this._data[mY]; }
-        this.inputFilter(y);
+//        this.inputFilter(y);
         this._data[mY] = y;
         return this;
     };
 
     MATRIX33.prototype.positionXY = function(x, y) {
-        this.inputFilter(x, y);
+//        this.inputFilter(x, y);
         this._data[mX] = x;
         this._data[mY] = y;
         return this;
     };
 
     MATRIX33.prototype.rotate = function(angle) {
-        this.inputFilter(angle);
+//        this.inputFilter(angle);
         if (angle > (Math.PI / 180)) {
             angle = angle - (Math.PI / 180);
         }
@@ -254,7 +264,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.mul = function(matrix) {
-        this.inputFilterMatrix(matrix);
+//        this.inputFilterMatrix(matrix);
         var b = matrix._data;
         var a = this.clone()._data;
         this._data[m11] = a[m11] * b[m11] + a[m12] * b[m21] + a[m13] * b[m31];
@@ -272,7 +282,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.add = function(matrix) {
-        this.inputFilterMatrix(matrix);
+//        this.inputFilterMatrix(matrix);
         this._data[m11] += matrix._date[m11];
         this._data[m12] += matrix._date[m12];
         this._data[m13] += matrix._date[m13];
@@ -286,7 +296,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.sub = function(matrix) {
-        this.inputFilterMatrix(matrix);
+//        this.inputFilterMatrix(matrix);
         this._data[m11] -= matrix._date[m11];
         this._data[m12] -= matrix._date[m12];
         this._data[m13] -= matrix._date[m13];
@@ -311,7 +321,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.vMul = function(vector) {
-        this.inputFilterVector(vector);
+//        this.inputFilterVector(vector);
         var r = new Vector2d();
         r.x = this._data[m11] * vector.x + this._data[m12] * vector.y
                 + this._data[m13];

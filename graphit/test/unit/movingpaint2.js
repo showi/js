@@ -64,9 +64,9 @@ define(function(require) {
             },
             worldTransform : this.screenTransform,
         });
-        this.renderer.fixedUpdate = 1 / 10;
-        this.renderer.fixedDraw = 1 / 66;
-        this.timeout = 1;
+        this.renderer.fixedUpdate = 20;
+        this.renderer.fixedDraw = 100 / 12;
+        this.timeout = 0;// this.renderer.fixedUpdate;
         this.renderer.limitUpdate = 2;
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
@@ -138,10 +138,11 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(1.0);
+        node.velocity.randomize().normalize().smul(Math.randFloat(0.2, 0.5));
+//        console.log('velocity', node.velocity);
         node.zindex = Math.randInt(0, 10);
         node.zindexInc = (Math.random() > 0.5) ? true : false;
-        node.timeout = Date.now() + Math.randInt(100, 10000);
+        node.timeout = Date.now() + Math.randInt(0, 10000);
         this.renderer.root.appendChild(node);
     };
 
@@ -210,10 +211,10 @@ define(function(require) {
         this.renderer.post_update = function(node) {
             ;
         };
-        this.renderer.update = function(node) {
+        this.renderer.update = function(node, elapsed) {
             if (tree.hasCapability(node, eCap.transform)) {
                 if (node.timeout < this.now) {
-                    node.timeout = this.now + Math.randInt(100, 10000);
+                    node.timeout = this.now + Math.randInt(1000, 10000);
                     if (node.zindexInc) {
                         if (node.zindex < 10) {
                             node.zindex++;
@@ -230,7 +231,9 @@ define(function(require) {
                     }
                 }
                 var p = node.transform.position();
-                var speed = node.orientation.clone().mul(node.velocity);
+                var v = node.velocity.clone().smul(elapsed);
+//                console.log('elapsed', elapsed)
+                var speed = node.orientation.clone().mul(v);
                 p.add(speed);
                 var w = (that.canvas.width() / 2) - (node.size.width / 2);
                 var h = (that.canvas.height() / 2) - (node.size.height / 2);
@@ -247,12 +250,14 @@ define(function(require) {
         this.renderer.draw_init = function() {
             that.buffer.back.clear('black');
         };
-        this.renderer.render = function(node) {
-            node.draw(this);
-        };
         this.renderer.draw_end = function() {
             that.buffer.flip();
         };
+        function drawTick() {
+            that.renderer.canDraw = true;
+            setTimeout(drawTick, 1000 / 25);
+        }
+        drawTick();
         function loop() {
             that.renderer.step();
             setTimeout(loop, that.timeout);

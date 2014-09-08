@@ -16,6 +16,7 @@ define(function(require) {
 
     var util = require('graphit/util');
     var ParameterMixin = require('graphit/mixin/parameter');
+    var RenderableMixin = require('graphit/mixin/renderable');
     var tree = require('graphit/tree/util');
     var eCap = require('graphit/enum/capability');
     var eMat = require('graphit/enum/matrix33');
@@ -85,10 +86,19 @@ define(function(require) {
                 end : null
             },
         };
+        this.canDraw = false;
+        this.setCtx(this.ctx);
     }
     RENDERER.__namespace__ = 'graphit/renderer/renderer';
     ParameterMixin.call(RENDERER.prototype);
+    RenderableMixin.call(RENDERER.prototype);
 
+    RENDERER.prototype.setCtx = function(ctx) {
+        ctx.fillStyle = null;
+        ctx.strokeStyle = null;
+        this.ctx = ctx;
+        this.apply_node_context(this.compositing);
+    }
     RENDERER.prototype.pushTransform = function(transform) {
         this.transforms.append(transform);
         this.transform = transform;
@@ -168,9 +178,9 @@ define(function(require) {
         this.startTime = Date.now();
         var doDraw = false;
         var doUpdate = false;
-        var nodes = undefined;
+//        var nodes = undefined;
         var child = null;
-        var node = null;
+//        var node = null;
 
         this.elapsedTime = 0;
         this.drawAdder += delta;
@@ -184,15 +194,7 @@ define(function(require) {
             this.elapsedTime = numUpdate * this.fixedUpdate;
             this.updateAdder -= this.elapsedTime;
         }
-        if (this.drawAdder >= this.fixedDraw) {
-            doDraw = true;
-            this.drawAdder -= (this.fixedDraw * this.numUpdate);
-        }
         var that = this;
-        if (this.fps() < this.limitFps && this.ups() > 60
-                && this.skipped < this.limitRenderSkipped) {
-            doUpdate = false;
-        }
         if (doUpdate == false) {
             this.skipped++;
         } else {
@@ -204,16 +206,14 @@ define(function(require) {
                 this.transforms.empty();
                 this.updateAdder -= (this.fixedUpdate);
                 this.pushTransform(this.worldTransform);
-                // this.worldTransform.copy(this.worldTransform);
-                if (this.render_node(this.root)) {
+                if (this.render_node(this.root, this.fixedUpdate)) {
                     this.layer.append(this.root);
                 }
-
             }
         }
-        if (this.fps() < this.limitFps
-                && this.skippedDraw < this.limitDrawSkipped) {
-            doDraw = false;
+        if (this.canDraw) {
+            this.canDraw = false;
+            doDraw = true;
         }
         if (doDraw == false) {
             this.skippedDraw++;
@@ -221,45 +221,49 @@ define(function(require) {
             this.skippedDraw = 0;
             this.measure.fps.count++;
             that.ctx.save();
-            that.apply_node_context(this.compositing);
-            that.hookExec('draw_init');
+            this.draw_init();
             this.nodeRendered = this.layer.length;
             child = this.node.first;
-            var layer, node = null;
-            for (var lidx = this.layer.data.length - 1; lidx >= 0; lidx--) {
+            var layer, node, lidx, nidx = null;
+            for (lidx = this.layer.data.length - 1; lidx >= 0; lidx--) {
                 layer = this.layer.data[lidx];
                 if (layer == undefined) {
                     continue;
                 }
-                for (var nidx = 0; nidx < layer.length; nidx++) {
+                for (nidx = 0; nidx < layer.length; nidx++) {
                     node = layer[nidx];
                     that.ctx.save();
                     if (tree.hasCapability(node, eCap.transform)) {
                         this.ctx.translate(node.worldTransform.positionX(),
                                            node.worldTransform.positionY());
                     }
-                    that.hookExec('pre_render', node);
+                    this.pre_render(node);
+                    node.pre_render(this);
                     if (tree.hasCapability(node, eCap.render)) {
                         that.apply_node_context(node);
                     }
-                    that.hookExec('render', node);
+                    this.render(node);
+                    node.render(this);
                     if (this.ctx.fillStyle) {
                         this.ctx.fill();
                     }
                     if (this.ctx.strokeStyle) {
                         this.ctx.stroke();
                     }
-                    that.hookExec('post_render', node);
+                    this.post_render(node);
+                    node.post_render(this);
                     that.ctx.restore();
-                    // child = child.next;
                 }
-            }
-            that.hookExec('draw_end');
+            };
+            this.draw_end();
             that.ctx.restore();
         }
     };
-
-    RENDERER.prototype.render_node = function(node) {
+    
+    RENDERER.prototype.draw_init = function() {/*PLACE HOLDER*/; };
+    RENDERER.prototype.draw_end = function() {/*PLACE HOLDER*/; };
+    
+    RENDERER.prototype.render_node = function(node, elapsed) {
         var child = null;
 
         // if (tree.hasCapability(node, eCap.prune)) {
@@ -271,15 +275,21 @@ define(function(require) {
         // }
         // return false;
         // }
-        this.hookExec('pre_update', node);
+//        this.hookExec('pre_update', node);
+        this.pre_update(node, elapsed);
+        node.pre_update(this, elapsed);
         if (tree.hasCapability(node, eCap.transform)) {
             this.pushTransform(node.applyWorldTransform(this.transform));
         }
-        this.hookExec('update', node);
-        this.hookExec('post_update', node);
+        this.update(node, elapsed);
+        node.update(this, elapsed);
+//        this.hookExec('update', node);
+        this.post_update(node, elapsed);
+        node.post_update(this, elapsed);
+//        this.hookExec('post_update', node);
         child = node.child.first;
         while (child != null) {
-            if (this.render_node(child.content)) {
+            if (this.render_node(child.content, elapsed)) {
                 this.layer.append(child.content);
             }
             child = child.next;

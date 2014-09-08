@@ -83,7 +83,9 @@ define(function(require) {
         var meth = 'draw_' + eShape.reverse(this.kind);
         return this[meth](renderer);
     };
-
+    SHAPE.prototype.render = function(renderer) {
+        return this.draw(renderer);
+    };
     SHAPE.prototype.draw_line = function(renderer) {
         var dSize = this.size / 2;
         shape.line(renderer.ctx, -dSize, 0, dSize, 0);
