@@ -21,8 +21,8 @@ define(function(require) {
     function wKeyValue(key) {
         var element = {
             root : jQuery('<div class="field"></div>'),
-            key : jQuery('<div class="value"></div>'),
-            value : jQuery('<div class="key">fps</div>'),
+            key : jQuery('<div class="key"></div>'),
+            value : jQuery('<div class="value">fps</div>'),
         };
         element.key.text(key);
         var elm = element.root;
@@ -47,8 +47,9 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.html('<h2>' + namespace + '/' + root.id + '</h2>');
 
-        var keys = ['fps', 'ups', 'delta', 'skipped', 'skippedDraw',
-                    'numUpdate', 'nodeRendered'];
+        var keys = ['fps', 'ups', 'skipped', 'skippedDraw',
+                    'numUpdate', 'nodeRendered', 'updateAdder', 'limitUpdate',
+                    'fixedUpdate', 'fixedDraw', 'elapsedTime'];
         var key = undefined;
         for (var i = 0; i < keys.length, key = keys[i]; i++) {
             this[key] = wKeyValue(key);
@@ -62,14 +63,17 @@ define(function(require) {
     WIDGET.prototype.update = function() {
         var fps = Math.floor(this.renderer.fps() * 1000);
         var ups = Math.floor(this.renderer.ups() * 1000);
-        var delta = Math.floor(this.renderer.delta * 100) / 100;
         this.fps.value.text(fps);
         this.ups.value.text(ups);
-        this.delta.value.text(delta);
         this.skipped.value.text(this.renderer.skipped);
         this.skippedDraw.value.text(this.renderer.skippedDraw);
         this.numUpdate.value.text(this.renderer.numUpdate);
         this.nodeRendered.value.text(this.renderer.nodeRendered);
+        this.limitUpdate.value.text(this.renderer.limitUpdate);
+        this.updateAdder.value.text(this.renderer.updateAdder);
+        this.fixedUpdate.value.text(this.renderer.fixedUpdate);
+        this.fixedDraw.value.text(this.renderer.fixedDraw);
+        this.elapsedTime.value.text(this.renderer.elapsedTime);
     };
 
     return WIDGET;

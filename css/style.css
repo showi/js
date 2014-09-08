@@ -16,11 +16,12 @@ html,body {
 .graphit-container {
 	padding:0em;
 	margin: 0.5em;
-	font-size: small;
+	font-size: medium;
 	border-style: ridge none;
 	border-width: thin;
 	border-color: lime;
 	text-shadow: blue;
+	width: auto;
 
 }
 
@@ -35,21 +36,32 @@ html,body {
 	display: none;
 	visibility: hidden;
 }
+div.field {
+	width: auto;
+	font-family: fantasy;
+	display: block;
+}
 .field .key {
-	display: inline-block;
+	display: inline;
 	padding: 0 1em;
-	max-size: 80px;
+	/* max-size: 80px;
 	min-size: 40;
 	overflow: hidden;
-	text-decoration: underline;
-	text-align: right;
+	 */
+	 font-weight: bolder;
+	 color: gray;
+	text-align: left;
 }
 
 .field .value {
 	display: inline;
 	padding: 0 1em;
 	text-decoration: none;
-	text-align: left;
+	text-align: right;
+	align: right;
+	max-width: 50px;
+	width: 50px;
+	color: white
 }
 .graphit-error: {
 	color: red;

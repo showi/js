@@ -64,8 +64,8 @@ define(function(require) {
             },
             worldTransform : this.screenTransform,
         });
-        this.renderer.fixedUpdate = 20;
-        this.renderer.fixedDraw = 100 / 12;
+        this.renderer.fixedUpdate = 66;
+        this.renderer.fixedDraw = 30;
         this.timeout = 0;// this.renderer.fixedUpdate;
         this.renderer.limitUpdate = 2;
         console.log('ScreenTransform', this.screenTransform.toString());
@@ -138,7 +138,7 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(Math.randFloat(0.2, 0.5));
+        node.velocity.randomize().normalize().smul(Math.randFloat(0.1,0.1));
 //        console.log('velocity', node.velocity);
         node.zindex = Math.randInt(0, 10);
         node.zindexInc = (Math.random() > 0.5) ? true : false;
@@ -255,7 +255,7 @@ define(function(require) {
         };
         function drawTick() {
             that.renderer.canDraw = true;
-            setTimeout(drawTick, 1000 / 25);
+            setTimeout(drawTick, that.renderer.fixedDraw);
         }
         drawTick();
         function loop() {

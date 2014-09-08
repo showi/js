@@ -50,16 +50,16 @@ define(function(require) {
         this.setParameters(arguments, VALIDATOR);
         this.startTime = Date.now();
         this.endTime = null;
-        this.delta = 0;
+//        this.delta = 0;
         this.skipped = 0;
         this.skippedDraw = 0;
         this.numUpdate = 0;
         this.fixedUpdate = 10;
         this.fixedDraw = 20;
         this.timeout = 3;
-        this.delta = this.fixedUpdate;
+        //this.delta = this.fixedUpdate;
         this.updateAdder = 0;
-        this.drawAdder = 0;
+        //this.drawAdder = 0;
         this.limitUpdate = 4;
         this.limitDrawSkipped = 2;
         this.limitRenderSkipped = 2;
@@ -173,17 +173,16 @@ define(function(require) {
     };
 
     RENDERER.prototype.step = function() {
+        var that = this;
         this.now = Date.now();
         var delta = (this.now - this.startTime);
         this.startTime = Date.now();
         var doDraw = false;
         var doUpdate = false;
-//        var nodes = undefined;
         var child = null;
-//        var node = null;
 
         this.elapsedTime = 0;
-        this.drawAdder += delta;
+        //this.drawAdder += delta;
         this.updateAdder += delta;
         if (this.updateAdder >= this.fixedUpdate) {
             var numUpdate = 0;
@@ -193,22 +192,22 @@ define(function(require) {
             this.numUpdate = numUpdate;
             this.elapsedTime = numUpdate * this.fixedUpdate;
             this.updateAdder -= this.elapsedTime;
+            var lh = this.fixedUpdate * this.limitUpdate;
+            if (this.updateAdder > lh) {
+                this.elapsedTime += lh;
+                this.updateAdder -= lh;
+            }
         }
-        var that = this;
         if (doUpdate == false) {
             this.skipped++;
         } else {
             this.skipped = 0;
-            for (var i = 0; i < this.numUpdate; i++) {
-                this.node.empty();
-                this.layer.empty();
-                this.measure.ups.count++;
-                this.transforms.empty();
-                this.updateAdder -= (this.fixedUpdate);
-                this.pushTransform(this.worldTransform);
-                if (this.render_node(this.root, this.fixedUpdate)) {
-                    this.layer.append(this.root);
-                }
+            this.layer.empty();
+            this.measure.ups.count++;
+            this.transforms.empty();
+            this.pushTransform(this.worldTransform);
+            if (this.render_node(this.root, this.elapsedTime)) {
+                this.layer.append(this.root);
             }
         }
         if (this.canDraw) {
@@ -259,10 +258,14 @@ define(function(require) {
             that.ctx.restore();
         }
     };
-    
-    RENDERER.prototype.draw_init = function() {/*PLACE HOLDER*/; };
-    RENDERER.prototype.draw_end = function() {/*PLACE HOLDER*/; };
-    
+
+    RENDERER.prototype.draw_init = function() {/* PLACE HOLDER */
+        ;
+    };
+    RENDERER.prototype.draw_end = function() {/* PLACE HOLDER */
+        ;
+    };
+
     RENDERER.prototype.render_node = function(node, elapsed) {
         var child = null;
 
@@ -275,7 +278,7 @@ define(function(require) {
         // }
         // return false;
         // }
-//        this.hookExec('pre_update', node);
+        // this.hookExec('pre_update', node);
         this.pre_update(node, elapsed);
         node.pre_update(this, elapsed);
         if (tree.hasCapability(node, eCap.transform)) {
@@ -283,10 +286,10 @@ define(function(require) {
         }
         this.update(node, elapsed);
         node.update(this, elapsed);
-//        this.hookExec('update', node);
+        // this.hookExec('update', node);
         this.post_update(node, elapsed);
         node.post_update(this, elapsed);
-//        this.hookExec('post_update', node);
+        // this.hookExec('post_update', node);
         child = node.child.first;
         while (child != null) {
             if (this.render_node(child.content, elapsed)) {
