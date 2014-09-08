@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -21,12 +21,13 @@ define(function(require) {
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var SHAPE = new Enum({
-        'rectangle' : 'rectangle',
-        'line' : 'line',
-        'circle' : 'circle',
+        'rectangle' : 1 << 0,
+        'line' : 1 << 1,
+        'circle' : 1 << 2,
+        'point' : 1 << 3
     });
     SHAPE.__namespace__ = 'graphit/enum/shape';
-    
+
     ns[_ns_] = SHAPE;
     return ns[_ns_];
 });

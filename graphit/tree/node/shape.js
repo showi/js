@@ -22,7 +22,7 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var Matrix33 = require('graphit/math/matrix33');
     var eAxis = require('graphit/enum/axis');
-
+    var eShape = require('graphit/enum/shape');
     var ns = require('graphit/namespace');
     ns = ns.tree.node;
     var _ns_ = 'shape';
@@ -56,7 +56,7 @@ define(function(require) {
     TransMixin.call(SHAPE.prototype);
 
     SHAPE.prototype.setUp = function(kind) {
-        var meth = 'setUp_' + kind;
+        var meth = 'setUp_' + eShape.reverse(kind);
         this.transform.positionX(this.pos.x);
         this.transform.positionY(this.pos.y);
         return this[meth]();
@@ -80,7 +80,7 @@ define(function(require) {
     };
     
     SHAPE.prototype.draw = function(renderer) {
-        var meth = 'draw_' + this.kind;
+        var meth = 'draw_' + eShape.reverse(this.kind);
         return this[meth](renderer);
     };
 

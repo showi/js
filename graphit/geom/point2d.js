@@ -15,6 +15,8 @@ define(function(require) {
     'use strict';
 
     var ns = require('graphit/namespace');
+    var shape = require('graphit/draw/shape');
+
     ns = ns.geom;
     var _ns_ = 'point2d';
 
@@ -39,6 +41,10 @@ define(function(require) {
     POINT2D.prototype.randomize = function() {
         this.x = Math.random();
         this.y = Math.random();
+    };
+
+    POINT2D.prototype.draw = function(ctx) {
+        shape.point(ctx, this.x, this.y);
     };
 
     POINT2D.prototype.toString = function() {
