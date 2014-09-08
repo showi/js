@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -24,8 +24,10 @@ define(function(require) {
     jQuery('body').append(logElement);
 
     var UTIL = {
-        __namespace__: 'graphit/test/util',
-        numPass : 10000000,
+        __namespace__ : 'graphit/test/util',
+        numPass       : 10000000,
+        numPassMedium : 10000,
+        numPassLow    : 1000,
         logElement : logElement,
         log : function() {
             console.log.apply(console, arguments);
@@ -81,24 +83,54 @@ define(function(require) {
         },
         runTest : function(name) {
             var that = this;
-            require(['graphit/test/unit/' + name], function(test) {
-                console.log('>>>>> Running test', name, '(',
-                            test.__namespace__, ')');
-                if (name in graphit.test) { throw 'TestAlreadyRunning'; }
-                graphit.test[name] = test;
-                for (var key in test) {
-                    if (key.startsWith('test_') && !test.hasOwnProperty(key)) {
-                        console.log('>>>', key);
-                        that.catchException(test, key);
-                    }
-                }
-                if ('run' in test) {
-                    if (!test.hasOwnProperty('run')) {
-                        console.log('>>> run');
-                        that.catchException(test, 'run');
-                    }
-                }
-            });
+            require(
+                    ['graphit/test/unit/' + name],
+                    function(test) {
+                        console.log('>>>>> Running test', name, '(',
+                                    test.__namespace__, ')');
+                        if (name in graphit.test) { throw 'TestAlreadyRunning'; }
+                        graphit.test[name] = test;
+                        var isTest = false;
+                        var isSpeedTest = false;
+
+                        if (test.constructor.name.startsWith('TEST_')) {
+                            isTest = true;
+                            if (test.constructor.name.startsWith('TEST_SPEED')) {
+                                isSpeedTest = true;
+                            }
+                            test.result = {
+                            };
+                        }
+                        for ( var key in test) {
+                            if (key.startsWith('test_')
+                                    && !test.hasOwnProperty(key)) {
+                                console.log('>>>', key);
+                                that.catchException(test, key);
+                            }
+                            if (isTest && key.startsWith('speed_')
+                                    && !test.hasOwnProperty(key)) {
+                                var fn = key
+                                        .slice('speed_'.length, key.length);
+                                var n = '[' + test.constructor.name + '/' + fn
+                                        + ']';
+                                // console.log(n, '>>> Start speed test',);
+                                var startTime = Date.now();
+                                var res = that.catchException(test, key);
+                                var elapsed = Date.now() - startTime;
+                                console.log(n, elapsed, 'ms, return:', res);
+                                test.result[fn] = elapsed;
+                            }
+                        }
+                        if (isSpeedTest) {
+                            console.log(test);
+                        }
+                        if ('run' in test) {
+                            if (!test.hasOwnProperty('run')) {
+                                console.log('>>> run');
+                                that.catchException(test, 'run');
+                            }
+                        }
+                    });
         }
     };
     ns[_ns_] = UTIL;

@@ -62,7 +62,7 @@ define(function(require) {
         });
         this.renderer.fixedUpdate = 1/10;
         this.renderer.fixedDraw = 1/66;
-        this.timeout = 0;
+        this.timeout = 1;
         this.renderer.limitUpdate = 2;
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
@@ -78,7 +78,6 @@ define(function(require) {
                 + '</div>');
         root.append(colorPicker);
         return root;
-
     }
     
     function wSlider(id, min, max, fnSlide, fnChange) {
@@ -113,16 +112,15 @@ define(function(require) {
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
         var node = new ShapeNode({
-            kind : eShape.rectangle,
+            kind : math.choice([eShape.rectangle, eShape.circle]),
             size : {
                 width : Math.randInt(5, mw),
-                height : Math.randInt(5, mh)
+                height : Math.randInt(5, mh),
             },
             pos : {
                 x : Math.randInt(-dw, dw),
-                y : Math.randInt(-dh, dh)
+                y : Math.randInt(-dh, dh),
             },
-
         });
         node.fillStyle = tool.randomColor();
         node.strokeStyle = tool.randomColor();

@@ -14,25 +14,19 @@ define(function(require) {
 
     'use strict';
 
+    var Enum = require('graphit/enum');
     var ns = require('graphit/namespace');
-    ns = ns.dt;
-    var _ns_ = 'array';
-
+    ns = ns.enum;
+    var _ns_ = 'vector';
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
-    function GARRAY() {
-        Array.call(this, arguments);
-    }
-    GARRAY.protoype.constructor = Object.create(Array.prototype);
-
-    GARRAY.prototype.empty = function() {
-        while (0 < this.length) {
-            this.pop();
-        }
-    };
-
-    GARRAY.prototype = Object.create(Array.prototype);
-
-    ns[_ns_] = GARRAY;
+    var VECTOR = new Enum({
+        x : 0, // m13,
+        y : 1,
+        z : 2, 
+    });
+    VECTOR.__namespace__ = 'graphit/enum/vector';
+    
+    ns[_ns_] = VECTOR;
     return ns[_ns_];
 });

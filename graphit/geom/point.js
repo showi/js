@@ -15,8 +15,8 @@ define(function(require) {
     'use strict';
 
     var ns = require('graphit/namespace');
-    ns = ns.math;
-    var _ns_ = 'point2d';
+    ns = ns.geom2d;
+    var _ns_ = 'point';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 

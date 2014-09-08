@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -20,28 +20,29 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
 
     function TRANSFORM() {
-        util.setCapability(this, eCap.transform);
-        this.transform = new Matrix33();
-        this.worldTransform = new Matrix33();
-        
-        this.applyWorldTransform = function(world) {
-          this.worldTransform = world.clone().mul(this.transform);
-          return this.worldTransform;
+        this.enable_transform = function() {
+            this.transform = new Matrix33();
+            this.worldTransform = new Matrix33();
+            util.setCapability(this, eCap.transform);
         };
-        this.getWorldTransform = function () {
+        this.enable_transform = function() {
+            util.setCapability(this, eCap.transform);
+            delete this.transform;
+            delete this.worldTransform;
+        };
+        this.applyWorldTransform = function(world) {
+            this.worldTransform = world.clone().mul(this.transform);
+            return this.worldTransform;
+        };
+        this.getWorldTransform = function() {
             return this.worldTransform;
         };
         this.getParentWorldTransform = function() {
-            if (util.hasCapability(this, eCap.transform)) {
-                return this.worldTransform;
-            }
-            if (this.parent == undefined || this.parent == null) {
-                return new Matrix33();
-            }
+            if (util.hasCapability(this, eCap.transform)) { return this.worldTransform; }
+            if (this.parent == undefined || this.parent == null) { return new Matrix33(); }
             return this.parent.getParentWorldTransform();
-            
-        },
-        this.rotate = function(angle) {
+
+        }, this.rotate = function(angle) {
             return this.transform.rotate(angle);
         };
         this.translate = function(vector) {

@@ -32,7 +32,7 @@ define(function(require) {
         kind : {
             required : true
         },
-        position : {
+        pos : {
             required : false,
         },
         size : {
@@ -40,23 +40,24 @@ define(function(require) {
         },
     };
 
-    function SHAPE() {
+    function AXIS(position) {
         Node.call(this, arguments);
-        this.__namespace__ = 'graphit/tree/node/shape';
+        this.__namespace__ = 'graphit/tree/node/axis';
         this.setParameters(arguments, VALIDATORS);
         tree.setCapability(this, eCap.draw);
+        this.enable_transform();
         this.setUp(this.kind);
     };
 
-    SHAPE.prototype = Object.create(Node.prototype);
+    AXIN.prototype = Object.create(Node.prototype);
     TransMixin.call(SHAPE.prototype);
 
-    SHAPE.prototype.setUp = function(kind) {
+    AXIN.prototype.setUp = function(kind) {
         this.u = new Vector2d(1, 0);
         this.v = new Vector2d(0, 1);
     };
 
-    SHAPE.prototype.draw_rectangle = function(renderer) {
+    AXIN.prototype.draw_rectangle = function(renderer) {
         
     };
 

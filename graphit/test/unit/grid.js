@@ -31,17 +31,18 @@ define(function(require) {
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
     var math = require('graphit/math');
+    var AxisNode = require('graphit/tree/node/axis');
 
     require('graphit/extend/jquery');
 
-    function MOUSE() {
+    function GRID() {
         var size = util.windowSize();
         size.x = math.clamp(size.x, 100, 800);
         size.y = math.clamp(size.y, 100, 600);
         this.setUp(size, 0.8);
     }
 
-    MOUSE.prototype.setUp = function(size, ratio) {
+    GRID.prototype.setUp = function(size, ratio) {
         this.numRectangle = 10;
         this.size = size;
         this.ratio = 1;
@@ -82,13 +83,13 @@ define(function(require) {
 
     }
 
-    MOUSE.prototype.createTree = function() {
+    GRID.prototype.createTree = function() {
         for (var i = 0; i < this.numRectangle; i++) {
             this.renderer.root.appendChild(this.createNode());
         }
     };
 
-    MOUSE.prototype.createNode = function(root) {
+    GRID.prototype.createNode = function(root) {
         var subchild = false;
         var width = this.canvas.width();
         var height = this.canvas.height();
@@ -145,7 +146,7 @@ define(function(require) {
         return node;
     };
 
-    MOUSE.prototype.createHTML = function() {
+    GRID.prototype.createHTML = function() {
         this.body.empty();
         this.body.css({
             'background-color' : '#222'
@@ -157,7 +158,7 @@ define(function(require) {
         elm.center();
     };
 
-    MOUSE.prototype.startMeasureLoop = function(timeout) {
+    GRID.prototype.startMeasureLoop = function(timeout) {
         var that = this;
         if (this._measureLoop !== undefined) {
             console.error('measure alreayd started');
@@ -177,7 +178,7 @@ define(function(require) {
         return true;
     };
 
-    MOUSE.prototype.stopMeasureLoop = function() {
+    GRID.prototype.stopMeasureLoop = function() {
         if (this._measureLoop === undefined) {
             console.error('Measure not started');
             return false;
@@ -186,7 +187,7 @@ define(function(require) {
         return true;
     };
 
-    MOUSE.prototype.run = function() {
+    GRID.prototype.run = function() {
         var that = this;
         this.startMeasureLoop(100);
         this.renderer.update = function(node) {
@@ -230,5 +231,5 @@ define(function(require) {
         loop();
     };
 
-    return new MOUSE();
+    return new GRID();
 });

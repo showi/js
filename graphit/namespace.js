@@ -33,6 +33,9 @@ define(function(require) {
         shape : null,
         draw: {},
         enum : {},
+        geom2d: {
+       
+        },
         dt: {},
         __uid__: 0,
         genUID : function() {
@@ -44,7 +47,7 @@ define(function(require) {
         test : {},
         toString: function() {
             return '<' + this.__namespace__ + 
-                ' version=' + this.__version__ + '>';
+                ' version="' + this.__version__ + '">';
         }
     };
 

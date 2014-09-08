@@ -66,6 +66,12 @@ define(function(require) {
                 }
             }
             return max;
+        },
+        randInt: function(a, b) {
+            return Math.floor((Math.random() * b) + a);
+        },
+        choice: function(list) {
+          return list[this.randInt(0, list.length)];  
         }
     };
     MATH.__namespace__ = 'graphit/math';

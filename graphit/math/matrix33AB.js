@@ -17,7 +17,7 @@ define(function(require) {
     var ns = require('graphit/math');
     var Vector2d = require('graphit/math/vector2d');
     var InputFilterMixin = require('graphit/mixin/inputfilter');
-    var _ns_ = 'matrix33';
+    var _ns_ = 'matrix33AB';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
@@ -40,7 +40,7 @@ define(function(require) {
          * 
          * @param matrix: If defined we are copying data
          */
-        this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+        this._data = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
         if (matrix !== undefined) {
             if (matrix instanceof Array) {
                 this.setData(matrix);
@@ -48,7 +48,7 @@ define(function(require) {
                 this.copy(matrix);
             }
         }
-    }
+    };
 
     MATRIX33.__namespace__ = 'graphit/math/matrix33';
 
@@ -155,7 +155,7 @@ define(function(require) {
         return this;
     };
     MATRIX33.prototype.identityMedium = function() {
-        this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+        this._data = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
         return this;
     };
 

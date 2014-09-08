@@ -73,7 +73,12 @@ define(function(require) {
         this.u = new Vector2d(this.size.width / 2, 0);
         this.v = new Vector2d(0, this.size.height / 2);
     };
-
+    
+    SHAPE.prototype.setUp_circle = function() {
+        this.u = new Vector2d(this.size.width / 2, 0);
+        this.size.height = this.size.width;
+    };
+    
     SHAPE.prototype.draw = function(renderer) {
         var meth = 'draw_' + this.kind;
         return this[meth](renderer);
@@ -84,14 +89,16 @@ define(function(require) {
         shape.line(renderer.ctx, -dSize, 0, dSize, 0);
     };
 
+    SHAPE.prototype.draw_circle = function(renderer) {
+        shape.circle(renderer.ctx, 0, 0, this.u.x);
+    };
+
     SHAPE.prototype.draw_rectangle = function(renderer) {
         if (this.fillStyle !== undefined) {
-//            console.log('fillRect Drawing rectangle');
             renderer.ctx
                 .fillRect(-this.u.x, -this.v.y, this.u.x * 2, this.v.y * 2);
         }
         if (this.strokeStyle !== undefined) {
-//            console.log('strokeRect Drawing rectangle');
             renderer.ctx
             .strokeRect(-this.u.x, -this.v.y, this.u.x * 2, this.v.y * 2);
         }

@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -59,7 +59,7 @@ define(function(require) {
         this.length += 1;
         return elm;
     };
-    
+
     DLIST.prototype.push = function(content) {
         return this.append(content);
     };
@@ -82,6 +82,18 @@ define(function(require) {
             item.prev.next = null;
             this.last = item.prev;
             this.length -= 1;
+        } else {
+            var elm = this.first.next;
+            while (elm.next) {
+                if (elm == item) {
+                    item.prev.next = item.next.prev;
+                    item.prev = null;
+                    item.next = null;
+                    this.length--;
+                    return item;
+                }
+                elm = elm.next;
+            }
         }
         return item;
     };
@@ -89,14 +101,24 @@ define(function(require) {
     DLIST.prototype.pop = function() {
         return this.remove(this.last);
     };
-    
+
     DLIST.prototype.shift = function() {
         return this.remove(this.first);
     };
-    
+
     DLIST.prototype.empty = function() {
-        var elm = null
-        while(elm = this.pop());
+        // if (this.last != null) {
+        // this.last.next = null;
+        // this.last = null;
+        // }
+        // if (this.first != null) {
+        // this.first.next = null;
+        // this.first = null;
+        // }
+        // this.first = this.last = null;
+        // this.length = 0;
+        var elm = null;
+        while (elm = this.pop());
     }
 
     return DLIST;
