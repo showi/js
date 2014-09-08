@@ -138,10 +138,10 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(Math.randFloat(0.1,0.1));
+        node.velocity.randomize().normalize().smul(Math.randFloat(0.05,0.1));
 //        console.log('velocity', node.velocity);
-        node.zindex = Math.randInt(0, 10);
-        node.zindexInc = (Math.random() > 0.5) ? true : false;
+//        node.zindex = Math.randInt(0, 10);
+//        node.zindexInc = (Math.random() > 0.5) ? true : false;
         node.timeout = Date.now() + Math.randInt(0, 10000);
         this.renderer.root.appendChild(node);
     };
