@@ -24,6 +24,7 @@ define(function(require) {
     var Matrix33 = require('graphit/math/matrix33');
     var Dlist = require('graphit/datatype/dlist');
     var math = require('graphit/math');
+    var Layer = require('graphit/renderer/layer');
 
     var VALIDATOR = {
         'root' : {
@@ -43,6 +44,7 @@ define(function(require) {
     };
 
     function RENDERER() {
+        this.now = Date.now();
         this.uid = util.genUID();
         this.setParameters(arguments, VALIDATOR);
         this.startTime = Date.now();
@@ -66,6 +68,7 @@ define(function(require) {
         this.transforms = new Dlist();
         this.transform = undefined;
         this.node = new Dlist();
+        this.layer = new Layer();
         this.measure = {
             fps : {
                 value : 0,
@@ -160,7 +163,8 @@ define(function(require) {
     };
 
     RENDERER.prototype.step = function() {
-        var delta = (Date.now() - this.startTime);
+        this.now = Date.now();
+        var delta = (this.now - this.startTime);
         this.startTime = Date.now();
         var doDraw = false;
         var doUpdate = false;
@@ -195,13 +199,14 @@ define(function(require) {
             this.skipped = 0;
             for (var i = 0; i < this.numUpdate; i++) {
                 this.node.empty();
+                this.layer.empty();
                 this.measure.ups.count++;
                 this.transforms.empty();
                 this.updateAdder -= (this.fixedUpdate);
                 this.pushTransform(this.worldTransform);
                 // this.worldTransform.copy(this.worldTransform);
                 if (this.render_node(this.root)) {
-                    this.node.append(this.root);
+                    this.layer.append(this.root);
                 }
 
             }
@@ -218,23 +223,30 @@ define(function(require) {
             that.ctx.save();
             that.apply_node_context(this.compositing);
             that.hookExec('draw_init');
-            this.nodeRendered = this.node.length;
+            this.nodeRendered = this.layer.length;
             child = this.node.first;
-            while (child != null) {
-                node = child.content;
-                that.ctx.save();
-                if (tree.hasCapability(node, eCap.transform)) {
-                    this.ctx.translate(node.worldTransform.positionX(),
-                                       node.worldTransform.positionY());
+            var layer, node = null;
+            for (var lidx = this.layer.data.length - 1; lidx >= 0; lidx--) {
+                layer = this.layer.data[lidx];
+                if (layer == undefined) {
+                    continue;
                 }
-                that.hookExec('pre_render', node);
-                if (tree.hasCapability(node, eCap.render)) {
-                    that.apply_node_context(node);
+                for (var nidx = 0; nidx < layer.length; nidx++) {
+                    node = layer[nidx];
+                    that.ctx.save();
+                    if (tree.hasCapability(node, eCap.transform)) {
+                        this.ctx.translate(node.worldTransform.positionX(),
+                                           node.worldTransform.positionY());
+                    }
+                    that.hookExec('pre_render', node);
+                    if (tree.hasCapability(node, eCap.render)) {
+                        that.apply_node_context(node);
+                    }
+                    that.hookExec('render', node);
+                    that.hookExec('post_render', node);
+                    that.ctx.restore();
+                    // child = child.next;
                 }
-                that.hookExec('render', node);
-                that.hookExec('post_render', node);
-                that.ctx.restore();
-                child = child.next;
             }
             that.hookExec('draw_end');
             that.ctx.restore();
@@ -244,15 +256,15 @@ define(function(require) {
     RENDERER.prototype.render_node = function(node) {
         var child = null;
 
-//        if (tree.hasCapability(node, eCap.prune)) {
-//            if (node.parent === undefined || !node.parent) {
-//                console.error('Cannot prune root node');
-//                return false;
-//            } else {
-//                node.parent.child.remove(node);
-//            }
-//            return false;
-//        }
+        // if (tree.hasCapability(node, eCap.prune)) {
+        // if (node.parent === undefined || !node.parent) {
+        // console.error('Cannot prune root node');
+        // return false;
+        // } else {
+        // node.parent.child.remove(node);
+        // }
+        // return false;
+        // }
         this.hookExec('pre_update', node);
         if (tree.hasCapability(node, eCap.transform)) {
             this.pushTransform(node.applyWorldTransform(this.transform));
@@ -262,7 +274,7 @@ define(function(require) {
         child = node.child.first;
         while (child != null) {
             if (this.render_node(child.content)) {
-                this.node.push(child.content);
+                this.layer.append(child.content);
             }
             child = child.next;
         }

@@ -32,7 +32,7 @@ define(function(require) {
     var math = require('graphit/math');
 
     require('graphit/extend/jquery');
-    
+
     function log() {
         console.log.apply(console, arguments);
     }
@@ -62,10 +62,10 @@ define(function(require) {
             compositing : {
                 globalAlpha : 0.8,
             },
-            worldTransform: this.screenTransform,
+            worldTransform : this.screenTransform,
         });
-        this.renderer.fixedUpdate = 1/10;
-        this.renderer.fixedDraw = 1/66;
+        this.renderer.fixedUpdate = 1 / 10;
+        this.renderer.fixedDraw = 1 / 66;
         this.timeout = 1;
         this.renderer.limitUpdate = 2;
         console.log('ScreenTransform', this.screenTransform.toString());
@@ -83,7 +83,7 @@ define(function(require) {
         root.append(colorPicker);
         return root;
     }
-    
+
     function wSlider(id, min, max, fnSlide, fnChange) {
         if (id === undefined) {
             id = util.genUID();
@@ -91,13 +91,13 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.id = id;
         elm.slider({
-            value: 250,
-            min: min,
-            max: max,
-            change: fnChange,
-            slide: fnSlide,
-            range: 'min',
-            orientation: 'horizontal'
+            value : 250,
+            min : min,
+            max : max,
+            change : fnChange,
+            slide : fnSlide,
+            range : 'min',
+            orientation : 'horizontal'
         });
         return elm;
     }
@@ -139,16 +139,19 @@ define(function(require) {
         }
         node.velocity = new Vector2d(0, 0);
         node.velocity.randomize().normalize().smul(1.0);
+        node.zindex = Math.randInt(0, 10);
+        node.zindexInc = (Math.random() > 0.5) ? true : false;
+        node.timeout = 0;
         this.renderer.root.appendChild(node);
     };
 
     MOUSE.prototype.setNumRectangle = function(value) {
         this.numRectangle = value;
         var root = this.renderer.root;
-        while(root.child.length > value) {
+        while (root.child.length > value) {
             root.child.shift();
         }
-        while(root.child.length<value) {
+        while (root.child.length < value) {
             this.createNode();
         }
     };
@@ -209,6 +212,23 @@ define(function(require) {
         };
         this.renderer.update = function(node) {
             if (tree.hasCapability(node, eCap.transform)) {
+                if (node.timeout < this.now) {
+                    node.timeout = this.now + 3000;
+                    if (node.zindexInc) {
+                        if (node.zindex < 10) {
+                            node.zindex++;
+                        } else {
+                            node.zindexInc = false;
+                        }
+                    }
+                    if (!node.zindexInc) {
+                        if (node.zindex > 0) {
+                            node.zindex--;
+                        } else {
+                            node.zindexInc = true;
+                        }
+                    }
+                }
                 var p = node.transform.position();
                 var speed = node.orientation.clone().mul(node.velocity);
                 p.add(speed);

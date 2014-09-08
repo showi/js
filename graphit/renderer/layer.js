@@ -26,6 +26,7 @@ define(function(require) {
             max = 10;
         }
         this.max = max;
+        this.length = 0;
         this.setUp();
     }
 
@@ -36,22 +37,27 @@ define(function(require) {
         }
     };
 
-    LAYER.prototype.push = function(idx, node) {
+    LAYER.prototype.append = function(node) {
+        var idx = node.zindex;
+        idx = (idx === undefined)? 0: idx;
         if (idx < 0 || idx > this.max) { throw 'LayerIndexRangeError(' + idx
                 + ')'; }
         if (node === undefined || node == null) { throw 'Cannot add undefined or null node'; }
         if (this.data[idx] == null) {
             this.data[idx] = [];
         }
-        this.data[idx].append(node);
+        this.data[idx].push(node);
+        this.length++;
     };
 
-    LAYER.prototype.clear = function() {
+    LAYER.prototype.empty = function() {
         for (var i = 0; i < this.max; i++) {
             if (this.data[i] != null) {
                 this.data[i] = [];
             }
         }
+        this.data = [];
+        this.length = 0;
     };
 
     return LAYER;
