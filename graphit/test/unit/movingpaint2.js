@@ -123,8 +123,8 @@ define(function(require) {
                 height : Math.randInt(5, mh),
             },
             pos : {
-                x : Math.randInt(-dw, dw),
-                y : Math.randInt(-dh, dh),
+                x : 0, //Math.randInt(-dw, dw),
+                y : 0, //Math.randInt(-dh, dh),
             },
         });
         node.fillStyle = tool.randomColor();
