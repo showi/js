@@ -195,6 +195,7 @@ define(function(require) {
             if (this.updateAdder > lh) {
                 this.elapsedTime += lh;
                 this.updateAdder -= lh;
+                this.canDraw = false;
             }
         }
         if (doUpdate == false) {
@@ -221,7 +222,6 @@ define(function(require) {
             that.ctx.save();
             this.draw_init();
             this.nodeRendered = this.layer.length;
-//            child = this.node.first;
             var layer, node, lidx, nidx = null;
             for (lidx = this.layer.data.length - 1; lidx >= 0, layer = this.layer.data[lidx]; lidx--) {
                 if (layer == undefined) {

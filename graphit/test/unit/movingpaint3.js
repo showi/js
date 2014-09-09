@@ -45,30 +45,51 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 50;
+        this.numRectangle = 250;
+        this.currentScreen = 0;
         this.size = size;
         this.ratio = 0.8;
+        var width = 320;
+        var height = 240;
+        var dw = width / 2;
+        var dh = height / 2;
         this.buffer = new DBuffer({
             width : this.size.x * this.ratio,
             height : this.size.y * this.ratio
         });
-        this.canvas = this.buffer.front;
-        console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
-        this.screenTransform = new Matrix33();
-        this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
-                .height() / 2);
+        this.numCol = 2;
+        this.numScreen = 4;
+        this.screen = [];
+
+        for (var i = 0; i < this.numScreen/this.numCol; i++) {
+            for (var j = 0; j < this.numCol; j++) {
+                var screen = new DBuffer({
+                    width : width,
+                    height : height
+                });
+                screen.worldTransform = new Matrix33();
+                screen.worldTransform.positionXY(-dw + i * (dw), -dh + j
+                        * (dh))
+                this.screen.push(screen);
+            }
+        }
+        // this.canvas = this.buffer.front;
+        // console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
+        // this.screenTransform = new Matrix33();
+        // this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
+        // .height() / 2);
         this.renderer = new Renderer({
-            ctx : this.buffer.back.getCtx(),
+            ctx : this.screen[0].back.getCtx(),
             compositing : {
-                globalAlpha : 0.8,
+            // globalAlpha : 0.8,
             },
-            worldTransform : this.screenTransform,
+        // worldTransform : this.screenTransform,
         });
-        this.renderer.fixedUpdate = 15;
+        this.renderer.fixedUpdate = 66;
         this.renderer.fixedDraw = 30;
-        this.timeout = 5;// this.renderer.fixedUpdate;
-        this.renderer.limitUpdate = 10;
-        console.log('ScreenTransform', this.screenTransform.toString());
+        this.timeout = 0;// this.renderer.fixedUpdate;
+        this.renderer.limitUpdate = 2;
+        // console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
         this.createHTML();
         this.createTree();
@@ -91,7 +112,7 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.id = id;
         elm.slider({
-            value : 100,
+            value : 250,
             min : min,
             max : max,
             change : fnChange,
@@ -109,8 +130,8 @@ define(function(require) {
     };
 
     MOUSE.prototype.createNode = function() {
-        var width = this.canvas.width();
-        var height = this.canvas.height();
+        var width = 320; // this.width * this.numCol;
+        var height = 240;
         var dw = width / 2;
         var dh = height / 2;
         var mw = dw * this.ratio;
@@ -123,8 +144,8 @@ define(function(require) {
                 height : Math.randInt(5, mh),
             },
             pos : {
-                x : 0, //Math.randInt(-dw, dw),
-                y : 0, //Math.randInt(-dh, dh),
+                x : 0,// Math.randInt(-dw, dw),
+                y : 0,// Math.randInt(-dh, dh),
             },
         });
         node.fillStyle = tool.randomColor();
@@ -138,10 +159,10 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(Math.randFloat(0.05,0.1));
-//        console.log('velocity', node.velocity);
-//        node.zindex = Math.randInt(0, 10);
-//        node.zindexInc = (Math.random() > 0.5) ? true : false;
+        node.velocity.randomize().normalize().clamp(0.01, 0.1);
+        // console.log('velocity', node.velocity);
+        node.zindex = Math.randInt(0, 10);
+        node.zindexInc = (Math.random() > 0.5) ? true : false;
         node.timeout = Date.now() + Math.randInt(0, 10000);
         this.renderer.root.appendChild(node);
     };
@@ -162,8 +183,20 @@ define(function(require) {
         this.body.css({
             'background-color' : '#222'
         });
-        var elm = jQuery(this.canvas.getElement());
-        this.body.append(elm);
+        var i, j, screen, row, elm;
+        this.table = jQuery('<table class="graphit-container"></table>');
+        for (i = 0; i < this.screen.length, screen = this.screen[i]; i++) {
+            row = jQuery('<tr></tr>');
+            for (j = 0; j < this.numCol; j++) {
+                elm = jQuery('<td class="screen"></td>');
+                elm.append(screen.front.getElement());
+                row.append(elm);
+            }
+            this.table.append(row);
+        }
+        this.body.append(this.table);
+        // var elm = jQuery(this.canvas.getElement());
+        // this.body.append(elm);
         this.wRenderer = new WRenderer(this.renderer);
         this.wRenderer.build(this.body);
         var that = this;
@@ -204,10 +237,17 @@ define(function(require) {
         this._measureLoop = undefined;
         return true;
     };
-
     MOUSE.prototype.run = function() {
-        var that = this;
+        var i;
         this.startMeasureLoop(1000);
+
+        this.render_screen();
+
+    };
+
+    MOUSE.prototype.render_screen = function() {
+        var that = this;
+        this.currentScreen = 0;
         this.renderer.post_update = function(node) {
             ;
         };
@@ -232,11 +272,11 @@ define(function(require) {
                 }
                 var p = node.transform.position();
                 var v = node.velocity.clone().smul(elapsed);
-//                console.log('elapsed', elapsed)
+                // console.log('elapsed', elapsed)
                 var speed = node.orientation.clone().mul(v);
                 p.add(speed);
-                var w = (that.canvas.width() / 2) - (node.size.width / 2);
-                var h = (that.canvas.height() / 2) - (node.size.height / 2);
+                var w = (640 / 2) - (node.size.width / 2);
+                var h = (480 / 2) - (node.size.height / 2);
                 if (p.x < -w || p.x > w) {
                     node.orientation.inverseX();
                 }
@@ -244,14 +284,30 @@ define(function(require) {
                     node.orientation.inverseY();
                 }
                 node.transform.translate(speed);
-                node.applyWorldTransform(that.screenTransform);
+                node
+                        .applyWorldTransform(that.screen[that.currentScreen].worldTransform);
+            }
+        };
+        this.renderer.pre_render = function() {
+            if (that.screen[that.currentScreen] === undefined) {
+                return;
+            }
+            console.log(that.screen[that.currentScreen], that.currentScreen);
+            this.ctx = that.screen[that.currentScreen].back.context.ctx;
+        };
+
+        this.renderer.post_render = function() {
+            if (that.currentScreen < that.screen.length) {
+                that.currentScreen++;
+            } else {
+                that.currentScreen = 0;
             }
         };
         this.renderer.draw_init = function() {
-            that.buffer.back.clear('black');
+            that.screen[that.currentScreen].back.clear('black');
         };
         this.renderer.draw_end = function() {
-            that.buffer.flip();
+            that.screen[that.currentScreen].back.flip();
         };
         function drawTick() {
             that.renderer.canDraw = true;
