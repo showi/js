@@ -34,6 +34,11 @@ define(function(require) {
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             ctx.closePath();
+        },
+        point: function(ctx, x, y) {
+            ctx.beginPath();
+            ctx.rect(x-0.5, y-0.5, 1,1);
+            ctx.closePath();
         }
     };
     return SHAPE;

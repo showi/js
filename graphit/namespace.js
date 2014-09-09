@@ -23,7 +23,7 @@ define(function(require) {
     }
     /* Extending javascript object */
     require('graphit/extend/string');
-    require('graphit/extend/math');
+//    require('graphit/extend/math');
 
     /* injecting our base data */
     var NAMESPACE = {

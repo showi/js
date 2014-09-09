@@ -16,6 +16,8 @@ define(function(require) {
 
     var ns = require('graphit/namespace');
     var shape = require('graphit/draw/shape');
+    var TransformMixin = require('graphit/tree/mixin/transform');
+    var Matrix33 = require('graphit/math/matrix33');
 
     ns = ns.geom;
     var _ns_ = 'point2d';
@@ -23,10 +25,28 @@ define(function(require) {
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function POINT2D(x, y) {
+        this.transform = new Matrix33();
+        this.worldTransform = new Matrix33();
+        Object.defineProperty(this, 'x', {
+            get : function() {
+                return this.transform.positionX();
+            },
+            set : function(x) {
+                this.transform.positionX(x);
+            }
+        });
+        Object.defineProperty(this, 'y', {
+            get : function() {
+                return this.transform.positionY();
+            },
+            set : function(y) {
+                this.transform.positionY(y);
+            }
+        });
         this.x = (x === undefined) ? 0 : x;
         this.y = (y === undefined) ? 0 : y;
     }
-
+    TransformMixin.call(POINT2D.prototype);
     POINT2D.__namespace__ = 'graphit/geom/point2d';
 
     POINT2D.prototype.clone = function() {

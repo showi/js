@@ -15,7 +15,6 @@ define(function(require) {
     'use strict';
 
     var graphit = window.graphit;
-
     var TOOL = {
         __namespace__ : 'graphit/draw/tool',
         randInt : function(max) {

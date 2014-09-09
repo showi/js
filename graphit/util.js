@@ -16,8 +16,8 @@ define(function(require) {
 
     var ns = require('graphit/namespace');
     var _ns_ = 'util';
+    var math = require('graphit/math');
     var Vector2d = require('graphit/math/vector2d');
-    
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
     
     var documentElement = jQuery(document);
@@ -97,7 +97,7 @@ define(function(require) {
             return window.graphit;
         },
         choice : function(choices) {
-            return choices[Math.randInt(0, choices.length)];
+            return choices[math.randInt(0, choices.length)];
         },
         isArray : function(value) {
             return (Object.prototype.toString.call(value) === 

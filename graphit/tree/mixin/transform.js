@@ -21,17 +21,17 @@ define(function(require) {
 
     function TRANSFORM() {
         this.enable_transform = function() {
-//            this.transform = new Matrix33();
-//            this.worldTransform = new Matrix33();
+            this.transform = new Matrix33();
+            this.worldTransform = new Matrix33();
             util.setCapability(this, eCap.transform);
         };
-        this.enable_transform = function() {
+        this.disable_transform = function() {
             util.setCapability(this, eCap.transform);
             delete this.transform;
             delete this.worldTransform;
         };
         this.applyWorldTransform = function(world) {
-            this.worldTransform = this.worldTransform.copy(this.transform).mul(world);
+            this.worldTransform = this.worldTransform.copy(world).mul(this.transform);
             return this.worldTransform;
         };
         this.getWorldTransform = function() {

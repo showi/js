@@ -119,8 +119,8 @@ define(function(require) {
         var node = new ShapeNode({
             kind : math.choice([eShape.rectangle, eShape.circle]),
             size : {
-                width : Math.randInt(5, mw),
-                height : Math.randInt(5, mh),
+                width : math.randInt(5, mw),
+                height : math.randInt(5, mh),
             },
             pos : {
                 x : 0, //Math.randInt(-dw, dw),
@@ -138,11 +138,11 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(Math.randFloat(0.05,0.1));
+        node.velocity.randomize().normalize().smul(math.randFloat(0.05,0.1));
 //        console.log('velocity', node.velocity);
 //        node.zindex = Math.randInt(0, 10);
 //        node.zindexInc = (Math.random() > 0.5) ? true : false;
-        node.timeout = Date.now() + Math.randInt(0, 10000);
+        node.timeout = Date.now() + math.randInt(0, 10000);
         this.renderer.root.appendChild(node);
     };
 
@@ -214,7 +214,7 @@ define(function(require) {
         this.renderer.update = function(node, elapsed) {
             if (tree.hasCapability(node, eCap.transform)) {
                 if (node.timeout < this.now) {
-                    node.timeout = this.now + Math.randInt(1000, 10000);
+                    node.timeout = this.now + math.randInt(1000, 10000);
                     if (node.zindexInc) {
                         if (node.zindex < 10) {
                             node.zindex++;

@@ -19,82 +19,112 @@ define(function(require) {
     var Canvas = require('graphit/draw/canvas');
     var Matrix33 = require('graphit/math/matrix33');
     var Vector2d = require('graphit/math/vector2d');
+    var math = require('graphit/math');
 
     function GEOM2D() {
         this.__namespace__ = 'graphit/test/geom2d';
-        this.numPoint = 100;
+        this.numPoint = 1000;
     }
 
     GEOM2D.prototype.run = function() {
         this.setUp();
-        this.draw(this.canvas.getCtx());
+        var ctx = this.canvas.getCtx();
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, this.width, this.height);
+        var trans = this.worldMat;
+        ctx.strokeStyle = 'white';
+        ctx.save();
+        for (var i = 0; i < this.numPoint; i++) {
+            ctx.save();
+            this.drawPoint(ctx, math.randInt(-this.dw, this.dw),
+                                math.randInt(-this.dh, this.dh));
+            ctx.stroke();
+            ctx.restore();
+        }
+        ctx.strokeStyle = 'red';
+        this.drawPoint(ctx, 100, 100);
+        ctx.stroke();
+        ctx.transform(trans._data[0], trans._data[1], trans._data[3],
+                      trans._data[4], trans._data[2], trans._data[5]);
+        ctx.restore();
+    };
+
+    GEOM2D.prototype.drawPoint = function(ctx, x, y) {
+        var trans;
+        var point = new Point(x, y);
+        point.applyWorldTransform(this.worldMat);
+        trans = point.worldTransform;
+        ctx.transform(trans._data[0], trans._data[1], trans._data[3],
+                      trans._data[4], trans._data[2], trans._data[5]);
+        point.draw(ctx);
     };
 
     GEOM2D.prototype.draw = function(ctx) {
         var i, circle;
         var dw = this.width / 2;
         var dh = this.height / 2;
-//        var vSize = new Vector2d(this.width, this.height);
-//        vSize = this.worldMat.vMul(vSize);
-//        dw = vSize.x;
-//        dh = vSize.y;
         console.log('dw/dh', dw, dh);
         var trans;
         ctx.save();
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, this.width, this.height);
-        for (i = 0; i < this.circle.length; i++) {
-            circle = this.circle[i];
-//            circle.scale(Math.randFloat(0.1, 10.0));
-//            circle.positionXY(Math.randFloat(-dw, dw), Math.randFloat(-dh, dh));
-            trans = this.worldMat.clone();
-            trans.mul(circle.transform);
+        ctx.restore();
+        // for (i = 0; i < this.circle.length; i++) {
+        // circle = this.circle[i];
+        // trans = circle.worldTransform;
+        // console.log('WT', trans, circle);
+        // ctx.save();
+        // ctx.transform(trans._data[0], trans._data[1], trans._data[3],
+        // trans._data[4], trans._data[2], trans._data[5]);
+        // ctx.fillStyle = 'red';
+        // circle.draw(ctx);
+        // ctx.fill();
+        // ctx.restore();
+        // }
+        var point;
+        for (i = 0; i < this.point.length; i++) {
+            point = this.point[i];
+            trans = point.worldTransform;
             ctx.save();
+
             ctx.transform(trans._data[0], trans._data[1], trans._data[3],
-                             trans._data[4], trans._data[2], trans._data[5]);
-            ctx.fillStyle = 'red';
-            circle.draw(ctx);
+                          trans._data[4], trans._data[2], trans._data[5]);
+            ctx.fillStyle = 'black';
+            point.draw(ctx);
             ctx.fill();
             ctx.restore();
         }
-        ctx.restore();
     };
 
     GEOM2D.prototype.setUp = function() {
-        console.log('Creating points', this.numPoint);
-        this.point = [];
-        var point;
-        for (var i = 0; i < this.numPoint; i++) {
-            point = new Point();
-            point.randomize();
-            this.point.push(point);
-        }
-        console.log('Creating circle', this.numPoint);
-        this.circle = [];
-        var circle;
-        for (var i = 0; i < this.numPoint; i++) {
-            circle = new Circle(0, 0, 1);
-            circle.randomize();
-//            this.circle.push(circle);
-        }
         var width = 640;
         var height = 480;
-        var circle = new Circle();
-        circle.scale(640/2);
-        this.circle.push(circle);
+        var dw = width / 2;
+        var dh = height / 2;
+        this.width = width;
+        this.height = height;
+        this.dw = dw;
+        this.dh = dh;
+        this.circle = [];
+        this.point = [];
+        var worldMat = new Matrix33();
+        worldMat.translateXY(dw, dh);
+        this.worldMat = worldMat;
+        var point, circle;
+
         var canvas = new Canvas({
             width : width,
-            height : height
+            height : height,
         });
         console.log('Creating canvas', canvas, 'w/h', width, height);
         this.canvas = canvas;
-
-        var worldMat = new Matrix33();
-        worldMat.translateXY(width /2, height / 2);
-        this.width = width;
-        this.height = height;
-        this.worldMat = worldMat;
-        jQuery('body').append(canvas.element);
+        var body = jQuery('body');
+        body.css({
+            'background-color' : 'grey',
+        });
+        body.append(canvas.element);
+        this.body = body;
     };
 
     return new GEOM2D();

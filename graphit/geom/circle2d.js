@@ -33,6 +33,7 @@ define(function(require) {
         y = (y === undefined)? 0: y;
         radius = (radius === undefined)? 1: radius;
         this.transform = new Matrix33();
+        this.worldTransform = new Matrix33();
         this.positionXY(x, y);
         this.u = new Vector2d(radius, 0);
     }

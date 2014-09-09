@@ -68,7 +68,10 @@ define(function(require) {
             return max;
         },
         randInt: function(a, b) {
-            return Math.floor((Math.random() * b) + a);
+            return Math.floor((Math.random() * (b - a) + a));
+        },
+        randFloat: function(a, b) {
+            return Math.random() * (b - a) + a;
         },
         choice: function(list) {
           return list[this.randInt(0, list.length)];  

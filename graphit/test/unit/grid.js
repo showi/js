@@ -80,7 +80,6 @@ define(function(require) {
                 + '</div>');
         root.append(colorPicker);
         return root;
-
     }
 
     GRID.prototype.createTree = function() {
