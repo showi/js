@@ -78,21 +78,25 @@ define(function(require) {
             ctx.fillStyle = '#241B1C';
             tw = that.sizeSecond;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+            ctx.fill();
         });
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#63353B';
             tw = that.sizeMinute;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+            ctx.fill();
         });
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#26211C';
             tw = that.sizeHour;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+            ctx.fill();
         });
         tool.saveAndRestore(ctx, function(ctx) {
             ctx.fillStyle = '#684E38';
             tw = that.sizeMillisecond;
             shape.rectangle(ctx, -tw, -tw, tw * 2, tw * 2);
+            ctx.fill();
         });
         function getFontSize(coef) {
             var num = (that._width / 1000) * coef;
@@ -167,7 +171,9 @@ define(function(require) {
                 ctx.lineWidth = 0.5 * l;
                 ctx.rotate(angle);
                 shape.line(ctx, 0, -that.sizeMillisecond, 0, 0);
+                ctx.fill();
                 shape.circle(ctx, 0, -that.sizeMillisecond, s);
+                ctx.fill();
             });
         }
         /* SECOND */
@@ -177,7 +183,9 @@ define(function(require) {
             var angle = Math.round(that.date.getSeconds()) * that.sPart;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeSecond, 0, 0);
+            ctx.stroke();
             shape.circle(ctx, 0, -that.sizeSecond, s * 2);
+            ctx.fill();
         });
         /* MINUTES */
         tool.saveAndRestore(ctx, function(ctx) {
@@ -186,7 +194,9 @@ define(function(require) {
             var angle = Math.round(that.date.getMinutes()) * that.mnPart;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeMinute, 0, 0);
+            ctx.stroke();
             shape.circle(ctx, 0, -that.sizeMinute, s * 3);
+            ctx.fill();
         });
         /* HOUR */
         tool.saveAndRestore(ctx, function(ctx) {
@@ -195,13 +205,16 @@ define(function(require) {
             ctx.lineWidth = 4 * l;
             ctx.rotate(angle);
             shape.line(ctx, 0, -that.sizeHour, 0, 0);
+            ctx.stroke();
             shape.circle(ctx, 0, -that.sizeHour, s * 4);
+            ctx.fill();
         });
         /* Decor */
         var w8 = this._width / 64;
-        this.fillStyle = '#241B1C';
+        ctx.fillStyle = '#241B1C';
         this.strokeStyle = '#241B1C';
         shape.rectangle(ctx, -w8, -w8, w8 * 2, w8 * 2);
+        ctx.fill();
         /* Flip backbuffer to front */
         this.dbuffer.flip();
         this.needRefresh = false;

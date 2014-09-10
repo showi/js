@@ -14,18 +14,19 @@ define(function(require) {
 
     'use strict';
 
-    var Primitive = require('graphit/tree/node/primitive');
-    var Node = require('graphit/tree/node/node');
-    var TransMixin = require('graphit/tree/mixin/transform');
+    var Primitive = require('graphit/scene/node/primitive');
+    var Node = require('graphit/scene/node/node');
+    var TransMixin = require('graphit/scene/mixin/transform');
     var DoubleBuffer = require('graphit/draw/doublebuffer');
-    var Line = require('graphit/math/line');
+    var Line = require('graphit/geom/line2d');
     var util = require('graphit/util');
     var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
     var Renderer = require('graphit/renderer');
     var eCap = require('graphit/enum/capability');
-    var tutil = require('graphit/tree/util');
-    var Point2d = require('graphit/math/point2d');
+    var tutil = require('graphit/scene/util');
+    var Point2d = require('graphit/geom/point2d');
+    var math = require('graphit/math');
     require('graphit/extend/jquery');
 
     var minWidth = 0.01;
@@ -43,16 +44,13 @@ define(function(require) {
 
     function genLine(width, height) {
         var max = Math.max(width, height);
-        function randInt(m) {
-            return Math.randInt(0, m);
-        }
         function randPoint() {
-            return new Point2d(randInt(width), randInt(height));
+            return new Point2d(math.randInt(width), math.randInt(height));
         }
         var line = new Line(randPoint(), randPoint());
         line.fillStyle = tool.randomColor();
         line.strokeStyle = tool.randomColor();
-        line.lineWidth = Math.randFloat(1.0, 10.0);
+        line.lineWidth = math.randFloat(1.0, 10.0);
         line.lineCap = util.choice(['butt', 'round', 'squared']);
         line.lineJoin = util.choice(['bevel', 'round', 'miter']);
         return line;
@@ -139,6 +137,7 @@ define(function(require) {
                 globalAlpha : 1.0,
                 globalCompositionOperation : 'source-over',
             },
+            canDraw: true,
         });
         this.renderer = renderer;
         function updateWidget() {
@@ -163,9 +162,8 @@ define(function(require) {
             buffer.clearBackBuffer();
         };
         renderer.render = function(node) {
-            if (tutil.hasCapability(node, eCap.draw)) {
+            console.log('render');
                 node.draw(this);
-            }
         };
         renderer.post_render = function(node) {
             buffer.flip();

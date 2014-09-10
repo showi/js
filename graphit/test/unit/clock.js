@@ -42,7 +42,7 @@ define(function(require) {
             overflow : 'hidden',
         });
 
-        var numClock = Math.randInt(1, 128);
+        var numClock = math.randInt(1, 128);
         var clocks = [];
         var delay = 100;
         var size = util.documentSize();

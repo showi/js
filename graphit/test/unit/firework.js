@@ -19,14 +19,14 @@ define(function(require) {
     var Canvas = require('graphit/draw/canvas');
     var shape = require('graphit/draw/shape');
     var tool = require('graphit/draw/tool');
-    var ShapeNode = require('graphit/tree/node/shape');
+    var ShapeNode = require('graphit/scene/node/shape');
     var eShape = require('graphit/enum/shape');
     var Vector2d = require('graphit/math/vector2d');
     var Matrix33 = require('graphit/math/matrix33');
     var eCtx = require('graphit/enum/context');
     var eCap = require('graphit/enum/capability');
     var Renderer = require('graphit/renderer');
-    var tree = require('graphit/tree/util');
+    var tree = require('graphit/scene/util');
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
     var math = require('graphit/math');
@@ -45,51 +45,32 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 250;
-        this.currentScreen = 0;
+        this.numRectangle = 50;
+        this.numChild = 0;
         this.size = size;
         this.ratio = 0.8;
-        var width = 320;
-        var height = 240;
-        var dw = width / 2;
-        var dh = height / 2;
         this.buffer = new DBuffer({
             width : this.size.x * this.ratio,
             height : this.size.y * this.ratio
         });
-        this.numCol = 2;
-        this.numScreen = 4;
-        this.screen = [];
-
-        for (var i = 0; i < this.numScreen/this.numCol; i++) {
-            for (var j = 0; j < this.numCol; j++) {
-                var screen = new DBuffer({
-                    width : width,
-                    height : height
-                });
-                screen.worldTransform = new Matrix33();
-                screen.worldTransform.positionXY(-dw + i * (dw), -dh + j
-                        * (dh))
-                this.screen.push(screen);
-            }
-        }
-        // this.canvas = this.buffer.front;
-        // console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
-        // this.screenTransform = new Matrix33();
-        // this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
-        // .height() / 2);
+        this.canvas = this.buffer.front;
+        console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
+        this.screenTransform = new Matrix33();
+        this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
+                .height() / 2);
         this.renderer = new Renderer({
-            ctx : this.screen[0].back.getCtx(),
+            ctx : this.buffer.back.getCtx(),
             compositing : {
-            // globalAlpha : 0.8,
+                globalAlpha : 0.8,
             },
-        // worldTransform : this.screenTransform,
+            worldTransform : this.screenTransform,
+            canDraw : false,
         });
-        this.renderer.fixedUpdate = 66;
-        this.renderer.fixedDraw = 30;
-        this.timeout = 0;// this.renderer.fixedUpdate;
-        this.renderer.limitUpdate = 2;
-        // console.log('ScreenTransform', this.screenTransform.toString());
+        this.renderer.fixedUpdate = 15;
+         this.renderer.fixedDraw = 1;
+        this.timeout = 2;// this.renderer.fixedUpdate;
+        this.renderer.limitUpdate = 10;
+        console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
         this.createHTML();
         this.createTree();
@@ -112,7 +93,7 @@ define(function(require) {
         var elm = jQuery('<div></div>');
         elm.id = id;
         elm.slider({
-            value : 250,
+            value : 100,
             min : min,
             max : max,
             change : fnChange,
@@ -125,33 +106,50 @@ define(function(require) {
 
     MOUSE.prototype.createTree = function() {
         for (var i = 0; i < this.numRectangle; i++) {
-            this.createNode();
+            this.createNode(this.renderer.root, this.numChild);
         }
     };
 
-    MOUSE.prototype.createNode = function() {
-        var width = 320; // this.width * this.numCol;
-        var height = 240;
+    MOUSE.prototype.createNode = function(root, limit) {
+        if (limit === undefined) {
+            limit = 0;
+        }
+        var width = this.canvas.width();
+        var height = this.canvas.height();
+        if (root.width !== undefined) {
+            width = root.width;
+        }
+        if (root.height !== undefined) {
+            height = root.height;
+        }
         var dw = width / 2;
         var dh = height / 2;
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
-        log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
+        // log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
         var node = new ShapeNode({
-            kind : math.choice([eShape.rectangle, eShape.circle]),
+            kind : math.choice([eShape.circle]),
             size : {
-                width : Math.randInt(5, mw),
-                height : Math.randInt(5, mh),
+                width : math.randInt(5, mw),
+                height : math.randInt(5, mh),
             },
             pos : {
-                x : 0,// Math.randInt(-dw, dw),
-                y : 0,// Math.randInt(-dh, dh),
+                x :  math.randInt(-dw + mw/2, dw - mw/2),
+                y :  math.randInt(-dh + mh/2, dh - mh/2),
             },
         });
-        node.fillStyle = tool.randomColor();
+        
+        if (limit != 0) {
+            node.fillStyle = 'red';
+            node.zindex = 0;
+        } else {
+            node.fillStyle = tool.randomColor();
+            node.zindex = 1;
+        }
         node.strokeStyle = tool.randomColor();
         node.orientation = new Vector2d();
         node.orientation.randomize().normalize();
+  
         if (Math.random() > 0.5) {
             node.orientation.inverseX();
         }
@@ -159,12 +157,15 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().clamp(0.01, 0.1);
-        // console.log('velocity', node.velocity);
-        node.zindex = Math.randInt(0, 10);
-        node.zindexInc = (Math.random() > 0.5) ? true : false;
-        node.timeout = Date.now() + Math.randInt(0, 10000);
-        this.renderer.root.appendChild(node);
+        node.velocity.randomize().normalize().smul(math.randFloat(0.05, 0.1));
+        node.timeout = Date.now() + math.randInt(0, 1000);
+        if (limit > 0) {
+            console.log('creating sub node');
+            for (var i = 0; i < this.numChild; i++) {
+                this.createNode(node, limit - 1);
+            }
+        }
+        root.appendChild(node);
     };
 
     MOUSE.prototype.setNumRectangle = function(value) {
@@ -174,7 +175,7 @@ define(function(require) {
             root.child.shift();
         }
         while (root.child.length < value) {
-            this.createNode();
+            this.createNode(this.renderer.root);
         }
     };
 
@@ -183,20 +184,8 @@ define(function(require) {
         this.body.css({
             'background-color' : '#222'
         });
-        var i, j, screen, row, elm;
-        this.table = jQuery('<table class="graphit-container"></table>');
-        for (i = 0; i < this.screen.length, screen = this.screen[i]; i++) {
-            row = jQuery('<tr></tr>');
-            for (j = 0; j < this.numCol; j++) {
-                elm = jQuery('<td class="screen"></td>');
-                elm.append(screen.front.getElement());
-                row.append(elm);
-            }
-            this.table.append(row);
-        }
-        this.body.append(this.table);
-        // var elm = jQuery(this.canvas.getElement());
-        // this.body.append(elm);
+        var elm = jQuery(this.canvas.getElement());
+        this.body.append(elm);
         this.wRenderer = new WRenderer(this.renderer);
         this.wRenderer.build(this.body);
         var that = this;
@@ -208,6 +197,10 @@ define(function(require) {
         this.wSlider.width(this.wRenderer.element.width());
         this.wRenderer.element.append(this.wSlider);
         elm.center();
+        elm = jQuery('<div class="graphit-container user-agent">'
+                + navigator.userAgent + '</div>');
+        elm.draggable();
+        this.body.append(elm);
     };
 
     MOUSE.prototype.startMeasureLoop = function(timeout) {
@@ -237,77 +230,72 @@ define(function(require) {
         this._measureLoop = undefined;
         return true;
     };
+
     MOUSE.prototype.run = function() {
-        var i;
-        this.startMeasureLoop(1000);
-
-        this.render_screen();
-
-    };
-
-    MOUSE.prototype.render_screen = function() {
         var that = this;
-        this.currentScreen = 0;
+        var width = that.canvas.width();
+        var height = that.canvas.width();
+        var dw = width / 2;
+        var dh = height / 2;
+        this.startMeasureLoop(1000);
         this.renderer.post_update = function(node) {
             ;
         };
         this.renderer.update = function(node, elapsed) {
             if (tree.hasCapability(node, eCap.transform)) {
-                if (node.timeout < this.now) {
-                    node.timeout = this.now + Math.randInt(1000, 10000);
-                    if (node.zindexInc) {
-                        if (node.zindex < 10) {
-                            node.zindex++;
+                if (node.timeout !== undefined) {
+                        var newSize = 100/this.elapsedTime;
+                        if ((node.width - newSize) > 0.01) {
+                            node.width -= newSize;
                         } else {
-                            node.zindexInc = false;
+                            tree.setCapability(node, eCap.prune);
+                            tree.unsetCapability(node, eCap.render);
+                            that.createNode(this.root, 0);
+                            return false;
                         }
-                    }
-                    if (!node.zindexInc) {
-                        if (node.zindex > 0) {
-                            node.zindex--;
-                        } else {
-                            node.zindexInc = true;
-                        }
-                    }
                 }
-                var p = node.transform.position();
+                var minx, miny, maxx, maxy, width, heith, dw, dh, ndw, ndh, p;
+                ndw = node.width / 2
+                ndh = node.height / 2;
                 var v = node.velocity.clone().smul(elapsed);
-                // console.log('elapsed', elapsed)
                 var speed = node.orientation.clone().mul(v);
+                p = node.transform.position();
+                if (node.parent !== undefined && tree.hasCapability(node.parent, eCap.transform)) {
+                    width = node.parent.width;
+                    height = node.parent.height;
+                    dw = width / 2;
+                    dh = height / 2;
+                    p = node.parent.worldTransform.position();
+                    minx = p.x + -dw + ndw;
+                    maxx = p.x + dw  - ndw;
+                    miny = p.y  -dh + ndh;
+                    maxy = p.y + dh - ndh;
+                } else {
+                    width = that.canvas.width();
+                    height = that.canvas.height();
+                    dw = width / 2;
+                    dh = height /2;
+                    minx = -dw + ndw;
+                    maxx =  dw - ndw;
+                    miny = -dh + ndh;
+                    maxy = dh - ndh;
+                }
                 p.add(speed);
-                var w = (640 / 2) - (node.size.width / 2);
-                var h = (480 / 2) - (node.size.height / 2);
-                if (p.x < -w || p.x > w) {
+                if (p.x < minx || p.x > maxx) {
                     node.orientation.inverseX();
                 }
-                if (p.y < -h || p.y > h) {
+                if (p.y < miny || p.y > maxy) {
                     node.orientation.inverseY();
-                }
+                }     
                 node.transform.translate(speed);
-                node
-                        .applyWorldTransform(that.screen[that.currentScreen].worldTransform);
             }
-        };
-        this.renderer.pre_render = function() {
-            if (that.screen[that.currentScreen] === undefined) {
-                return;
-            }
-            console.log(that.screen[that.currentScreen], that.currentScreen);
-            this.ctx = that.screen[that.currentScreen].back.context.ctx;
-        };
-
-        this.renderer.post_render = function() {
-            if (that.currentScreen < that.screen.length) {
-                that.currentScreen++;
-            } else {
-                that.currentScreen = 0;
-            }
+            return true;
         };
         this.renderer.draw_init = function() {
-            that.screen[that.currentScreen].back.clear('black');
+            that.buffer.back.clear('black');
         };
         this.renderer.draw_end = function() {
-            that.screen[that.currentScreen].back.flip();
+            that.buffer.flip();
         };
         function drawTick() {
             that.renderer.canDraw = true;

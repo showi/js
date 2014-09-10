@@ -13,10 +13,10 @@
 	<classpathentry kind="src" path="graphit/mixin"/>
 	<classpathentry kind="src" path="graphit/physic"/>
 	<classpathentry kind="src" path="graphit/test"/>
-	<classpathentry excluding="node/|enum/|mixin/" kind="src" path="graphit/tree"/>
-	<classpathentry kind="src" path="graphit/tree/enum"/>
-	<classpathentry kind="src" path="graphit/tree/mixin"/>
-	<classpathentry kind="src" path="graphit/tree/node"/>
+	<classpathentry excluding="node/|enum/|mixin/" kind="src" path="graphit/scene"/>
+	<classpathentry kind="src" path="graphit/scene/enum"/>
+	<classpathentry kind="src" path="graphit/scene/mixin"/>
+	<classpathentry kind="src" path="graphit/scene/node"/>
 	<classpathentry kind="src" path="graphit/Widget"/>
 	<classpathentry kind="src" path="lib"/>
 	<classpathentry kind="src" path="node_modules/.bin"/>

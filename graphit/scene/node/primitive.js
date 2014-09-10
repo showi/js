@@ -17,11 +17,15 @@ define(function(require) {
     var Node = require('./node');
     var Line = require('graphit/math/line');
     var ns = require('graphit/namespace');
+    ns = ns.scene.node;
     var shape = require('graphit/draw/shape');
     var util = require('graphit/scene/util');
     var eCap = require('graphit/enum/capability');
     var _ns_ = 'primitive';
 
+    if (_ns_ in ns && ns[_ns_] != undefined) {
+        return ns[_ns_];
+    }
     var CTX_PROPERTIES = {
         'fillStyle' : true,
         'strokeStyle' : true,
@@ -32,15 +36,17 @@ define(function(require) {
 
     function PRIMITIVE() {
         Node.call(this, arguments);
-        util.setCapability(this, eCap.draw);
-        this.traversable = false;
+//        this.enable_transform();
+        util.setCapability(this, eCap.render);
         this.primitive = [];
     };
     PRIMITIVE.prototype = Object.create(Node.prototype);
     PRIMITIVE.__namespace__ = 'graphit/scene/node/primitive';
+   
     
     PRIMITIVE.prototype.addPrimitive = function(primitive) {
         if (primitive === undefined) { throw 'UndefinedPrimitive'; }
+        console.log('add primitive');
         this.primitive.push(primitive);
     };
 
@@ -51,6 +57,7 @@ define(function(require) {
     };
 
     PRIMITIVE.prototype.draw = function(renderer) {
+        console.log('drawing primitive');
         for (var i = 0; i < this.primitive.length; i++) {
             renderer.ctx.save();
             // try {
@@ -77,7 +84,6 @@ define(function(require) {
         shape.circl(renderer.ctx, circle.x, circl.y, circle.radius);
     };
 
-    ns.tree.node[_ns_] = PRIMITIVE;
-    // return ns.tree.node[_ns_];
-    return PRIMITIVE;
+    ns[_ns_] = PRIMITIVE;
+    return ns[_ns_];
 });

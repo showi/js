@@ -15,11 +15,11 @@ define(function(require) {
     'use strict';
 
     return function() {
-        this.pre_update = function() { /* */};
-        this.update = function() { /* */ };
-        this.post_update = function() { /* */ };
-        this.pre_render = function() { /* */};
-        this.render = function() { /* */ };
-        this.post_render = function() { /* */ };
+        this.pre_update = function() { return true; };
+        this.update = function() { return true; };
+        this.post_update = function() { return true; };
+        this.pre_render = function() { return true; };
+        this.render = function() { return true; };
+        this.post_render = function() { return true; };
     };
 });

@@ -33,6 +33,8 @@ define(function(require) {
 
         mX : 2, // m13,
         mY : 5, // m23,
+        mSx: 0,
+        mSy: 4,
     });
     MATRIX33.__namespace__ = 'graphit/enum/matrix33';
     

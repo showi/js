@@ -20,18 +20,39 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
 
     function TRANSFORM() {
+        Object.defineProperty(this, 'worldTransform', {
+            get: function() {
+                if (this._worldTransform === undefined) {
+                return this.transform;
+                }
+                return this._worldTransform;
+            },
+            set: function(world) {
+                if (this._worldTransform === undefined) {
+                    this._worldTransform = this.transform.clone();
+                } else {
+                    this._worldTransform.copy(this.transform);
+                }
+                this._worldTransform.mul(world);
+                
+            },
+        });
         this.enable_transform = function() {
             this.transform = new Matrix33();
-            this.worldTransform = new Matrix33();
+            this._worldTransform = undefined;
+//            this.worldTransform = new Matrix33();
             util.setCapability(this, eCap.transform);
         };
         this.disable_transform = function() {
             util.setCapability(this, eCap.transform);
             delete this.transform;
-            delete this.worldTransform;
+            delete this._worldTransform;
         };
         this.applyWorldTransform = function(world) {
-            this.worldTransform = this.worldTransform.copy(world).mul(this.transform);
+            if (world === undefined) {
+                throw 'UndefinedWorldTransform';
+            }
+            this.worldTransform = world;
             return this.worldTransform;
         };
         this.getWorldTransform = function() {

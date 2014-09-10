@@ -28,6 +28,10 @@ define(function(require) {
         genUID : function() {
             return graphit.genUID();
         },
+        emptyArray: function(a) {
+            while(a.length > 0)
+                a.pop();
+        },
         injectProperties : function(obj, properties) {
             for (var i = 0; i < properties.length; i++) {
                 var meth = properties[i];

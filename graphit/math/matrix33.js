@@ -321,6 +321,10 @@ define(function(require) {
         return this;
     };
 
+    MATRIX33.prototype.inverse = function() {
+        throw 'NotImplemented';
+    };
+
     MATRIX33.prototype.toString = function() {
         var o = "<Matrix33(" + this.__namespace__ + ")>\n";
         for (var i = 0; i < 9; i += 3) {

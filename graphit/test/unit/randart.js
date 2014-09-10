@@ -89,6 +89,7 @@ define(function(require) {
                 var kind = choice(['line', 'rectangle', 'circle']);
                 var method = 'draw_' + kind;
                 that[method].call(that, ctx);
+                ctx.fill();
             }
             setTimeout(fn, timeout);
         };

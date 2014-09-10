@@ -49,7 +49,7 @@ define(function(require) {
 
         var keys = ['fps', 'ups', 'skipped', 'skippedDraw',
                     'numUpdate', 'nodeRendered', 'updateAdder', 'limitUpdate',
-                    'fixedUpdate', 'fixedDraw', 'elapsedTime'];
+                    'fixedUpdate', 'fixedDraw', 'elapsedTime', 'isPaused'];
         var key = undefined;
         for (var i = 0; i < keys.length, key = keys[i]; i++) {
             this[key] = wKeyValue(key);
@@ -74,6 +74,7 @@ define(function(require) {
         this.fixedUpdate.value.text(this.renderer.fixedUpdate);
         this.fixedDraw.value.text(this.renderer.fixedDraw);
         this.elapsedTime.value.text(this.renderer.elapsedTime);
+        this.isPaused.value.text(this.renderer.isPaused);
     };
 
     return WIDGET;

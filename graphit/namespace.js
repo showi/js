@@ -39,7 +39,7 @@ define(function(require) {
         genUID : function() {
             return this.__uid__++;
         },
-        tree : {
+        scene : {
             node : [],
         },
         test : {},

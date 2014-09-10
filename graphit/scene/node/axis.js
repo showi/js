@@ -23,7 +23,7 @@ define(function(require) {
     var eAxis = require('graphit/enum/axis');
 
     var ns = require('graphit/namespace');
-    ns = ns.tree.node;
+    ns = ns.scene.node;
     var _ns_ = 'shape';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }

@@ -14,7 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var tree = require('graphit/tree/factory');
+    var tree = require('graphit/scene/factory');
     
     var FACTORY = {
             tree: tree,

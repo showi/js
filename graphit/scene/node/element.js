@@ -14,9 +14,9 @@ define(function(require) {
 
     'use strict';
 
-    var Node = require('./node');
+    var Node = require('graphit/scene/node/node');
     var ns = require('graphit/namespace');
-    ns = ns.tree.node;
+    ns = ns.scene.node;
     var _ns_ = 'element';
 
     if (_ns_ in ns && ns !== undefined) { return ns[_ns_]; }

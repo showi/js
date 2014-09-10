@@ -23,28 +23,33 @@ define(function(require) {
     var math = require('graphit/math');
     var util = require('graphit/util');
     var Renderer = require('graphit/renderer');
+    var RenderableMixin = require('graphit/scene/mixin/renderable');
+    var Node = require('graphit/scene/node/node');
+    var eCap = require('graphit/enum/capability');
+    var scene = require('graphit/scene/util');
 
     require('graphit/extend/jquery');
 
     function BCircle() {
         Circle.apply(this, arguments);
         this.bound = new BondCircle(this, arguments[3]);
-        
+
     }
     BCircle.prototype = Object.create(Circle.prototype);
+    RenderableMixin.call(BCircle.prototype);
     var data = {
-                sun: {
-                    radius: 696342,
-                    color: 'yellow',
-                    position: [0, 0],
-                },
-                earth: {
-                    radius: 6378.137*10,
-                    color: 'blue',
-                    position: [149600000, 0]
-                }
+        sun : {
+            radius : 696342,
+            color : 'yellow',
+            position : [0, 0],
+        },
+        earth : {
+            radius : 6378.137 * 10,
+            color : 'blue',
+            position : [149600000, 0]
+        }
     };
-    
+
     function GEOM2D() {
         this.__namespace__ = 'graphit/test/geom2d';
         this.numPoint = 1000;
@@ -52,73 +57,22 @@ define(function(require) {
 
     GEOM2D.prototype.run = function() {
         this.setUp();
-        var ctx = this.canvas.getCtx();
-        ctx.save();
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, this.width, this.height);
-        var trans = this.worldMat;
-        ctx.strokeStyle = 'white';
-        ctx.save();
-        for (var i = 0; i < this.numPoint; i++) {
-            ctx.save();
-            this.drawPoint(ctx, math.randInt(-this.dw, this.dw),
-                                math.randInt(-this.dh, this.dh));
-            ctx.stroke();
-            ctx.restore();
+        var render = this.render;
+        var count = 3;
+        function loop() {
+            render.step();
+            if (count > 0) {
+                count--;
+                setTimeout(loop, 33);
+            }
         }
-        var scale = 1/20000;
-        ctx.scale(scale, scale);
-        ctx.translate(1/scale*this.dw, 1/scale*this.dh);
-        this.drawPlanet(ctx, 'sun');
-        this.drawPlanet(ctx, 'earth');
-//        ctx.fill();
-//        ctx.stroke();
-        ctx.strokeStyle = 'red';
-        this.drawPoint(ctx, 100, 100);
-        ctx.stroke();
-        ctx.transform(trans._data[0], trans._data[1], trans._data[3],
-                      trans._data[4], trans._data[2], trans._data[5]);
-        ctx.restore();
-    };
-
-    GEOM2D.prototype.drawPlanet = function(ctx, name) {
-        var d = data[name];
-        ctx.save();
-        ctx.fillStyle = d.color;
-        var trans = this.worldMat;
-        ctx.transform(trans._data[0], trans._data[1], trans._data[3],
-                      trans._data[4], trans._data[2], trans._data[5]);
-        this.drawCircle(ctx, d.position[0],
-                             d.position[1], 
-                             d.radius);
-        ctx.fill();
-        ctx.restore();
-    };
-
-    GEOM2D.prototype.drawPoint = function(ctx, x, y) {
-        var trans;
-        var point = new Point(x, y);
-        point.applyWorldTransform(this.worldMat);
-        trans = point.worldTransform;
-        ctx.transform(trans._data[0], trans._data[1], trans._data[3],
-                      trans._data[4], trans._data[2], trans._data[5]);
-        point.draw(ctx);
-    };
-
-    GEOM2D.prototype.drawCircle = function(ctx, x, y, radius) {
-        var trans;
-        var circle = new Circle(x, y, radius);
-        circle.applyWorldTransform(this.worldMat);
-        trans = circle.worldTransform;
-        ctx.transform(trans._data[0], trans._data[1], trans._data[3],
-                      trans._data[4], trans._data[2], trans._data[5]);
-        circle.draw(ctx);
+        loop();
     };
 
     GEOM2D.prototype.setUp = function() {
         var size = util.windowSize();
-        var width = size.x;
-        var height = size.y;
+        var width = 600; //size.x;
+        var height = 400; //size.y;
         var dw = width / 2;
         var dh = height / 2;
         this.width = width;
@@ -145,13 +99,65 @@ define(function(require) {
         body.append(canvas.element);
         body.center();
         this.body = body;
-        this.numCircle = 10;
+        this.numCircle = 0;
+        var root = new Node();
+        this.root = root;
+        console.log('rand', math.randInt(-height, height));
         for (var i = 0; i < this.numCircle; i++) {
-            var circle = new BCircle(math.randInt(-dw, dw),
-                                      math.randInt(-dh, dh));
-            this.circle.push(circle);
+            var circle = genCircle(math.randInt(-dw, dw), math
+                    .randInt(-dh, dh), {
+                color : 'red'
+            });
+            root.appendChild(circle);
         }
-    };
+        root.appendChild(genCircle(0, 0, {fillStyle: 'white'}));
+        root.appendChild(genCircle(0, -40, {fillStyle:'green'}));
+        root.appendChild(genCircle(40, 0, {fillStyle:'blue'}));
+        root.appendChild(genCircle(-40, 0, {fillStyle:'red'}));
+        root.appendChild(genCircle(0, 40, {fillStyle:'yellow'}));
 
+        console.log(canvas.getCtx());
+        this.worldTransform = new Matrix33();
+        this.worldTransform.positionXY(dw, dh);
+        this.render = new Renderer({
+            root : root,
+            ctx : canvas.getCtx(),
+            canDraw : true,
+            worldTransform : this.worldTransform,
+        });
+        OurRenderer.call(this.render, this);
+
+    };
+    function genCircle(x, y, opts) {
+        var circle = new BCircle(x, y, 20);
+        circle.fillStyle = 'white';
+        if (opts !== undefined) {
+            if (opts.fillStyle !== undefined) {
+                circle.fillStyle = opts.fillStyle;
+            }
+        }
+        return circle;
+    }
+    function OurRenderer(parent) {
+        console.log('Patching renderer with our function');
+        var test = parent;
+        this.draw_init = function() {
+            this.ctx.save();
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(0, 0, test.width, test.height);
+            this.ctx.restore();
+        }
+        this.pre_update = function(node) {
+            // console.log('pre_update', node);
+            if (scene.hasCapability(node, eCap.render)) {
+                // console.log(node);
+            }
+        };
+        this.render = function(node) {
+            console.log('Rendering node');
+            node.draw(this.ctx);
+            // this.ctx.fillRect(-10, -50, 100, 100);
+        }
+    }
     return new GEOM2D();
 });

@@ -19,11 +19,13 @@ define(function(require) {
     var _ns_ = 'array';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+    
+    var A = [];
 
     function GARRAY() {
         Array.call(this, arguments);
     }
-    GARRAY.protoype.constructor = Object.create(Array.prototype);
+    GARRAY.protoype.constructor = Object.create(A.prototype);
 
     GARRAY.prototype.empty = function() {
         while (0 < this.length) {

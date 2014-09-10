@@ -46,6 +46,7 @@ define(function(require) {
 
     MOUSE.prototype.setUp = function(size, ratio) {
         this.numRectangle = 50;
+        this.numChild = 0;
         this.size = size;
         this.ratio = 0.8;
         this.buffer = new DBuffer({
@@ -63,10 +64,11 @@ define(function(require) {
                 globalAlpha : 0.8,
             },
             worldTransform : this.screenTransform,
+            canDraw : false,
         });
         this.renderer.fixedUpdate = 15;
-        this.renderer.fixedDraw = 30;
-        this.timeout = 5;// this.renderer.fixedUpdate;
+         this.renderer.fixedDraw = 1;
+        this.timeout = 2;// this.renderer.fixedUpdate;
         this.renderer.limitUpdate = 10;
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
@@ -104,33 +106,50 @@ define(function(require) {
 
     MOUSE.prototype.createTree = function() {
         for (var i = 0; i < this.numRectangle; i++) {
-            this.createNode();
+            this.createNode(this.renderer.root, this.numChild);
         }
     };
 
-    MOUSE.prototype.createNode = function() {
+    MOUSE.prototype.createNode = function(root, limit) {
+        if (limit === undefined) {
+            limit = 0;
+        }
         var width = this.canvas.width();
         var height = this.canvas.height();
+        if (root.width !== undefined) {
+            width = root.width;
+        }
+        if (root.height !== undefined) {
+            height = root.height;
+        }
         var dw = width / 2;
         var dh = height / 2;
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
-        log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
+        // log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
         var node = new ShapeNode({
-            kind : math.choice([eShape.rectangle, eShape.circle]),
+            kind : math.choice([eShape.circle]),
             size : {
                 width : math.randInt(5, mw),
                 height : math.randInt(5, mh),
             },
             pos : {
-                x : 0, //Math.randInt(-dw, dw),
-                y : 0, //Math.randInt(-dh, dh),
+                x :  math.randInt(-dw + mw/2, dw - mw/2),
+                y :  math.randInt(-dh + mh/2, dh - mh/2),
             },
         });
-        node.fillStyle = tool.randomColor();
+        
+        if (limit != 0) {
+            node.fillStyle = 'red';
+            node.zindex = 0;
+        } else {
+            node.fillStyle = tool.randomColor();
+            node.zindex = 1;
+        }
         node.strokeStyle = tool.randomColor();
         node.orientation = new Vector2d();
         node.orientation.randomize().normalize();
+  
         if (Math.random() > 0.5) {
             node.orientation.inverseX();
         }
@@ -138,12 +157,15 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(math.randFloat(0.05,0.1));
-//        console.log('velocity', node.velocity);
-//        node.zindex = Math.randInt(0, 10);
-//        node.zindexInc = (Math.random() > 0.5) ? true : false;
-        node.timeout = Date.now() + math.randInt(0, 10000);
-        this.renderer.root.appendChild(node);
+        node.velocity.randomize().normalize().smul(math.randFloat(0.05, 0.1));
+        node.timeout = Date.now() + math.randInt(0, 1000);
+        if (limit > 0) {
+            console.log('creating sub node');
+            for (var i = 0; i < this.numChild; i++) {
+                this.createNode(node, limit - 1);
+            }
+        }
+        root.appendChild(node);
     };
 
     MOUSE.prototype.setNumRectangle = function(value) {
@@ -153,7 +175,7 @@ define(function(require) {
             root.child.shift();
         }
         while (root.child.length < value) {
-            this.createNode();
+            this.createNode(this.renderer.root);
         }
     };
 
@@ -175,7 +197,8 @@ define(function(require) {
         this.wSlider.width(this.wRenderer.element.width());
         this.wRenderer.element.append(this.wSlider);
         elm.center();
-        elm = jQuery('<div class="graphit-container user-agent">'+navigator.userAgent+'</div>');
+        elm = jQuery('<div class="graphit-container user-agent">'
+                + navigator.userAgent + '</div>');
         elm.draggable();
         this.body.append(elm);
     };
@@ -210,45 +233,63 @@ define(function(require) {
 
     MOUSE.prototype.run = function() {
         var that = this;
+        var width = that.canvas.width();
+        var height = that.canvas.width();
+        var dw = width / 2;
+        var dh = height / 2;
         this.startMeasureLoop(1000);
         this.renderer.post_update = function(node) {
             ;
         };
         this.renderer.update = function(node, elapsed) {
             if (tree.hasCapability(node, eCap.transform)) {
-                if (node.timeout < this.now) {
-                    node.timeout = this.now + math.randInt(1000, 10000);
-                    if (node.zindexInc) {
-                        if (node.zindex < 10) {
-                            node.zindex++;
+                if (node.timeout !== undefined) {
+                        var newSize = 100/this.elapsedTime;
+                        if ((node.width - newSize) > 0.01) {
+                            node.width -= newSize;
                         } else {
-                            node.zindexInc = false;
+                            tree.setCapability(node, eCap.prune);
+                            tree.unsetCapability(node, eCap.render);
+                            that.createNode(this.root, 0);
+                            return false;
                         }
-                    }
-                    if (!node.zindexInc) {
-                        if (node.zindex > 0) {
-                            node.zindex--;
-                        } else {
-                            node.zindexInc = true;
-                        }
-                    }
                 }
-                var p = node.transform.position();
+                var minx, miny, maxx, maxy, width, heith, dw, dh, ndw, ndh, p;
+                ndw = node.width / 2
+                ndh = node.height / 2;
                 var v = node.velocity.clone().smul(elapsed);
-//                console.log('elapsed', elapsed)
                 var speed = node.orientation.clone().mul(v);
+                p = node.transform.position();
+                if (node.parent !== undefined && tree.hasCapability(node.parent, eCap.transform)) {
+                    width = node.parent.width;
+                    height = node.parent.height;
+                    dw = width / 2;
+                    dh = height / 2;
+                    p = node.parent.worldTransform.position();
+                    minx = p.x + -dw + ndw;
+                    maxx = p.x + dw  - ndw;
+                    miny = p.y  -dh + ndh;
+                    maxy = p.y + dh - ndh;
+                } else {
+                    width = that.canvas.width();
+                    height = that.canvas.height();
+                    dw = width / 2;
+                    dh = height /2;
+                    minx = -dw + ndw;
+                    maxx =  dw - ndw;
+                    miny = -dh + ndh;
+                    maxy = dh - ndh;
+                }
                 p.add(speed);
-                var w = (that.canvas.width() / 2) - (node.size.width / 2);
-                var h = (that.canvas.height() / 2) - (node.size.height / 2);
-                if (p.x < -w || p.x > w) {
+                if (p.x < minx || p.x > maxx) {
                     node.orientation.inverseX();
                 }
-                if (p.y < -h || p.y > h) {
+                if (p.y < miny || p.y > maxy) {
                     node.orientation.inverseY();
-                }
+                }     
                 node.transform.translate(speed);
-                node.applyWorldTransform(that.screenTransform);
             }
+            return true;
         };
         this.renderer.draw_init = function() {
             that.buffer.back.clear('black');

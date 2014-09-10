@@ -20,7 +20,7 @@ define(function(require) {
     var ParameterMixin = require('graphit/mixin/parameter');
     var RenderableMixin = require('graphit/scene/mixin/renderable');
 
-    var ns = namespace.tree.node;
+    var ns = namespace.scene.node;
     var _ns_ = 'node';
 
     if (_ns_ in ns && ns !== undefined) { return ns[_ns_]; }

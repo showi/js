@@ -16,11 +16,10 @@ define(function(require) {
 
     var test = require('graphit/test/util');
     var util = require('graphit/util');
-    var choices = ['randart', 'clock', 'wall', 
-                   'movingpaint', 
-                   'movingpaint2'];
+    var choices = ['randart', 'clock', 'wall',
+                   'movingpaint2', 'firework'];
     var choice = util.choice(choices);
-    choice = 'movingpaint2';
+//    choice = 'firework';
     console.log('>>> random test:', choice, '(', choices, ')');
     test.runTest(choice);
 });

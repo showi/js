@@ -25,8 +25,7 @@ define(function(require) {
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function POINT2D(x, y) {
-        this.transform = new Matrix33();
-        this.worldTransform = new Matrix33();
+        this.enable_transform();
         Object.defineProperty(this, 'x', {
             get : function() {
                 return this.transform.positionX();
@@ -64,6 +63,7 @@ define(function(require) {
     };
 
     POINT2D.prototype.draw = function(ctx) {
+        console.log('draw point');
         shape.point(ctx, this.x, this.y);
     };
 

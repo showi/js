@@ -16,7 +16,7 @@ define(function(require) {
 
     var Node = require('graphit/scene/node/node');
     var eCap = require('graphit/enum/capability');
-    var tree = require('graphit/scene/util');
+    var scene = require('graphit/scene/util');
     var TransMixin = require('graphit/scene/mixin/transform');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
@@ -24,7 +24,7 @@ define(function(require) {
     var eAxis = require('graphit/enum/axis');
     var eShape = require('graphit/enum/shape');
     var ns = require('graphit/namespace');
-    ns = ns.tree.node;
+    ns = ns.scene.node;
     var _ns_ = 'shape';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
@@ -46,9 +46,9 @@ define(function(require) {
         this.setParameters(arguments, VALIDATORS);
         this.transform = new Matrix33();
         this.worldTransform = new Matrix33();
-        tree.setCapability(this, eCap.render);
-        tree.setCapability(this, eCap.draw);
-        tree.setCapability(this, eCap.transform);
+        scene.setCapability(this, eCap.render);
+        scene.setCapability(this, eCap.draw);
+        scene.setCapability(this, eCap.transform);
         this.setUp(this.kind);
     };
     SHAPE.prototype = Object.create(Node.prototype);
@@ -70,13 +70,44 @@ define(function(require) {
     };
 
     SHAPE.prototype.setUp_rectangle = function() {
+        Object.defineProperty(this, 'width', {
+            get: function() {
+                return this.u.x * 2;
+            },
+            set: function(width) {
+                return this.u.x = width / 2;
+            },
+        });
+        Object.defineProperty(this, 'height', {
+            get: function() {
+                return this.v.y * 2;
+            },
+            set: function(height) {
+                return this.v.y = height / 2;
+            },
+        });
         this.u = new Vector2d(this.size.width / 2, 0);
         this.v = new Vector2d(0, this.size.height / 2);
     };
     
     SHAPE.prototype.setUp_circle = function() {
+        Object.defineProperty(this, 'width', {
+            get: function() {
+                return this.u.x * 2;
+            },
+            set: function(width) {
+                return this.u.x = width / 2;
+            },
+        });
+        Object.defineProperty(this, 'height', {
+            get: function() {
+                return this.u.x * 2;
+            },
+            set: function(height) {
+                return this.u.x = height / 2;
+            },
+        });
         this.u = new Vector2d(this.size.width / 2, 0);
-        this.size.height = this.size.width;
     };
     
     SHAPE.prototype.draw = function(renderer) {

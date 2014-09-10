@@ -26,12 +26,11 @@ define(function(require) {
     var m = require('graphit/enum/matrix33');
     var eCap = require('graphit/enum/capability');
     ns = ns.geom;
-    var _ns_ = 'circle2d';
+    var _ns_ = 'line2d';
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
-    function CIRCLE2D(x, y, radius) {
-        console.log('NEW circle', x, y, radius);
+    function LINE2D(a, b) {
         Base2d.call(this, arguments);
         Object.defineProperty(this, 'x', {
             get : function() {
@@ -46,55 +45,44 @@ define(function(require) {
                 return this.transform._data[eMat.mY];
             },
             set : function(y) {
-                console.log('set y', y);
                 this.transform._data[eMat.mY] = y;
             }
         });
-//        Object.defineProperty(this, 'radius', {
-//            get : function() {
-//                return this.transform._data[eMat.mSx];
-//            },
-//            set : function(radius) {
-//                this.transform._data[eMat.mSx] = radius;
-//                this.transform._data[eMat.mSy] = radius;
-//            }
-//        });
-        this.x = (x === undefined) ? 0 : x;
-        this.y = (y === undefined) ? 0 : y;
-        this.radius = (radius === undefined) ? 1 : radius;
+        this.a = a;
+        this.b = b;
+        this.x = 0;
+        this.y = 0;
         scene.setCapability(this, eCap.render);
         scene.setCapability(this, eCap.transform);
     }
-    CIRCLE2D.prototype = Object.create(Base2d.prototype);
-    TransformMixin.call(CIRCLE2D.prototype);
+    LINE2D.prototype = Object.create(Base2d.prototype);
+    TransformMixin.call(LINE2D.prototype);
 
-    CIRCLE2D.__namespace__ = 'graphit/geom/circle2d';
+    LINE2D.__namespace__ = 'graphit/geom/circle2d';
 
-    CIRCLE2D.prototype.clone = function() {
-        return new CIRCLE2D(this.position.x, this.position.y, this.radius);
+    LINE2D.prototype.clone = function() {
+        return new LINE2D(this.a, this.b);
     };
 
-    CIRCLE2D.prototype.copy = function(circle) {
+    LINE2D.prototype.copy = function(circle) {
         this.transform.copy(circle.transform);
     };
 
-    CIRCLE2D.prototype.randomize = function() {
+    LINE2D.prototype.randomize = function() {
         this.x = Math.random();
         this.y = Math.random();
         this.radius = Math.random();
     };
 
-    CIRCLE2D.prototype.draw = function(ctx) {
-        shape.circle(ctx, 0, 0, this.radius);
-//        ctx.rect(-10, -10, 20, 20);
-//        ctx.fill();
-        console.log('x/y/radius', this.x, this.y, this.radius);
+    LINE2D.prototype.draw = function(ctx) {
+        console.log('Draw line');
+        shape.line(ctx, this.a.x, this.a.y, this.b.x, this.b.y);
     };
 
-    CIRCLE2D.prototype.toString = function() {
+    LINE2D.prototype.toString = function() {
         return '<Circle2d transform=' + this.transform.toString() + '>';
     };
 
-    ns[_ns_] = CIRCLE2D;
+    ns[_ns_] = LINE2D;
     return ns[_ns_];
 });

@@ -23,11 +23,13 @@ define(function(require) {
         }
         ctx.fillStyle = 'red';
         shape.rectangle(ctx, 0, 0, opts.width, opts.height);
+        ctx.fill();
         ctx.fillStyle = 'white';
         stepRectangle(step * 2);
+        ctx.fill();
         ctx.fillStyle = 'red';
         stepRectangle(step * 4);
-
+        ctx.fill();
         for (var i = 0; i < 256; i++) {
             var c = new Canvas(opts);
             c.copyData(canvas);
