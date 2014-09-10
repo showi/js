@@ -68,8 +68,8 @@ define(function(require) {
         this.skipped = 0;
         this.skippedDraw = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 1000/33;
-        this.fixedDraw = 1000/66;
+        this.fixedUpdate = 33;
+        this.fixedDraw = 100;
         this.timeout = 0;
         this.updateAdder = 0;
         this.limitUpdate = 3;
@@ -230,7 +230,7 @@ define(function(require) {
             this.skipped = 0;
             this.layer.empty();
             this.measure.ups.count++;
-            this.transforms = [];
+            util.emptyArray(this.transforms);
             this.pushTransform(this.worldTransform);
             if (this.render_node(this.root, this.elapsedTime)) {
                 this.layer.append(this.root);

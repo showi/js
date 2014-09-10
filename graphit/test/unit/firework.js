@@ -126,8 +126,8 @@ define(function(require) {
         var node = new ShapeNode({
             kind : math.choice([eShape.circle]),
             size : {
-                width : math.randInt(5, mw),
-                height : math.randInt(5, mh),
+                width : 1, //math.randInt(5, mw),
+                height : 1, //math.randInt(5, mh),
             },
             pos : {
                 x : math.randInt(-dw + mw / 2, dw - mw / 2),
@@ -153,7 +153,7 @@ define(function(require) {
             node.orientation.inverseY();
         }
         node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(math.randFloat(0.05, 0.1));
+        node.velocity.randomize().normalize().smul(math.randFloat(0.1, 0.5));
         node.timeout = Date.now() + math.randInt(0, 1000);
         if (limit > 0) {
             console.log('creating sub node');
@@ -161,6 +161,8 @@ define(function(require) {
                 this.createNode(node, limit - 1);
             }
         }
+        node.grow = true;
+        node.timeout = this.renderer.startTime + math.randInt(0, 1000);
         root.appendChild(node);
     };
 
@@ -239,17 +241,7 @@ define(function(require) {
         };
         this.renderer.update = function(node, elapsed) {
             if (tree.hasCapability(node, eCap.transform)) {
-                if (node.timeout !== undefined) {
-                    var newSize = 100 / this.elapsedTime;
-                    if ((node.width - newSize) > 0.01) {
-                        node.width -= newSize;
-                    } else {
-                        tree.setCapability(node, eCap.prune);
-                        tree.unsetCapability(node, eCap.render);
-                        that.createNode(this.root, 0);
-                        return false;
-                    }
-                }
+
                 var minx, miny, maxx, maxy, width, heith, dw, dh, ndw, ndh, p;
                 ndw = node.width / 2
                 ndh = node.height / 2;
@@ -277,6 +269,33 @@ define(function(require) {
                     miny = -dh + ndh;
                     maxy = dh - ndh;
                 }
+                if (node.timeout > this.startTime) {
+                    node.timeout = this.startTime + math.randInt(0, 1000);
+                    var newSize = (this.elapsedTime / 10);
+                    var newBorn = false;
+                    if (node.grow) {
+                        if ((node.width + newSize) < maxx/2) {
+                            node.width += newSize;
+                        } else {
+                            newBorn = true;
+                            node.grow = true;
+                        }
+                    } else {
+                        if ((node.height - newSize) > 1) {
+                            node.width -= newSize;
+                        } else {
+                            newBorn = true;
+                            node.grow = false;
+                        }
+                    }
+                    if (newBorn) {
+                        node.width = 1;//math.randFloat(0, maxx);
+                        node.x = math.randFloat(-minx, maxx);
+                        node.y = math.randFloat(-miny, maxy);
+                        node.fillStyle = tool.randomColor();
+                        node.velocity.randomize().normalize().smul(math.randFloat(0.1, 0.5));
+                    }
+                }
                 p.add(speed);
                 if (p.x < minx || p.x > maxx) {
                     node.orientation.inverseX();
@@ -285,6 +304,7 @@ define(function(require) {
                     node.orientation.inverseY();
                 }
                 node.transform.translate(speed);
+
             }
             return true;
         };
@@ -294,9 +314,10 @@ define(function(require) {
         this.renderer.draw_end = function() {
             that.buffer.flip();
         };
+        var timeout = 1000 / that.renderer.fixedDraw;
         function drawTick() {
             that.renderer.canDraw = true;
-            setTimeout(drawTick, that.renderer.fixedDraw);
+            setTimeout(drawTick, 100);
         }
         drawTick();
         function loop() {
