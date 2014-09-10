@@ -14,8 +14,8 @@ define(function(require) {
 
     'use strict';
 
-    require('graphit/tree/node/element');
-    require('graphit/tree/node/primitive');
+    require('graphit/scene/node/element');
+    require('graphit/scene/node/primitive');
     var ns = require('graphit/namespace');
     var util = require('graphit/util');
 

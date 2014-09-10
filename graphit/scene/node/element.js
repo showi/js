@@ -25,7 +25,7 @@ define(function(require) {
         Node.call(this, arguments);
     };
     ELEMENT.prototype = Object.create(Node.prototype);
-    ELEMENT.__namespace__ = 'graphit/tree/node/element';
+    ELEMENT.__namespace__ = 'graphit/scene/node/element';
     
     ns[_ns_] = ELEMENT;
     return ns[_ns_];

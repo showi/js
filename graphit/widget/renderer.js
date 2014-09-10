@@ -35,7 +35,7 @@ define(function(require) {
     WIDGET.prototype.build = function(parent) {
         parent = (parent !== undefined) ? parent : jQuery('body');
         var id = this.renderer.uid;
-        var namespace = 'graphit/renderer/renderer';
+        var namespace = 'graphit/renderer';
 
         var root = jQuery('<div id="' + id + '"></div>');
         root.id = id;

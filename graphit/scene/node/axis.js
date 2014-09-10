@@ -14,10 +14,10 @@ define(function(require) {
 
     'use strict';
 
-    var Node = require('graphit/tree/node/node');
+    var Node = require('graphit/scene/node/node');
     var eCap = require('graphit/enum/capability');
-    var tree = require('graphit/tree/util');
-    var TransMixin = require('graphit/tree/mixin/transform');
+    var tree = require('graphit/scene/util');
+    var TransMixin = require('graphit/scene/mixin/transform');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
     var eAxis = require('graphit/enum/axis');
@@ -42,7 +42,7 @@ define(function(require) {
 
     function AXIS(position) {
         Node.call(this, arguments);
-        this.__namespace__ = 'graphit/tree/node/axis';
+        this.__namespace__ = 'graphit/scene/node/axis';
         this.setParameters(arguments, VALIDATORS);
         tree.setCapability(this, eCap.draw);
         this.enable_transform();

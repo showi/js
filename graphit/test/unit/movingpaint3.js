@@ -25,7 +25,7 @@ define(function(require) {
     var Matrix33 = require('graphit/math/matrix33');
     var eCtx = require('graphit/enum/context');
     var eCap = require('graphit/enum/capability');
-    var Renderer = require('graphit/renderer/renderer');
+    var Renderer = require('graphit/renderer');
     var tree = require('graphit/tree/util');
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');

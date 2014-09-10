@@ -22,7 +22,7 @@ define(function(require) {
     var util = require('graphit/util');
     var tool = require('graphit/draw/tool');
     var factory = require('graphit/factory');
-    var Renderer = require('graphit/renderer/renderer');
+    var Renderer = require('graphit/renderer');
     var eCap = require('graphit/enum/capability');
     var tutil = require('graphit/tree/util');
     var Point2d = require('graphit/math/point2d');

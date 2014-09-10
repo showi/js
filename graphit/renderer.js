@@ -16,12 +16,12 @@ define(function(require) {
 
     var util = require('graphit/util');
     var ParameterMixin = require('graphit/mixin/parameter');
-    var RenderableMixin = require('graphit/mixin/renderable');
-    var tree = require('graphit/tree/util');
+    var RenderableMixin = require('graphit/scene/mixin/renderable');
+    var tree = require('graphit/scene/util');
     var eCap = require('graphit/enum/capability');
     var eMat = require('graphit/enum/matrix33');
     var eCtx = require('graphit/enum/context');
-    var Node = require('graphit/tree/node/node');
+    var Node = require('graphit/scene/node/node');
     var Matrix33 = require('graphit/math/matrix33');
     var Dlist = require('graphit/datatype/dlist');
     var math = require('graphit/math');
@@ -61,8 +61,8 @@ define(function(require) {
         this.updateAdder = 0;
         //this.drawAdder = 0;
         this.limitUpdate = 4;
-        this.limitDrawSkipped = 2;
-        this.limitRenderSkipped = 2;
+        this.limitSkippedDraw = 2;
+        this.limitSkippedRender = 2;
         this.limitFps = 20;
         this.nodeRendered = 0;
         this.maxUps = 120;
@@ -89,7 +89,7 @@ define(function(require) {
         this.canDraw = false;
         this.setCtx(this.ctx);
     }
-    RENDERER.__namespace__ = 'graphit/renderer/renderer';
+    RENDERER.__namespace__ = 'graphit/renderer';
     ParameterMixin.call(RENDERER.prototype);
     RenderableMixin.call(RENDERER.prototype);
 
@@ -195,7 +195,9 @@ define(function(require) {
             if (this.updateAdder > lh) {
                 this.elapsedTime += lh;
                 this.updateAdder -= lh;
-                this.canDraw = false;
+                if (this.skippedDraw < this.limitSkippedDraw) {
+                    this.canDraw = false;
+                }
             }
         }
         if (doUpdate == false) {

@@ -28,6 +28,6 @@ define(function(require) {
             return false;
         },
     };
-    UTIL.__namespace__ = 'graphit/tree/util';
+    UTIL.__namespace__ = 'graphit/scene/util';
     return UTIL;
 });

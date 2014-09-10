@@ -23,6 +23,9 @@ define(function(require) {
 
     var MATH = {
         __namespace__ : 'graphit/math',
+        distance: function(a, b) {
+            return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        },
         clamp : function(value, min, max) {
             if (value > max) {
                 return max;
@@ -68,9 +71,17 @@ define(function(require) {
             return max;
         },
         randInt: function(a, b) {
+            if (b === undefined) {
+                b = a;
+                a = 0;
+            }
             return Math.floor((Math.random() * (b - a) + a));
         },
         randFloat: function(a, b) {
+            if (b === undefined) {
+                b = a;
+                a = 0;
+            }
             return Math.random() * (b - a) + a;
         },
         choice: function(list) {

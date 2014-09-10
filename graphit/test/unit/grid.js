@@ -20,18 +20,18 @@ define(function(require) {
     var Canvas = require('graphit/draw/canvas');
     var shape = require('graphit/draw/shape');
     var tool = require('graphit/draw/tool');
-    var ShapeNode = require('graphit/tree/node/shape');
+    var ShapeNode = require('graphit/scene/node/shape');
     var eShape = require('graphit/enum/shape');
     var Vector2d = require('graphit/math/vector2d');
     var Matrix33 = require('graphit/math/matrix33');
     var eCtx = require('graphit/enum/context');
     var eCap = require('graphit/enum/capability');
-    var Renderer = require('graphit/renderer/renderer');
-    var tree = require('graphit/tree/util');
+    var Renderer = require('graphit/renderer');
+    var tree = require('graphit/scene/util');
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
     var math = require('graphit/math');
-    var AxisNode = require('graphit/tree/node/axis');
+    var AxisNode = require('graphit/scene/node/axis');
 
     require('graphit/extend/jquery');
 

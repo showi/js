@@ -16,7 +16,7 @@ define(function(require) {
 
     var ns = require('graphit/namespace');
     var shape = require('graphit/draw/shape');
-    var TransformMixin = require('graphit/tree/mixin/transform');
+    var TransformMixin = require('graphit/scene/mixin/transform');
     var Matrix33 = require('graphit/math/matrix33');
 
     ns = ns.geom;

@@ -18,7 +18,7 @@ define(function(require) {
     var Line = require('graphit/math/line');
     var ns = require('graphit/namespace');
     var shape = require('graphit/draw/shape');
-    var util = require('graphit/tree/util');
+    var util = require('graphit/scene/util');
     var eCap = require('graphit/enum/capability');
     var _ns_ = 'primitive';
 
@@ -37,7 +37,7 @@ define(function(require) {
         this.primitive = [];
     };
     PRIMITIVE.prototype = Object.create(Node.prototype);
-    PRIMITIVE.__namespace__ = 'graphit/tree/node/primitive';
+    PRIMITIVE.__namespace__ = 'graphit/scene/node/primitive';
     
     PRIMITIVE.prototype.addPrimitive = function(primitive) {
         if (primitive === undefined) { throw 'UndefinedPrimitive'; }

@@ -15,7 +15,7 @@ define(function(require) {
     'use strict';
 
     var eCap = require('graphit/enum/capability');
-    var util = require('graphit/tree/util');
+    var util = require('graphit/scene/util');
     var Matrix33 = require('graphit/math/matrix33');
     var Vector2d = require('graphit/math/vector2d');
 
@@ -73,7 +73,7 @@ define(function(require) {
             return this.transform.scale(scale);
         };
     }
-    TRANSFORM.__namespace__ = 'graphit/tree/mixin/transform';
+    TRANSFORM.__namespace__ = 'graphit/scene/mixin/transform';
 
     return TRANSFORM;
 });

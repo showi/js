@@ -19,8 +19,10 @@ define(function(require) {
     var shape = require('graphit/draw/shape');
     var Matrix33 = require('graphit/math/matrix33');
     var Vector2d = require('graphit/math/vector2d');
-    
-    var TransformMixin = require('graphit/tree/mixin/transform');
+    var eMat = require('graphit/enum/matrix33');
+    var Base2d = require('graphit/geom/base2d');
+
+    var TransformMixin = require('graphit/scene/mixin/transform');
     var m = require('graphit/enum/matrix33');
 
     ns = ns.geom;
@@ -29,15 +31,38 @@ define(function(require) {
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function CIRCLE2D(x, y, radius) {
-        x = (x === undefined)? 0: x;
-        y = (y === undefined)? 0: y;
-        radius = (radius === undefined)? 1: radius;
-        this.transform = new Matrix33();
-        this.worldTransform = new Matrix33();
-        this.positionXY(x, y);
-        this.u = new Vector2d(radius, 0);
-    }
+        Base2d.call(this, arguments);
+        Object.defineProperty(this, 'x', {
+            get : function() {
+                return this.transform._data[eMat.mX];
+            },
+            set : function(x) {
+                this.transform._data[eMat.mX] = x;
+            }
+        });
+        Object.defineProperty(this, 'y', {
+            get : function() {
+                return this.transform._data[eMat.mY];
+            },
+            set : function(y) {
+                this.transform._data[eMat.mY] = y;
+            }
+        });
+        Object.defineProperty(this, 'radius', {
+            get : function() {
+                return this.transform._data[eMat.mSx];
+            },
+            set : function(radius) {
+                this.transform._data[eMat.mSx] = radius;
+                this.transform._data[eMat.mSx] = radius;
+            }
+        });
 
+        this.x = (x === undefined) ? 0 : x;
+        this.x = (y === undefined) ? 0 : y;
+        this.radius = (radius === undefined) ? 1 : radius;
+    }
+    CIRCLE2D.prototype = Object.create(Base2d.prototype);
     TransformMixin.call(CIRCLE2D.prototype);
 
     CIRCLE2D.__namespace__ = 'graphit/geom/circle2d';
@@ -51,13 +76,13 @@ define(function(require) {
     };
 
     CIRCLE2D.prototype.randomize = function() {
-        this.transform._data[m.mX] = Math.random();
-        this.transform._data[m.mY] = Math.random();
-        this.u.x = Math.random();
+        this.x = Math.random();
+        this.y = Math.random();
+        this.radius = Math.random();
     };
 
     CIRCLE2D.prototype.draw = function(ctx) {
-        shape.circle(ctx, 0, 0, this.u.x);
+        shape.circle(ctx, this.x, this.y, this.radius);
     };
 
     CIRCLE2D.prototype.toString = function() {
