@@ -23,3 +23,4 @@ define(function(require) {
         util.runTest(kinds[i]);
     }
 });
+ 
