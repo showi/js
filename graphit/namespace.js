@@ -41,6 +41,7 @@ define(function(require) {
         },
         scene : {
             node : [],
+ 
         },
         test : {},
         toString: function() {

@@ -14,6 +14,7 @@ define(function(require) {
 
     'use strict';
 
+    var ns = require('graphit/namespace');
     var util = require('graphit/util');
     var ParameterMixin = require('graphit/mixin/parameter');
     var RenderableMixin = require('graphit/scene/mixin/renderable');
@@ -27,6 +28,9 @@ define(function(require) {
     var math = require('graphit/math');
     var Layer = require('graphit/renderer/layer');
 
+    var _ns_ = 'renderer';
+
+    if (_ns_ in ns && ns[_ns_] != undefined) { return ns[_ns_]; }
     var VALIDATOR = {
         'root' : {
             required : true,
@@ -34,6 +38,7 @@ define(function(require) {
         },
         'ctx' : {
             required : true,
+            defaultValue: undefined,
         },
         'compositing' : {
             required : true,
@@ -47,6 +52,7 @@ define(function(require) {
         },
         'canDraw' : {
             required : true,
+            defaultValue: true,
         }
     };
 
@@ -251,7 +257,8 @@ define(function(require) {
             this.nodeRendered = this.layer.length;
             var layer, node, lidx, nidx = null;
             for (lidx = this.layer.data.length - 1;
-                 lidx >= 0, layer = this.layer.data[lidx]; lidx--) {
+                                                    lidx >= 0,
+                                                    layer = this.layer.data[lidx]; lidx--) {
                 if (layer == undefined) {
                     continue;
                 }
@@ -301,9 +308,7 @@ define(function(require) {
         node.pre_update(this, elapsed);
 
         /* UPDATE */
-        if (!this.update(node, elapsed)) {
-            return ret;
-        }
+        if (!this.update(node, elapsed)) { return ret; }
         node.update(this, elapsed);
         if (tree.hasCapability(node, eCap.transform)) {
             node.worldTransform = this.transform;
@@ -312,7 +317,7 @@ define(function(require) {
         this.post_update(node, elapsed);
         node.post_update(this, elapsed);
         if (node.child !== undefined) {
-            
+
             /* RENDERING CHILD */
             child = node.child.first;
             while (child != null) {
@@ -327,7 +332,7 @@ define(function(require) {
                 if (this.render_node(child.content, elapsed)) {
                     this.layer.append(child.content);
                 }
-                
+
                 /* TRANSFORM POP */
                 if (tree.hasCapability(child.content, eCap.transform)) {
                     this.popTransform();
@@ -336,8 +341,9 @@ define(function(require) {
             }
         }
         /* TRUE if Drawable */
-        return ret;   
+        return ret;
     };
 
-    return RENDERER;
+    ns[_ns_] = RENDERER;
+    return ns[_ns_];
 });

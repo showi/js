@@ -14,14 +14,44 @@ define(function(require) {
 
     'use strict';
 
-//    var Context = require('../draw/Context');
-
-    function IMAGE(options) {
-        this.__MODULE__ = 'graphit/draw/Image';
-        this.element = null;
-        this.context = null;
-        this._newContext(options.width, options.height, options.id);
+    var namespace = require('graphit/namespace');
+    var ns = namespace.draw;
+    
+    var _ns_ = 'image';
+    
+    if (_ns_ in ns && ns[_ns_] != undefined) {
+        return ns[_ns_];
+    }
+        
+    function IMAGE(parent, name, src) {
+        this.__namespace__ = 'graphit/draw/Image';
+        var that = this;
+        this.name = name;
+        this.type = 'image';
+        this.parent = parent;
+        this.isLoaded = false;
+        this.error = false;
+        this.uid = namespace.genUID();
+        this.element = document.createElement('img');
+        this.element.onload = (function(element) {
+            return function(e) {
+//                console.log('OnLoad', e, parent);
+                element.isLoaded = true;
+                element.error = false;
+                parent.addAsset(element);
+            };
+        }(this));
+        this.element.onerror = (function(element) {
+            return function(e) {
+                element.isLoaded = false;
+                element.error = true;
+//                console.log('OnLoad');
+                parent.addAsset(element);
+            };
+        }(this));
+        this.element.src = encodeURI(src);
     };
 
-    return IMAGE;
+    ns[_ns_] = IMAGE;
+    return ns[_ns_];
 });
