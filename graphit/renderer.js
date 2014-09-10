@@ -68,11 +68,11 @@ define(function(require) {
         this.skipped = 0;
         this.skippedDraw = 0;
         this.numUpdate = 0;
-        this.fixedUpdate = 33;
-        this.fixedDraw = 100 / 6;
-        this.timeout = 15;
+        this.fixedUpdate = 1000/33;
+        this.fixedDraw = 1000/66;
+        this.timeout = 0;
         this.updateAdder = 0;
-        this.limitUpdate = 4;
+        this.limitUpdate = 3;
         this.limitSkippedDraw = 3;
         this.limitSkippedRender = 2;
         // this.limitFps = 20;

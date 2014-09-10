@@ -23,7 +23,33 @@ define(function(require) {
 
     var MATH = {
         __namespace__ : 'graphit/math',
-        distance: function(a, b) {
+        round : function(value, precision) {
+            var factor = 1;
+            if (precision === undefined) {
+                precision = 0;
+            } else {
+                precision = Math.round(precision);
+            }
+            if (precision < 0 || precision > 10) { throw 'ValueError'; }
+            if (precision != 0) {
+                factor = Math.pow(10, precision);
+            }
+            return Math.round(value * factor) / factor;
+        },
+        floor : function(value, precision) {
+            var factor = 1;
+            if (precision === undefined) {
+                precision = 0;
+            } else {
+                precision = Math.round(precision);
+            }
+            if (precision < 0 || precision > 10) { throw 'ValueError'; }
+            if (precision != 0) {
+                factor = Math.pow(10, precision);
+            }
+            return Math.floor(value * factor) / factor;
+        },
+        distance : function(a, b) {
             return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
         },
         clamp : function(value, min, max) {
@@ -70,26 +96,26 @@ define(function(require) {
             }
             return max;
         },
-        randInt: function(a, b) {
+        randInt : function(a, b) {
             if (b === undefined) {
                 b = a;
                 a = 0;
             }
             return Math.floor((Math.random() * (b - a) + a));
         },
-        randFloat: function(a, b) {
+        randFloat : function(a, b) {
             if (b === undefined) {
                 b = a;
                 a = 0;
             }
             return Math.random() * (b - a) + a;
         },
-        choice: function(list) {
-          return list[this.randInt(0, list.length)];  
+        choice : function(list) {
+            return list[this.randInt(0, list.length)];
         }
     };
     MATH.__namespace__ = 'graphit/math';
-  
+
     ns[_ns_] = MATH;
     return ns[_ns_];
 });

@@ -14,6 +14,8 @@ define(function(require) {
 
     'use strict';
 
+    var math = require('graphit/math');
+
     function WIDGET(renderer) {
         this.renderer = renderer;
     }
@@ -70,10 +72,10 @@ define(function(require) {
         this.numUpdate.value.text(this.renderer.numUpdate);
         this.nodeRendered.value.text(this.renderer.nodeRendered);
         this.limitUpdate.value.text(this.renderer.limitUpdate);
-        this.updateAdder.value.text(this.renderer.updateAdder);
-        this.fixedUpdate.value.text(this.renderer.fixedUpdate);
-        this.fixedDraw.value.text(this.renderer.fixedDraw);
-        this.elapsedTime.value.text(this.renderer.elapsedTime);
+        this.updateAdder.value.text(math.round(this.renderer.updateAdder, 2));
+        this.fixedUpdate.value.text(math.round(this.renderer.fixedUpdate, 2));
+        this.fixedDraw.value.text(math.round(this.renderer.fixedDraw, 2));
+        this.elapsedTime.value.text(math.round(this.renderer.elapsedTime));
         this.isPaused.value.text(this.renderer.isPaused);
     };
 

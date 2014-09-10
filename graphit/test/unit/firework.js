@@ -66,10 +66,6 @@ define(function(require) {
             worldTransform : this.screenTransform,
             canDraw : false,
         });
-        this.renderer.fixedUpdate = 15;
-         this.renderer.fixedDraw = 1;
-        this.timeout = 2;// this.renderer.fixedUpdate;
-        this.renderer.limitUpdate = 10;
         console.log('ScreenTransform', this.screenTransform.toString());
         this.body = jQuery('body');
         this.createHTML();
@@ -134,11 +130,11 @@ define(function(require) {
                 height : math.randInt(5, mh),
             },
             pos : {
-                x :  math.randInt(-dw + mw/2, dw - mw/2),
-                y :  math.randInt(-dh + mh/2, dh - mh/2),
+                x : math.randInt(-dw + mw / 2, dw - mw / 2),
+                y : math.randInt(-dh + mh / 2, dh - mh / 2),
             },
         });
-        
+
         if (limit != 0) {
             node.fillStyle = 'red';
             node.zindex = 0;
@@ -149,7 +145,7 @@ define(function(require) {
         node.strokeStyle = tool.randomColor();
         node.orientation = new Vector2d();
         node.orientation.randomize().normalize();
-  
+
         if (Math.random() > 0.5) {
             node.orientation.inverseX();
         }
@@ -244,15 +240,15 @@ define(function(require) {
         this.renderer.update = function(node, elapsed) {
             if (tree.hasCapability(node, eCap.transform)) {
                 if (node.timeout !== undefined) {
-                        var newSize = 100/this.elapsedTime;
-                        if ((node.width - newSize) > 0.01) {
-                            node.width -= newSize;
-                        } else {
-                            tree.setCapability(node, eCap.prune);
-                            tree.unsetCapability(node, eCap.render);
-                            that.createNode(this.root, 0);
-                            return false;
-                        }
+                    var newSize = 100 / this.elapsedTime;
+                    if ((node.width - newSize) > 0.01) {
+                        node.width -= newSize;
+                    } else {
+                        tree.setCapability(node, eCap.prune);
+                        tree.unsetCapability(node, eCap.render);
+                        that.createNode(this.root, 0);
+                        return false;
+                    }
                 }
                 var minx, miny, maxx, maxy, width, heith, dw, dh, ndw, ndh, p;
                 ndw = node.width / 2
@@ -260,23 +256,24 @@ define(function(require) {
                 var v = node.velocity.clone().smul(elapsed);
                 var speed = node.orientation.clone().mul(v);
                 p = node.transform.position();
-                if (node.parent !== undefined && tree.hasCapability(node.parent, eCap.transform)) {
+                if (node.parent !== undefined
+                        && tree.hasCapability(node.parent, eCap.transform)) {
                     width = node.parent.width;
                     height = node.parent.height;
                     dw = width / 2;
                     dh = height / 2;
                     p = node.parent.worldTransform.position();
                     minx = p.x + -dw + ndw;
-                    maxx = p.x + dw  - ndw;
-                    miny = p.y  -dh + ndh;
+                    maxx = p.x + dw - ndw;
+                    miny = p.y - dh + ndh;
                     maxy = p.y + dh - ndh;
                 } else {
                     width = that.canvas.width();
                     height = that.canvas.height();
                     dw = width / 2;
-                    dh = height /2;
+                    dh = height / 2;
                     minx = -dw + ndw;
-                    maxx =  dw - ndw;
+                    maxx = dw - ndw;
                     miny = -dh + ndh;
                     maxy = dh - ndh;
                 }
@@ -286,7 +283,7 @@ define(function(require) {
                 }
                 if (p.y < miny || p.y > maxy) {
                     node.orientation.inverseY();
-                }     
+                }
                 node.transform.translate(speed);
             }
             return true;
