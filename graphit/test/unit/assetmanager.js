@@ -23,7 +23,7 @@ define(function(require) {
 
                 for (var j = 0; j < directions.length,
                                 direction = directions[j]; j++) {
-                    var src = '../img/sprite/';
+                    var src = '../js/img/sprite/';
                     src += name + '/' + action + direction + t + '.bmp';
                     var cname = 'sprite-' + action + '-' + direction + '-'
                             + direction + '-' + t;
