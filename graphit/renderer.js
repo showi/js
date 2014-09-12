@@ -271,7 +271,7 @@ define(function(require) {
                     this.ctx.save();
                     node.pre_render(this);
                     if (tree.hasCapability(node, eCap.transform)) {
-                        wt = node.localTransform._data;
+                        wt = node.getLocalTransform()._data;
 //                        this.ctx.translate(wt[2], wt[5]);
                          this.ctx.transform(wt[0], wt[1], wt[3], wt[4],
                          wt[2],
@@ -314,7 +314,7 @@ define(function(require) {
         node.update(this, elapsed);
         if (tree.hasCapability(node, eCap.transform)) {
             this.pushTransform(this.transform);
-            node.localTransform = this.transform;//.clone();
+            node.applyLocalTransform(this.transform);//.clone();
         }
         /* POSTUPDATE */
         this.post_update(node, elapsed);

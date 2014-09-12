@@ -275,7 +275,7 @@ define(function(require) {
 //                    that.createNode(this.root, 0);
 //                    return false;
 //                }
-                p = node.localTransform.position();
+                p = node.getLocalTransform().position();
 //                console.log('position', p, WORLD.x, WORLD.y);
 //                if (1) {
 //                    width = that.canvas.width();

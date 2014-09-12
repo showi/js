@@ -20,29 +20,9 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
 
     function TRANSFORM() {
-        Object.defineProperty(this, 'localTransform', {
-            get: function() {
-                if (this._localTransform === undefined) {
-                return this.transform;
-                }
-                return this._localTransform;
-            },
-            set: function(world) {
-                if (this._localTransform === undefined) {
-                    this._localTransform = this.transform.clone();
-                } else {
-                    this._localTransform.copy(this.transform);
-                }
-//                console.log('transform', this._localTransform.toString());
-                if (world != undefined && world !== null) {
-                    this._localTransform.mul(world);
-//                console.log('wt', this._localTransform.toString());
-                } else { throw 'bug'; }
-            },
-        });
         this.enable_transform = function() {
             this.transform = new Matrix33();
-            this._localTransform = undefined;
+            this.localTransform = undefined;
             util.setCapability(this, eCap.transform);
         };
         this.disable_transform = function() {
@@ -54,10 +34,20 @@ define(function(require) {
             if (world === undefined) {
                 throw 'UndefinedWorldTransform';
             }
-            this.localTransform = world;
-            return this._localTransform;
+            if (this.localTransform === undefined) {
+                this.localTransform = this.transform.clone();
+            } else {
+                this.localTransform.copy(this.transform);
+            }
+            if (world != undefined && world !== null) {
+                this.localTransform.mul(world);
+            }
+            return this.localTransform;
         };
         this.getLocalTransform = function() {
+            if (this.localTransform === undefined) {
+                return this.transform;
+            }
             return this.localTransform;
         };
         this.getParentLocelTransform = function() {
@@ -97,6 +87,24 @@ define(function(require) {
         };
     }
     TRANSFORM.__namespace__ = 'graphit/scene/mixin/transform';
-
+//    
+//    Object.defineProperty(TRANSFORM.prototype, 'localTransform', {
+//        get: function() {
+//            if (this._localTransform === undefined) {
+//            return this.transform;
+//            }
+//            return this._localTransform;
+//        },
+//        set: function(world) {
+//            if (this._localTransform === undefined) {
+//                this._localTransform = this.transform.clone();
+//            } else {
+//                this._localTransform.copy(this.transform);
+//            }
+//            if (world != undefined && world !== null) {
+//                this._localTransform.mul(world);
+//            } else { throw 'bug'; }
+//        },
+//    });
     return TRANSFORM;
 });

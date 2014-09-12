@@ -23,75 +23,76 @@ define(function(require) {
 
     function RECT(left, top, width, height) {
         this.type = eType.rect;
-        this.u = Vector2d.Create();
-        this.v = Vector2d.Create(),
+        this.extents = Vector2d.Create();
         this.center = Vector2d.Create();
         this.setUp(left, top, width, height);
-        
-        Object.defineProperty(this, 'position', {
-            get: function() {
-                return this.center.clone().sub(this.u).sub(this.v);
-            },
-            set: function(position) {
-                this.center.add(position.clone().add(this.u).add(this.v));
-            }
-        });          
-        Object.defineProperty(this, 'x', {
-            get: function() {
-                return this.center.x - this.u.x;
-            },
-            set: function(x) {
-                this.center.x = x + this.u.x;
-            }
-        });
-        Object.defineProperty(this, 'y', {
-            get: function() {
-                return this.center.y - this.v.y;
-            },
-            set: function(y) {
-                this.center.y = y + this.u.y;
-            }
-        });
-        Object.defineProperty(this, 'width', {
-            get: function() {
-                return this.u.x * 2;
-            },
-            set: function(width) {
-                this.u.x = width / 2;
-            }
-        });
-        Object.defineProperty(this, 'height', {
-            get: function() {
-                return this.v.y * 2;
-            },
-            set: function(height) {
-                this.v.y = height / 2;
-            }
-        });
-        
-        Object.defineProperty(this, 'size', {
-            get: function() {
-                return Vector2d.Create(this.width, this.height);
-            },
-            set: function(size) {
-                this.width = size.x;
-                this.height = size.y;
-            }
-        });
-        Object.defineProperty(this, 'max', {
-            get: function() {
-                return this.u.clone().sub(this.v);
-            },
-            set: function(max) {
-                this.center.x += max.x / 2;
-                this.center.y += max.y / 2;
-                this.width += max.x;
-                this.height += max.y;
-            }
-        });        
+       
     };
     RECT.prototype = Object.create(Storeable.prototype);
 
+    
+    Object.defineProperty(RECT.prototype, 'position', {
+        get: function() {
+            return this.center.clone().sub(this.extents);
+        },
+        set: function(position) {
+            this.center.add(position.clone().add(this.extents));
+        }
+    });          
+    Object.defineProperty(RECT.prototype, 'x', {
+        get: function() {
+            return this.center.x - this.extents.x;
+        },
+        set: function(x) {
+            this.center.x = x + this.extents.x;
+        }
+    });
+    Object.defineProperty(RECT.prototype, 'y', {
+        get: function() {
+            return this.center.y - this.extents.y;
+        },
+        set: function(y) {
+            this.center.y = y + this.extents.y;
+        }
+    });
+    Object.defineProperty(RECT.prototype, 'width', {
+        get: function() {
+            return this.extents.x * 2;
+        },
+        set: function(width) {
+            this.extents.x = width / 2;
+        }
+    });
+    Object.defineProperty(RECT.prototype, 'height', {
+        get: function() {
+            return this.extents.y * 2;
+        },
+        set: function(height) {
+            this.extents.y = height / 2;
+        }
+    });
+    
+    Object.defineProperty(RECT.prototype, 'size', {
+        get: function() {
+            return Vector2d.Create(this.width, this.height);
+        },
+        set: function(size) {
+            this.width = size.x;
+            this.height = size.y;
+        }
+    });
+    Object.defineProperty(RECT.prototype, 'max', {
+        get: function() {
+            return this.u.clone().sub(this.v);
+        },
+        set: function(max) {
+            this.center.x += max.x / 2;
+            this.center.y += max.y / 2;
+            this.width += max.x;
+            this.height += max.y;
+        }
+    }); 
+    
     RECT.prototype.clone = function() {
         return this.Create(this.x, this.y, this.width, this.height);
     };
@@ -106,12 +107,10 @@ define(function(require) {
     };
 
     RECT.prototype.setUp = function(left, top, width, height) {
-        this.u.x = width / 2;
-        this.u.y = 0;
-        this.v.y = height / 2;
-        this.v.x = 0;
-        this.center.x = left + this.u.x;
-        this.center.y = top + this.v.y;  
+        this.extents.x = width / 2;
+        this.extents.y = height / 2;
+        this.center.x = left + this.extents.x;
+        this.center.y = top + this.extents.y;  
     };
 
     RECT.prototype.toString = function() {
