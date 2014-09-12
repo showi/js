@@ -45,7 +45,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 50;
+        this.numRectangle = 1;
         this.numChild = 0;
         this.size = size;
         this.ratio = 0.8;
@@ -126,8 +126,8 @@ define(function(require) {
         var node = new ShapeNode({
             kind : math.choice([eShape.circle]),
             size : {
-                width : 1, //math.randInt(5, mw),
-                height : 1, //math.randInt(5, mh),
+                width : math.randInt(5, mw),
+                height : math.randInt(5, mh),
             },
             pos : {
                 x : math.randInt(-dw + mw / 2, dw - mw / 2),

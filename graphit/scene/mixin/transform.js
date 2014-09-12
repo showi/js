@@ -20,46 +20,48 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
 
     function TRANSFORM() {
-        Object.defineProperty(this, 'worldTransform', {
+        Object.defineProperty(this, 'localTransform', {
             get: function() {
-                if (this._worldTransform === undefined) {
+                if (this._localTransform === undefined) {
                 return this.transform;
                 }
-                return this._worldTransform;
+                return this._localTransform;
             },
             set: function(world) {
-                if (this._worldTransform === undefined) {
-                    this._worldTransform = this.transform.clone();
+                if (this._localTransform === undefined) {
+                    this._localTransform = this.transform.clone();
                 } else {
-                    this._worldTransform.copy(this.transform);
+                    this._localTransform.copy(this.transform);
                 }
-                this._worldTransform.mul(world);
-                
+//                console.log('transform', this._localTransform.toString());
+                if (world != undefined && world !== null) {
+                    this._localTransform.mul(world);
+//                console.log('wt', this._localTransform.toString());
+                } else { throw 'bug'; }
             },
         });
         this.enable_transform = function() {
             this.transform = new Matrix33();
-            this._worldTransform = undefined;
-//            this.worldTransform = new Matrix33();
+            this._localTransform = undefined;
             util.setCapability(this, eCap.transform);
         };
         this.disable_transform = function() {
             util.setCapability(this, eCap.transform);
             delete this.transform;
-            delete this._worldTransform;
+            delete this._localTransform;
         };
-        this.applyWorldTransform = function(world) {
+        this.applyLocalTransform = function(world) {
             if (world === undefined) {
                 throw 'UndefinedWorldTransform';
             }
-            this.worldTransform = world;
-            return this.worldTransform;
+            this.localTransform = world;
+            return this._localTransform;
         };
-        this.getWorldTransform = function() {
-            return this.worldTransform;
+        this.getLocalTransform = function() {
+            return this.localTransform;
         };
-        this.getParentWorldTransform = function() {
-            if (util.hasCapability(this, eCap.transform)) { return this.worldTransform; }
+        this.getParentLocelTransform = function() {
+            if (util.hasCapability(this, eCap.transform)) { return this.localTransform; }
             if (this.parent == undefined || this.parent == null) { return new Matrix33(); }
             return this.parent.getParentWorldTransform();
 

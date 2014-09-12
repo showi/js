@@ -16,20 +16,19 @@ define(function(require) {
 
     var ns = require('graphit/namespace');
     var Enum = require('graphit/enum');
-    ns = ns.scene.enum;
+    ns = ns.enum;
     var _ns_ = 'type';
-    console.log('namespace', ns);
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
-    var CAPABILITY = new Enum({
-        gameobject: 1 << 0,
-        component: 2 << 1,
-        transform: 3 << 2,
-        texture: 4 << 3,
-        texture2d: 5 << 4,
+    var TYPE = new Enum({
+        rect: 1 << 1,
+        vector2d: 1 << 2,
+        matrix33: 1 << 3,
+        
+        sceneNodeShap: 1 << 4,
     });
-    CAPABILITY.__namespace__ = 'graphit/enum/capability';
+    TYPE.__namespace__ = 'graphit/enum/type';
 
-    ns[_ns_] = CAPABILITY;
+    ns[_ns_] = TYPE;
     return ns[_ns_];
 });

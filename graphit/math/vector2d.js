@@ -17,18 +17,30 @@ define(function(require) {
     var ns = require('graphit/math');
     var _ns_ = 'vector2d';
     var math = require('graphit/math');
+    var Storeable = require('graphit/storeable');
+    var eType = require('graphit/enum/type');
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function VECTOR2D(x, y) {
-        this.x = (x === undefined) ? 0 : x;
-        this.y = (y === undefined) ? 0 : y;
+        this.type = eType.vector2d;
+        this.setUp(x, y);
     }
-
+    VECTOR2D.prototype = Object.create(Storeable.prototype);
     VECTOR2D.__namespace__ = 'graphit/math/vector2d';
         
     VECTOR2D.prototype.clone = function() {
-        return new VECTOR2D(this.x, this.y);
+        return this.Create(this.x, this.y);
+//        return new VECTOR2D(this.x, this.y);
+    };
+
+    VECTOR2D.prototype.setUp = function(x, y) {
+        this.x = (x === undefined) ? 0 : x;
+        this.y = (y === undefined) ? 0 : y;
+    };
+    
+    VECTOR2D.prototype.New = function(x, y) {
+        return new VECTOR2D(x, y);
     };
 
     VECTOR2D.prototype.copy = function(vector) {
@@ -92,6 +104,7 @@ define(function(require) {
         var vector = b.clone().sub(a);
         this.x = vector.x;
         this.y = vector.y;
+        vector.Delete();
         return this;
     };
     VECTOR2D.prototype.floor = function() {
@@ -128,7 +141,8 @@ define(function(require) {
     VECTOR2D.prototype.lengthSlow = function() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     };
-
+    var v = new VECTOR2D();
+    v.Delete();
     ns[_ns_] = VECTOR2D;
     return ns[_ns_];
 });

@@ -38,7 +38,7 @@ define(function(require) {
         },
         'ctx' : {
             required : true,
-            defaultValue: undefined,
+            defaultValue : undefined,
         },
         'compositing' : {
             required : true,
@@ -52,7 +52,7 @@ define(function(require) {
         },
         'canDraw' : {
             required : true,
-            defaultValue: true,
+            defaultValue : true,
         }
     };
 
@@ -76,7 +76,7 @@ define(function(require) {
         this.numUpdate = 0;
         this.fixedUpdate = 33;
         this.fixedDraw = 100;
-        this.timeout = 0;
+        this.timeout = 1000/66;
         this.updateAdder = 0;
         this.limitUpdate = 3;
         this.limitSkippedDraw = 3;
@@ -126,6 +126,9 @@ define(function(require) {
     RENDERER.prototype.popTransform = function() {
         var elm = this.transforms.pop();
         this.transform = elm;
+        if (elm != undefined) {
+//            elm.Delete();
+        }
         return this;
     };
 
@@ -241,6 +244,7 @@ define(function(require) {
             if (this.render_node(this.root, this.elapsedTime)) {
                 this.layer.append(this.root);
             }
+            this.popTransform();
         }
         if (this.canDraw) {
             this.canDraw = false;
@@ -267,13 +271,12 @@ define(function(require) {
                     this.ctx.save();
                     node.pre_render(this);
                     if (tree.hasCapability(node, eCap.transform)) {
-                        wt = node.worldTransform._data;
-                        this.ctx.translate(wt[2], wt[5]);
-                        // this.ctx.seTransform(wt[0], wt[1], wt[3], wt[4],
-                        // wt[2],
-                        // wt[5]);
+                        wt = node.localTransform._data;
+//                        this.ctx.translate(wt[2], wt[5]);
+                         this.ctx.transform(wt[0], wt[1], wt[3], wt[4],
+                         wt[2],
+                         wt[5]);
                     }
-
                     this.apply_node_context(node);
                     this.render(node);
                     node.render(this);
@@ -306,18 +309,17 @@ define(function(require) {
         /* PRE UPDATE */
         this.pre_update(node, elapsed);
         node.pre_update(this, elapsed);
-
         /* UPDATE */
         if (!this.update(node, elapsed)) { return ret; }
         node.update(this, elapsed);
         if (tree.hasCapability(node, eCap.transform)) {
-            node.worldTransform = this.transform;
+            this.pushTransform(this.transform);
+            node.localTransform = this.transform;//.clone();
         }
         /* POSTUPDATE */
         this.post_update(node, elapsed);
         node.post_update(this, elapsed);
         if (node.child !== undefined) {
-
             /* RENDERING CHILD */
             child = node.child.first;
             while (child != null) {
@@ -325,25 +327,20 @@ define(function(require) {
                     child = node.child.remove(child);
                     continue;
                 }
-                /* TRANSFORM PUSH */
-                if (tree.hasCapability(child.content, eCap.transform)) {
-                    this.pushTransform(this.transform);
-                }
                 if (this.render_node(child.content, elapsed)) {
                     this.layer.append(child.content);
                 }
-
-                /* TRANSFORM POP */
-                if (tree.hasCapability(child.content, eCap.transform)) {
-                    this.popTransform();
-                }
                 child = child.next;
             }
+       
+        }
+        /* TRANSFORM POP */
+        if (tree.hasCapability(node, eCap.transform)) {
+            this.popTransform();
         }
         /* TRUE if Drawable */
         return ret;
     };
-
     ns[_ns_] = RENDERER;
     return ns[_ns_];
 });

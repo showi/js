@@ -17,7 +17,7 @@ define(function(require) {
     var test = require('graphit/test/util');
     var util = require('graphit/util');
     var choices = ['randart', 'clock', 'wall',
-                   'movingpaint2', 'firework', 'assetmanager'];
+                   'movingpaint2', 'firework', 'rect'];
     var choice = util.choice(choices);
 //    choice = 'firework';
     console.log('>>> random test:', choice, '(', choices, ')');

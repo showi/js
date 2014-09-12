@@ -30,8 +30,12 @@ define(function(require) {
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
     var math = require('graphit/math');
-
+    var mathFactory = require('graphit/math/namespace');
+    var Rect = require('graphit/math/rect');
+    Vector2d = mathFactory.vector2d;
     require('graphit/extend/jquery');
+
+    var WORLD = null;
 
     function log() {
         console.log.apply(console, arguments);
@@ -39,25 +43,27 @@ define(function(require) {
 
     function MOUSE() {
         var size = util.windowSize();
-        size.x = math.clamp(size.x, 100, 640);
-        size.y = math.clamp(size.y, 100, 480);
-        this.setUp(size, 0.8);
+        size.x = math.clamp(size.x, 100, 800);
+        size.y = math.clamp(size.y, 100, 600);
+        this.setUp(size, 1.0);
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 50;
+        this.numRectangle = 64;
         this.numChild = 0;
         this.size = size;
-        this.ratio = 0.8;
+
+//        WORLD.center()
+        this.ratio = ratio
         this.buffer = new DBuffer({
             width : this.size.x * this.ratio,
             height : this.size.y * this.ratio
         });
         this.canvas = this.buffer.front;
+        WORLD = new Rect(0, 0, this.canvas.width(), this.canvas.height());
         console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
         this.screenTransform = new Matrix33();
-        this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
-                .height() / 2);
+        this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas.height() / 2);
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
             compositing : {
@@ -122,16 +128,17 @@ define(function(require) {
         if (root.height !== undefined) {
             height = root.height;
         }
+        var ratio = 0.1;
         var dw = width / 2;
         var dh = height / 2;
-        var mw = dw * this.ratio;
-        var mh = dh * this.ratio;
+        var mw = dw * ratio;
+        var mh = dh * ratio;
         // log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
         var node = new ShapeNode({
             kind : math.choice([eShape.circle]),
             size : {
-                width : math.randInt(5, mw),
-                height : math.randInt(5, mh),
+                width : math.randInt(0.1, mw),
+                height : math.randInt(0.1, mh),
             },
             pos : {
                 x :  math.randInt(-dw + mw/2, dw - mw/2),
@@ -147,7 +154,7 @@ define(function(require) {
             node.zindex = 1;
         }
         node.strokeStyle = tool.randomColor();
-        node.orientation = new Vector2d();
+        node.orientation = Vector2d.Create(0, 0);
         node.orientation.randomize().normalize();
   
         if (Math.random() > 0.5) {
@@ -156,8 +163,8 @@ define(function(require) {
         if (Math.random() > 0.5) {
             node.orientation.inverseY();
         }
-        node.velocity = new Vector2d(0, 0);
-        node.velocity.randomize().normalize().smul(math.randFloat(0.05, 0.1));
+        node.velocity = Vector2d.Create(0, 0);
+        node.velocity.randomize().normalize().smul(math.randFloat(0.1, 0.3));
         node.timeout = Date.now() + math.randInt(0, 1000);
         if (limit > 0) {
             console.log('creating sub node');
@@ -216,6 +223,7 @@ define(function(require) {
                 that.wRenderer.update();
                 that.renderer.measureStart();
             }
+//            console.log(mathFactory.vector2d.StoreableStats());
             setTimeout(loop, timeout);
         }
         loop();
@@ -242,9 +250,10 @@ define(function(require) {
             ;
         };
         this.renderer.update = function(node, elapsed) {
+//            console.log('update');
             if (tree.hasCapability(node, eCap.transform)) {
                 if (node.timeout !== undefined) {
-                        var newSize = 100/this.elapsedTime;
+                        var newSize = this.elapsedTime*0.01;
                         if ((node.width - newSize) > 0.01) {
                             node.width -= newSize;
                         } else {
@@ -254,40 +263,45 @@ define(function(require) {
                             return false;
                         }
                 }
-                var minx, miny, maxx, maxy, width, heith, dw, dh, ndw, ndh, p;
-                ndw = node.width / 2
+                var minx, miny, maxx, maxy, width, height, dw, dh, ndw, ndh, p;
+                ndw = node.width / 2;
                 ndh = node.height / 2;
                 var v = node.velocity.clone().smul(elapsed);
+
                 var speed = node.orientation.clone().mul(v);
-                p = node.transform.position();
-                if (node.parent !== undefined && tree.hasCapability(node.parent, eCap.transform)) {
-                    width = node.parent.width;
-                    height = node.parent.height;
-                    dw = width / 2;
-                    dh = height / 2;
-                    p = node.parent.worldTransform.position();
-                    minx = p.x + -dw + ndw;
-                    maxx = p.x + dw  - ndw;
-                    miny = p.y  -dh + ndh;
-                    maxy = p.y + dh - ndh;
-                } else {
-                    width = that.canvas.width();
-                    height = that.canvas.height();
-                    dw = width / 2;
-                    dh = height /2;
-                    minx = -dw + ndw;
-                    maxx =  dw - ndw;
-                    miny = -dh + ndh;
-                    maxy = dh - ndh;
-                }
+//                if (speed.x == Infinity || speed.y == Infinity) {
+//                    tree.setCapability(node, eCap.prune);
+//                    tree.unsetCapability(node, eCap.render);
+//                    that.createNode(this.root, 0);
+//                    return false;
+//                }
+                p = node.localTransform.position();
+//                console.log('position', p, WORLD.x, WORLD.y);
+//                if (1) {
+//                    width = that.canvas.width();
+//                    height = that.canvas.height();
+//                    dw = width / 2;
+//                    dh = height /2;
+//                    minx = -dw + ndw;
+//                    maxx =  dw - ndw;
+//                    miny = -dh + ndh;
+//                    maxy = dh - ndh;
+//                }
                 p.add(speed);
-                if (p.x < minx || p.x > maxx) {
+//                var px = p.x + ndw;
+//                var py = p.y + ndh;
+//                console.log(WORLD.width, WORLD.height, WORLD.x, WORLD.y, ndw, ndh);
+                if (p.x <= (WORLD.x + ndw) || (p.x + ndw) >= WORLD.width) {
                     node.orientation.inverseX();
                 }
-                if (p.y < miny || p.y > maxy) {
+                if (p.y <= (WORLD.y + ndh) || (p.y + ndh) >= WORLD.height) {
                     node.orientation.inverseY();
-                }     
+                }
+//                console.log('speed', speed);
                 node.transform.translate(speed);
+//               console.log('x/y', node.position(), 'position', p);
+//                speed.Delete();
+//                v.Delete();
             }
             return true;
         };
@@ -304,6 +318,7 @@ define(function(require) {
         drawTick();
         function loop() {
             that.renderer.step();
+//            mathFactory.matrix33.ClearCache();
             setTimeout(loop, that.timeout);
         }
         loop();

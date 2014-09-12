@@ -21,7 +21,7 @@ define(function(require) {
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var logElement = jQuery('<div class="graphit-container log"></div>');
-    jQuery('body').append(logElement);
+//    jQuery('body').append(logElement);
 
     var UTIL = {
         __namespace__ : 'graphit/test/util',

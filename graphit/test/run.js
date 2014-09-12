@@ -18,7 +18,7 @@ define(function(require) {
     var kinds_visual = ['clock', 'randart', 'movingpaint', 'mouseclick'];
     var kinds_speed = ['speed_array', 'speed_matrix33', 'speed_canvas'];
     var kinds_math = ['speed_matrix33', 'vector2d'];
-    var kinds = ['firework', 'movingpaint2'];
+    var kinds = ['movingpaint2'];
     for (var i = 0; i < kinds.length; i++) {
         util.runTest(kinds[i]);
     }

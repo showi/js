@@ -24,6 +24,7 @@ define(function(require) {
     var eAxis = require('graphit/enum/axis');
     var eShape = require('graphit/enum/shape');
     var ns = require('graphit/namespace');
+    var fact = require('graphit/math/namespace');
     ns = ns.scene.node;
     var _ns_ = 'shape';
 
@@ -44,8 +45,8 @@ define(function(require) {
     function SHAPE() {
         Node.call(this, arguments);
         this.setParameters(arguments, VALIDATORS);
-        this.transform = new Matrix33();
-        this.worldTransform = new Matrix33();
+        this.transform = fact.matrix33.Create();
+        this.worldTransform = fact.matrix33.Create();
         scene.setCapability(this, eCap.render);
         scene.setCapability(this, eCap.draw);
         scene.setCapability(this, eCap.transform);

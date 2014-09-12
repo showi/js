@@ -17,7 +17,9 @@ define(function(require) {
     var ns = require('graphit/math');
     var Vector2d = require('graphit/math/vector2d');
     var InputFilterMixin = require('graphit/mixin/inputfilter');
-    var _ns_ = 'matrix33';
+    var Storeable = require('graphit/storeable');
+    var eType = require('graphit/enum/type');
+    var _ns_ = eType.reverse(eType.matrix33);
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
@@ -33,7 +35,7 @@ define(function(require) {
 
     var mX = m13;
     var mY = m23;
-    
+
     var sX = m11;
     var sY = m22;
     var sZ = m33;
@@ -44,6 +46,18 @@ define(function(require) {
          * 
          * @param matrix: If defined we are copying data
          */
+        this.type = eType.matrix33;
+        this.setUp(matrix);
+    }
+    MATRIX33.prototype = Object.create(Storeable.prototype);
+
+    MATRIX33.__namespace__ = 'graphit/math/matrix33';
+
+    MATRIX33.prototype.New = function(matrix) {
+        return new MATRIX33(matrix);
+    };
+
+    MATRIX33.prototype.setUp = function(matrix) {
         if (matrix === undefined) {
             this._data = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         } else {
@@ -54,23 +68,21 @@ define(function(require) {
                 this.copy(matrix);
             }
         }
-    }
-
-    MATRIX33.__namespace__ = 'graphit/math/matrix33';
+    };
 
     MATRIX33.prototype.setData = function(data) {
         if (data.length != 9) { throw 'InvalidMatrix33DataSize(' + data.length
                 + ')'; }
-            this._data[0] = data[0];
-            this._data[1] = data[1];
-            this._data[2] = data[2];
-            this._data[3] = data[3];
-            this._data[4] = data[4];
-            this._data[5] = data[5];
-            this._data[6] = data[6];
-            this._data[7] = data[7];
-            this._data[8] = data[8];
-            return this;
+        this._data[0] = data[0];
+        this._data[1] = data[1];
+        this._data[2] = data[2];
+        this._data[3] = data[3];
+        this._data[4] = data[4];
+        this._data[5] = data[5];
+        this._data[6] = data[6];
+        this._data[7] = data[7];
+        this._data[8] = data[8];
+        return this;
         this._data = data;
     };
 
@@ -78,8 +90,7 @@ define(function(require) {
         /*
          * Copying matrix data from source
          * 
-         * @param matrix: Source for copying 
-         * @return: this for chaining
+         * @param matrix: Source for copying @return: this for chaining
          */
         this._data[0] = matrix._data[0];
         this._data[1] = matrix._data[1];
@@ -90,7 +101,7 @@ define(function(require) {
         this._data[6] = matrix._data[6];
         this._data[7] = matrix._data[7];
         this._data[8] = matrix._data[8];
-        
+
         return this;
     };
 
@@ -100,11 +111,12 @@ define(function(require) {
          * 
          * @return: new Matrix33 object
          */
-        return new MATRIX33(this);
+        return this.Create(this._data);
+//        return new MATRIX33(this);
     };
 
     MATRIX33.prototype.equal = function(matrix) {
-//        this.inputFilterMatrix(matrix);
+        // this.inputFilterMatrix(matrix);
         for (var i = 0; i < 9; i++) {
             if (this._data[i] != matrix._data[i]) { return false; }
         }
@@ -112,7 +124,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fill = function(value) {
-//        this.inputFilter(value);
+        // this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -135,7 +147,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fillSlow = function(value) {
-//        this.inputFilter(value);
+        // this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -151,7 +163,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fillMedium = function(value) {
-//        this.inputFilter(value);
+        // this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -186,26 +198,26 @@ define(function(require) {
     };
 
     MATRIX33.prototype.translate = function(vector) {
-//        this.inputFilterVector(vector);
+        // this.inputFilterVector(vector);
         this._data[mX] += vector.x;
         this._data[mY] += vector.y;
         return this;
     };
 
     MATRIX33.prototype.translateX = function(x) {
-//        this.inputFilter(x);
+        // this.inputFilter(x);
         this._data[mX] += x;
         return this;
     };
 
     MATRIX33.prototype.translateY = function(y) {
-//        this.inputFilter(y);
+        // this.inputFilter(y);
         this._data[mY] += y;
         return this;
     };
 
     MATRIX33.prototype.translateXY = function(x, y) {
-//        this.inputFilter(x, y);
+        // this.inputFilter(x, y);
         this._data[mX] += x;
         this._data[mY] += y;
         return this;
@@ -214,7 +226,7 @@ define(function(require) {
     MATRIX33.prototype.position = function(vector) {
         if (vector === undefined) { return new Vector2d(this._data[mX],
                                                         this._data[mY]); }
-//        this.inputFilter(vector);
+        // this.inputFilter(vector);
         this._data[mX] = vector.x;
         this._data[mY] = vector.y;
         return this;
@@ -222,27 +234,27 @@ define(function(require) {
 
     MATRIX33.prototype.positionX = function(x) {
         if (x === undefined) { return this._data[mX]; }
-//        this.inputFilter(x);
+        // this.inputFilter(x);
         this._data[mX] = x;
         return this;
     };
 
     MATRIX33.prototype.positionY = function(y) {
         if (y === undefined) { return this._data[mY]; }
-//        this.inputFilter(y);
+        // this.inputFilter(y);
         this._data[mY] = y;
         return this;
     };
 
     MATRIX33.prototype.positionXY = function(x, y) {
-//        this.inputFilter(x, y);
+        // this.inputFilter(x, y);
         this._data[mX] = x;
         this._data[mY] = y;
         return this;
     };
 
     MATRIX33.prototype.rotate = function(angle) {
-//        this.inputFilter(angle);
+        // this.inputFilter(angle);
         if (angle > (Math.PI / 180)) {
             angle = angle - (Math.PI / 180);
         }
@@ -276,8 +288,9 @@ define(function(require) {
     };
 
     MATRIX33.prototype.mul = function(matrix) {
-//        this.inputFilterMatrix(matrix);
+        // this.inputFilterMatrix(matrix);
         var b = matrix._data;
+//        var aClone = this.clone();
         var a = this.clone()._data;
         this._data[m11] = a[m11] * b[m11] + a[m12] * b[m21] + a[m13] * b[m31];
         this._data[m12] = a[m11] * b[m12] + a[m12] * b[m22] + a[m13] * b[m32];
@@ -290,11 +303,12 @@ define(function(require) {
         this._data[m31] = a[m31] * b[m11] + a[m32] * b[m21] + a[m33] * b[m31];
         this._data[m32] = a[m31] * b[m12] + a[m32] * b[m22] + a[m33] * b[m32];
         this._data[m33] = a[m31] * b[m13] + a[m32] * b[m23] + a[m33] * b[m33];
+//        aClone.Delete();
         return this;
     };
 
     MATRIX33.prototype.add = function(matrix) {
-//        this.inputFilterMatrix(matrix);
+        // this.inputFilterMatrix(matrix);
         this._data[m11] += matrix._date[m11];
         this._data[m12] += matrix._date[m12];
         this._data[m13] += matrix._date[m13];
@@ -308,7 +322,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.sub = function(matrix) {
-//        this.inputFilterMatrix(matrix);
+        // this.inputFilterMatrix(matrix);
         this._data[m11] -= matrix._date[m11];
         this._data[m12] -= matrix._date[m12];
         this._data[m13] -= matrix._date[m13];
@@ -337,7 +351,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.vMul = function(vector) {
-//        this.inputFilterVector(vector);
+        // this.inputFilterVector(vector);
         var r = new Vector2d();
         r.x = this._data[m11] * vector.x + this._data[m12] * vector.y
                 + this._data[m13];
@@ -355,6 +369,8 @@ define(function(require) {
 
     InputFilterMixin.call(MATRIX33.prototype);
 
+    var m = new MATRIX33();
+    m.Delete();
     ns[_ns_] = MATRIX33;
     return ns[_ns_];
 });
