@@ -75,6 +75,10 @@ define(function(require) {
         c.copyData(this);
         return c;
     };
+    
+    CANVAS.prototype.copyImage = function(image) {
+        this.context.copyImage(image.element);
+    };
 
     CANVAS.prototype.clear = function(color) {
         if (color === undefined) {

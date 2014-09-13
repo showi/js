@@ -16,6 +16,8 @@ define(function(require) {
 
     var ns = require('graphit/namespace');
     var Image = require('graphit/draw/image');
+    var SpritePack = require('graphit/draw/spritepack');
+    var eType = require('graphit/enum/type')
 
     var _ns_ = 'assetManager';
 
@@ -36,27 +38,34 @@ define(function(require) {
                 this._loading = value;
             }
         });
-        this.asset = {
-            image : {},
-        };
+        this.asset = {};
         this.loading = 0;
         this.event = document.createElement('div');
     }
 
-    MANAGER.prototype.loadImage = function(uid, src) {
+    MANAGER.prototype.loadImage = function(uid, src, fnOk, fnFail) {
         if (uid in this.asset) { throw 'UidAlreadyPresent'; }
         this.loading++;
-        new Image(this, uid, src);
+        new Image(this, uid, src, fnOk, fnFail);
+    };
+
+    MANAGER.prototype.loadSpritePack = function(uid, src, fnOk, fnFail) {
+        if (eType.spritepack in this.asset && uid in this.asset[eType.spritepack]) { throw 'UidAlreadyPresent'; }
+        this.loading++;
+        new SpritePack(this, uid, src, fnOk, fnFail);
     };
 
     MANAGER.prototype.addAsset = function(obj) {
+        if (!(obj.type in this.asset)) {
+            this.asset[obj.type] = {};
+        }
         if (obj.name in this.asset[obj.type]) { throw 'NameAlreadyRegistered'; }
-        // console.log('Add asset', obj);
         if (obj.error) {
             this._event_loaded(obj);
             console.error('Fail loading ', obj);
             return false;
         }
+        console.log('Asset added', obj);
         this.loading--;
         this.asset[obj.type][obj.name] = obj;
         return true;

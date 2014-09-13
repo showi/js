@@ -17,6 +17,8 @@ define(function(require) {
     var ns = require('graphit/namespace');
     var Texture = require('graphit/scene/texture');
     var eType = require('graphit/scene/enum/type');
+    var AssetManager = require('graphit/asset/manager');
+
     ns = ns.scene;
     var _ns_ = eType.reverse(eType.texture2d);
 
@@ -34,15 +36,33 @@ define(function(require) {
         this.height = height;
         this.format = (format === undefined)? 'RGBA32': format;
         this.linear = (linear === undefined)? true: linear;
+        this.image = undefined;
     };
     
     TEXTURE2D.prototype = Object.create(Texture.prototype);
 
     TEXTURE2D.__namespace__ = 'graphit/scene/texture/texture2d';
 
-    TEXTURE2D.prototype.loadImage = function(name) {
-        
-    
+    TEXTURE2D.prototype.loadImage = function(name, src, myOk, myFail) {
+        var that = this;
+        function fnOk(img) {
+            this.asset = img;
+            this.error = undefined;
+            that.image = img.element;
+            console.log('ok', that)
+            if (myOk !== undefined) {
+                myOk.call(that, img);
+            }
+        }
+        function fnFail(img) {
+            this.asset = undefined;
+            that.image = undefined;
+            this.error = 'Cannot load image: ' + img.src;
+            if (myFail !== undefined) {
+                myFail.call(that, img);
+            }
+        }
+        AssetManager.loadImage(name, src, fnOk, fnFail);
     };
     ns[_ns_] = TEXTURE2D;
     return ns[_ns_];

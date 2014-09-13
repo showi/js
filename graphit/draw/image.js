@@ -16,37 +16,40 @@ define(function(require) {
 
     var namespace = require('graphit/namespace');
     var ns = namespace.draw;
-    
-    var _ns_ = 'image';
+    var eType = require('graphit/enum/type');
+    var _ns_ = eType.reverse(eType.image);
     
     if (_ns_ in ns && ns[_ns_] != undefined) {
         return ns[_ns_];
     }
         
-    function IMAGE(parent, name, src) {
+    function IMAGE(parent, name, src, fnOk, fnFail) {
+        if (fnOk === undefined) fnOk = function() {};
+        if (fnFail === undefined) fnFail = function() {};
         this.__namespace__ = 'graphit/draw/Image';
         var that = this;
         this.name = name;
-        this.type = 'image';
+        this.type = eType.image;
         this.parent = parent;
         this.isLoaded = false;
-        this.error = false;
+        this.error = undefined;
         this.uid = namespace.genUID();
         this.element = document.createElement('img');
         this.element.onload = (function(element) {
             return function(e) {
-//                console.log('OnLoad', e, parent);
                 element.isLoaded = true;
-                element.error = false;
+                element.error = undefined;
                 parent.addAsset(element);
+                this.image = element;
+                fnOk.call(this, element);
             };
         }(this));
         this.element.onerror = (function(element) {
             return function(e) {
                 element.isLoaded = false;
-                element.error = true;
-//                console.log('OnLoad');
+                element.error = 'Cannot load image: ' + element.src;
                 parent.addAsset(element);
+                fnFail.call(this, element);
             };
         }(this));
         this.element.src = encodeURI(src);

@@ -112,6 +112,31 @@ define(function(require) {
         this.center.x = left + this.extents.x;
         this.center.y = top + this.extents.y;  
     };
+    
+    RECT.prototype.contains = function(point) {
+        console.log('point', point);
+        console.log('x', this.x);
+        console.log('y', this.y);
+        console.log('maxx', this.maxx);
+        console.log('maxy', this.maxy);
+        if (point.x < this.x) {
+            console.log('x min');
+            return false;
+        }
+        if (point.x > this.width) {
+            console.log('x max');
+            return false;
+        }
+        if (point.y < this.y) {
+            console.log('y min');
+            return false;
+        }
+        if (point.y > this.height) {
+            console.log('y max');
+            return false;
+        }
+        return true;
+    };
 
     RECT.prototype.toString = function() {
         var s ='<Rect ';

@@ -40,6 +40,9 @@ define(function(require) {
         return this.ctx;
     };
 
+    CONTEXT.prototype.copyImage = function(image) {
+        this.ctx.drawImage(image, 0, 0, this.width(), this.heigh());
+    }
     CONTEXT.prototype.copyData = function(src, sX, sY, width, height) {
         this.ctx.putImageData(src.ctx.getImageData(sX, sY, width, height), 0,
                               0);

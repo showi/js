@@ -23,10 +23,11 @@ define(function(require) {
 
     var CAPABILITY = new Enum({
         gameobject: 1 << 0,
-        component: 2 << 1,
-        transform: 3 << 2,
-        texture: 4 << 3,
-        texture2d: 5 << 4,
+        component: 1 << 1,
+        transform: 1 << 2,
+        texture: 1 << 3,
+        texture2d: 1 << 4,
+        sprite: 1 << 5,
     });
     CAPABILITY.__namespace__ = 'graphit/enum/capability';
 

@@ -24,8 +24,9 @@ define(function(require) {
         rect: 1 << 1,
         vector2d: 1 << 2,
         matrix33: 1 << 3,
-        
-        sceneNodeShap: 1 << 4,
+        image: 1 << 4,
+        spritepack: 1 << 5,
+        sceneNodeShap: 1 << 6,
     });
     TYPE.__namespace__ = 'graphit/enum/type';
 
