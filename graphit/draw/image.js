@@ -23,7 +23,7 @@ define(function(require) {
         return ns[_ns_];
     }
         
-    function IMAGE(parent, name, src, fnOk, fnFail) {
+    function IMAGE(parent, name, src, fnOk, fnFail, linkUid) {
         if (fnOk === undefined) fnOk = function() {};
         if (fnFail === undefined) fnFail = function() {};
         this.__namespace__ = 'graphit/draw/Image';
@@ -31,6 +31,7 @@ define(function(require) {
         this.name = name;
         this.type = eType.image;
         this.parent = parent;
+        this.linkUid = linkUid;
         this.isLoaded = false;
         this.error = undefined;
         this.uid = namespace.genUID();

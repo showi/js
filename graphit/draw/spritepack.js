@@ -41,11 +41,8 @@ define(function(require) {
             that.isLoaded = true;
             that.error = undefined;
             parent.addAsset(that);
-            console.log('loaddddd', that);
-            
             that.loadJSON(data);
             fnOk.call(that, data);
-            
         });
     };
 
@@ -67,7 +64,7 @@ define(function(require) {
                 for (var i = 0; i < pool.length; i++) {
                     var d = data[action][direction][i];
                     var name = [this.name, action, direction, i].join('-');
-                    graphit.assetManager.loadImage(name, d.path);
+                    graphit.assetManager.loadImage(name, d.path, this.uid);
                 }
             }
         }

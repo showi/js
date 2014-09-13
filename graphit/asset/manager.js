@@ -43,10 +43,10 @@ define(function(require) {
         this.event = document.createElement('div');
     }
 
-    MANAGER.prototype.loadImage = function(uid, src, fnOk, fnFail) {
+    MANAGER.prototype.loadImage = function(uid, src, fnOk, fnFail, linkUid) {
         if (uid in this.asset) { throw 'UidAlreadyPresent'; }
         this.loading++;
-        new Image(this, uid, src, fnOk, fnFail);
+        new Image(this, uid, src, fnOk, fnFail, linkUid);
     };
 
     MANAGER.prototype.loadSpritePack = function(uid, src, fnOk, fnFail) {

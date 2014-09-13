@@ -23,8 +23,10 @@ define(function(require) {
     var math = require('graphit/math');
     var sm = require('tile/sm');
     var body = jQuery('body');
-    var width = 800;
-    var height = 600;
+    var util = require('graphit/util');
+    var size = util.windowSize();
+    var width = size.x;
+    var height = size.y;
     console.log('Width/Height', width, height);
     var canvas = new Canvas({
         width : width,
