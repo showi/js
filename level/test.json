@@ -1,0 +1,328 @@
+{ "height":8,
+ "layers":[
+        {
+         "data":[305, 0, 0, 0, 0, 0, 0, 305, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 305, 305, 0, 0, 0, 0, 0, 0, 305, 305, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 305, 0, 0, 0, 0, 0, 0, 305],
+         "height":8,
+         "name":"Calque 5",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":8,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[305, 305, 305, 0, 0, 0, 0, 0, 305, 305, 305, 0, 0, 0, 0, 0, 305, 305, 305, 0, 0, 0, 0, 0, 305, 305, 305, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "name":"sub",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":false,
+         "width":8,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 35, 19, 1, 1, 1, 1, 0, 0, 35, 19, 1, 1, 1, 1, 0, 0, 35, 19, 1, 1, 1, 1, 244, 244, 47, 19, 1, 2, 2, 2, 20, 20, 20, 18, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "name":"ground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":false,
+         "width":8,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 390, 391, 408, 0, 0, 0, 0, 0, 405, 406, 407, 424, 0, 0, 0, 0, 0, 421, 422, 423, 0, 0, 0, 0, 0, 0, 0, 0, 36, 36, 36, 36, 36, 36, 36, 36, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "name":"building-down",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":false,
+         "width":8,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 358, 359, 0, 0, 0, 0, 0, 0, 373, 374, 375, 392, 0, 0, 0, 0, 0, 389, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2],
+         "height":8,
+         "name":"building-top",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":false,
+         "width":8,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":8,
+         "name":"Calque d'objets 1",
+         "objects":[
+                {
+                 "ellipse":true,
+                 "height":17,
+                 "name":"mob.orc.01",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"mob.orc",
+                 "visible":true,
+                 "width":17.6666666666667,
+                 "x":104,
+                 "y":8
+                }, 
+                {
+                 "ellipse":true,
+                 "height":17,
+                 "name":"mob.orc.01",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"mob.orc",
+                 "visible":true,
+                 "width":17.6666666666667,
+                 "x":136,
+                 "y":8
+                }, 
+                {
+                 "height":16,
+                 "name":"door.01",
+                 "properties":
+                    {
+                     "behavior":"sleep"
+                    },
+                 "rotation":0,
+                 "type":"door",
+                 "visible":true,
+                 "width":24,
+                 "x":168,
+                 "y":152
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "width":8,
+         "x":0,
+         "y":0
+        }],
+ "orientation":"isometric",
+ "properties":
+    {
+
+    },
+ "renderorder":"left-down",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/img\/tile\/grassland_tiles.png",
+         "imageheight":1344,
+         "imagewidth":1024,
+         "margin":0,
+         "name":"grassland_tiles",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "terrains":[
+                {
+                 "name":"Nouveau terrain",
+                 "tile":-1
+                }],
+         "tileheight":32,
+         "tileproperties":
+            {
+             "0":
+                {
+                 "walkable":"0.5"
+                },
+             "149":
+                {
+                 "resource":"wood"
+                },
+             "16":
+                {
+                 "walkable":"0.9"
+                },
+             "17":
+                {
+                 "walkable":"0.9"
+                },
+             "178":
+                {
+                 "type":"herb"
+                },
+             "18":
+                {
+                 "walkable":"0.9"
+                },
+             "19":
+                {
+                 "walkable":"0.9"
+                },
+             "20":
+                {
+                 "walkable":"0.9"
+                },
+             "21":
+                {
+                 "walkable":"0.9"
+                },
+             "22":
+                {
+                 "walkable":"0.9"
+                },
+             "23":
+                {
+                 "walkable":"0.9"
+                },
+             "24":
+                {
+                 "walkable":"0.9"
+                },
+             "25":
+                {
+                 "walkable":"0.9"
+                },
+             "26":
+                {
+                 "walkable":"0.9"
+                },
+             "27":
+                {
+                 "walkable":"0.9"
+                },
+             "28":
+                {
+                 "walkable":"0.9"
+                },
+             "29":
+                {
+                 "walkable":"0.9"
+                },
+             "30":
+                {
+                 "walkable":"0.9"
+                },
+             "31":
+                {
+                 "walkable":"0.9"
+                }
+            },
+         "tiles":
+            {
+             "376":
+                {
+                 "terrain":[-1, 0, 0, 0]
+                },
+             "377":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "392":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "393":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "394":
+                {
+                 "terrain":[0, -1, 0, 0]
+                },
+             "408":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "409":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "410":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "411":
+                {
+                 "terrain":[-1, -1, 0, -1]
+                },
+             "424":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "425":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "426":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "427":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "440":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "441":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "442":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "443":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "456":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "457":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "458":
+                {
+                 "terrain":[0, 0, 0, 0]
+                },
+             "459":
+                {
+                 "terrain":[0, 0, 0, -1]
+                },
+             "472":
+                {
+                 "terrain":[-1, 0, -1, -1]
+                },
+             "473":
+                {
+                 "terrain":[0, 0, -1, -1]
+                },
+             "474":
+                {
+                 "terrain":[0, 0, -1, -1]
+                },
+             "475":
+                {
+                 "terrain":[0, -1, -1, -1]
+                }
+            },
+         "tilewidth":64,
+         "transparentcolor":"#ff00ff"
+        }],
+ "tilewidth":64,
+ "version":1,
+ "width":8
+}

@@ -1,0 +1,41 @@
+{ "height":1,
+ "layers":[
+        {
+         "data":[305],
+         "height":1,
+         "name":"Calque 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":1,
+         "x":0,
+         "y":0
+        }],
+ "orientation":"isometric",
+ "properties":
+    {
+
+    },
+ "renderorder":"left-up",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/img\/tile\/grassland_tiles.png",
+         "imageheight":1344,
+         "imagewidth":1024,
+         "margin":0,
+         "name":"grassland_tiles",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":64,
+         "transparentcolor":"#ff00ff"
+        }],
+ "tilewidth":64,
+ "version":1,
+ "width":1
+}
