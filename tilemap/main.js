@@ -69,38 +69,6 @@ define(function(require) {
     }
     var renderer = new Renderer(grid);
     renderer.worldTransform = worldTransform;
-//
-//    var data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 0, 0, 1, 1, 1, 1,
-//                2, 2, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 0, 0, 1,
-//                1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0,
-//                0, ];
-//    var tiles = {
-//        0 : {
-//            fillStyle : 'grey'
-//        },
-//        1 : {
-//            fillStyle : 'green'
-//        },
-//        2 : {
-//            fillStyle : 'blue'
-//        }
-//    };
-//    for (var i = 0; i < grid.cell.length; i++) {
-//        for (var j = 0; j < grid.cell[i].tile.length; j++) {
-//
-//            var t = tiles[data[j]];
-//            if (t === undefined) {
-//                continue;
-//            }
-//            if (t.fillStyle !== undefined) {
-//                grid.cell[i].tile[j].fillStyle = t.fillStyle;
-//            }
-//        }
-//    }
-//    ctx.save();
-//    ctx.fillColor = 'white';
-//    ctx.fillRect(0, 0, width, height);
-//    ctx.restore();
     var now, elapsed,  mob;
     var startTime = Date.now();
     console.log(mobs.length);
