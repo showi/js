@@ -125,7 +125,7 @@ define(function(require) {
 //        ctx.scale(0.5, 0.5);
         renderer.draw(ctx);
         ctx.restore();
-        setTimeout(loop, 1000);
+        setTimeout(loop, 20000);
     }
     loop();
 }

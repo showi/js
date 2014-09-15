@@ -53,7 +53,7 @@ define(function(require) {
         if (!(idx in layer[layerNum].data)) { 
            return undefined
         }
-        console.log(layer[layerNum]);
+//        console.log(layer[layerNum]);
 //        throw 'plop';
         return layer[layerNum].data[idx];
         };
