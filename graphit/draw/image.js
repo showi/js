@@ -56,6 +56,17 @@ define(function(require) {
         this.element.src = encodeURI(src);
     };
 
+    IMAGE.prototype.drawTile = function(ctx, x, y, tileWidth, tileHeight) {
+        ctx.drawImage(this.element,
+                      x * tileWidth,
+                      y * tileHeight,
+                      tileWidth,
+                      tileHeight,
+                      0, 0, 
+                      tileWidth, tileHeight);
+//        throw 'plop';
+    };
+
     ns[_ns_] = IMAGE;
     return ns[_ns_];
 });

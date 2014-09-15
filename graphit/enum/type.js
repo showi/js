@@ -26,7 +26,8 @@ define(function(require) {
         matrix33: 1 << 3,
         image: 1 << 4,
         spritepack: 1 << 5,
-        sceneNodeShap: 1 << 6,
+        tileset: 1 << 6,
+        sceneNodeShap: 1 << 7,
     });
     TYPE.__namespace__ = 'graphit/enum/type';
 

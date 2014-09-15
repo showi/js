@@ -25,8 +25,8 @@ define(function(require) {
     var body = jQuery('body');
     var util = require('graphit/util');
     var size = util.windowSize();
-    var width = size.x;
-    var height = size.y;
+    var width = 800;
+    var height = 600;
     console.log('Width/Height', width, height);
     var canvas = new Canvas({
         width : width,
@@ -38,11 +38,28 @@ define(function(require) {
     // worldTransform.translateXY(width/2.5, height / 0.9);
     // worldTransform.scale(0.5, 0.5);
     console.log('WorldTransform', worldTransform._data);
-    var grid = new Grid(2, 2, 8, 8, 128, 64);
+    var grid = new Grid(1, 1, 8, 8, 128, 64);
+    grid.getJson('level/test.json', function(data) {
+        function wait(timeout) {
+            console.log('Loading', grid.loading);
+            if (grid.loading < 1) {
+                console.log('Loading finished');
+//                render();
+                console.log(data);
+                render(width, height);
+                return;
+            }
+            setTimeout(wait, timeout);
+        }
+        setTimeout(wait, 250);
+    });
+    
+ function render(width, height) {
+     console.log('rendering map');
     var ratioX = width / grid.width;
     var ratioY = height / grid.height;
     console.log('Grid', grid);
-    var numMob = 10;
+    var numMob = 0;
     var mobs = [];
     for (var i = 0; i < numMob; i++) {
         var mob = new Mob(math.randInt(0, grid.width), math
@@ -52,34 +69,34 @@ define(function(require) {
     }
     var renderer = new Renderer(grid);
     renderer.worldTransform = worldTransform;
-
-    var data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 0, 0, 1, 1, 1, 1,
-                2, 2, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 0, 0, 1,
-                1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0,
-                0, ];
-    var tiles = {
-        0 : {
-            fillStyle : 'grey'
-        },
-        1 : {
-            fillStyle : 'green'
-        },
-        2 : {
-            fillStyle : 'blue'
-        }
-    };
-    for (var i = 0; i < grid.cell.length; i++) {
-        for (var j = 0; j < grid.cell[i].tile.length; j++) {
-
-            var t = tiles[data[j]];
-            if (t === undefined) {
-                continue;
-            }
-            if (t.fillStyle !== undefined) {
-                grid.cell[i].tile[j].fillStyle = t.fillStyle;
-            }
-        }
-    }
+//
+//    var data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 0, 0, 1, 1, 1, 1,
+//                2, 2, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 0, 0, 1,
+//                1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0,
+//                0, ];
+//    var tiles = {
+//        0 : {
+//            fillStyle : 'grey'
+//        },
+//        1 : {
+//            fillStyle : 'green'
+//        },
+//        2 : {
+//            fillStyle : 'blue'
+//        }
+//    };
+//    for (var i = 0; i < grid.cell.length; i++) {
+//        for (var j = 0; j < grid.cell[i].tile.length; j++) {
+//
+//            var t = tiles[data[j]];
+//            if (t === undefined) {
+//                continue;
+//            }
+//            if (t.fillStyle !== undefined) {
+//                grid.cell[i].tile[j].fillStyle = t.fillStyle;
+//            }
+//        }
+//    }
 //    ctx.save();
 //    ctx.fillColor = 'white';
 //    ctx.fillRect(0, 0, width, height);
@@ -104,11 +121,12 @@ define(function(require) {
         ctx.save();
         ctx.fillStyle = 'white';
         ctx.fillRect(0,0, width, height);
-        ctx.translate(0, (height / 2));
-        ctx.scale(ratioX, ratioX);
+        ctx.translate(width/2, (height / 2));
+//        ctx.scale(0.5, 0.5);
         renderer.draw(ctx);
         ctx.restore();
-        setTimeout(loop, 10);
+        setTimeout(loop, 1000);
     }
     loop();
+}
 });

@@ -49,6 +49,10 @@ define(function(require) {
         new Image(this, uid, src, fnOk, fnFail, linkUid);
     };
 
+    MANAGER.prototype.getImage = function(uid) {
+        return this.asset[eType.image][uid];
+    };
+
     MANAGER.prototype.loadSpritePack = function(uid, src, fnOk, fnFail) {
         if (eType.spritepack in this.asset && uid in this.asset[eType.spritepack]) { throw 'UidAlreadyPresent'; }
         this.loading++;

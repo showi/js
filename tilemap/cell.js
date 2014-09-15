@@ -38,10 +38,25 @@ define(function(require) {
         }
     };
     
-    Cell.prototype.get = function(x, y) {
+    Cell.prototype.get = function(x, y, layerNum) {
+        if (layerNum === undefined) {
+            layerNum = 0;
+        }
         var idx = y * this.col + x;
-        return this.tile[idx];
-    };
+        var layer = this.parent.json.layers;
+        if (layer[layerNum] === undefined) {
+            return undefined;
+        }
+        if (layer[layerNum].data === undefined) {
+            return undefined;
+        }
+        if (!(idx in layer[layerNum].data)) { 
+           return undefined
+        }
+        console.log(layer[layerNum]);
+//        throw 'plop';
+        return layer[layerNum].data[idx];
+        };
 
     Cell.prototype.appendNpc = function(npc) {
         console.log('appending npc in cell', npc);
@@ -49,7 +64,7 @@ define(function(require) {
     };
     
     Cell.prototype.worldToCellCoord = function(position) {
-        
+
     };
 
     return Cell;
