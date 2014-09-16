@@ -28,8 +28,8 @@ define(function(require) {
     VECTOR2D.__namespace__ = 'graphit/math/vector2d';
         
     VECTOR2D.prototype.clone = function() {
-        return this.Create(this.x, this.y);
-//        return new VECTOR2D(this.x, this.y);
+//        return this.Create(this.x, this.y);
+        return new VECTOR2D(this.x, this.y);
     };
 
     VECTOR2D.prototype.setUp = function(x, y) {

@@ -29,7 +29,6 @@ define(function(require) {
             }
         };
         this.checkArguments = function(options, validators) {
-            console.log('Checking options', options, validators);
             var opts = {};
             for (name in options) {
                 if (!options.hasOwnProperty(name)){

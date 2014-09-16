@@ -35,20 +35,17 @@ define(function(require) {
     };
 
     GAMEOBJECT.prototype.addComponent = function(cls) {
-        console.log('cls', cls, typeof cls);
         var name = cls.name;
         var component;
         if (typeof cls === 'object') {
             component = cls;
             name = eType.reverse(component.type);
-            console.log('component', name, component);
         } else {
             component = new cls(this);
         }
         name = name.toLowerCase();
         if (name in this.component) { throw 'ComponentAlreadyAttached'; }
         this.component[name] = component;
-        console.log('Component', name, this.component[name]);
         Object.defineProperty(this, name, {
             get : function() {
                 if (!(name in this.component)) { return null; }

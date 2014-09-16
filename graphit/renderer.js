@@ -166,13 +166,13 @@ define(function(require) {
         }
     };
 
-    RENDERER.prototype.hookExec = function(name, node) {
+    RENDERER.prototype.hookExec = function(name, node, elapsed) {
         var ret;
         if (name in this) {
-            ret = this[name].call(this, node);
+            ret = this[name].call(this, node, elapsed);
         }
         if (node !== undefined && name in node) {
-            ret = node[name].call(node, this);
+            ret = node[name].call(node, this, elapsed);
         }
         return ret;
     };
@@ -275,6 +275,7 @@ define(function(require) {
                     this.hookExec('pre_render', node); //node.pre_render(this);
                     if (node.transform !== undefined) {
                         wt = node.transform.local._data;
+//                        console.log('wt', wt);
 //                        this.ctx.translate(wt[2], wt[5]);
                          this.ctx.transform(wt[0], wt[1], wt[3], wt[4],
                          wt[2],
@@ -315,11 +316,11 @@ define(function(require) {
         var child = null;
         var ret = (node.renderer === undefined)? false: true;//tree.hasCapability(node, eCap.render);
         /* PRE UPDATE */
-        this.hookExec('pre_update', node);
+        this.hookExec('pre_update', node, elapsed);
 //        this.pre_update(node, elapsed);
 //        node.pre_update(this, elapsed);
         /* UPDATE */
-       this.hookExec('update', node); // Can return directly if update fail
+       this.hookExec('update', node, elapsed); // Can return directly if update fail
 //        if (!this.update(node, elapsed)) { return ret; }
 //        node.update(this, elapsed);
         if (hasTransform) {

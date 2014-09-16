@@ -15,10 +15,6 @@ define(function(require) {
     }
     Transform.prototype = Object.create(Component.prototype);
 
-    Transform.prototype.position = function(position) {
-        return this.world.position(postion);
-    };
-
     Transform.prototype.localPosition = function(position) {
         if (this.local === undefined) { return this.world.position(position); }
         return this.local.position(position);
@@ -41,19 +37,19 @@ define(function(require) {
     };
 
     Transform.prototype.position = function(vector) {
-        return this.local.position(vector);
+        return this.world.position(vector);
     };
 
     Transform.prototype.positionX = function(x) {
-        return this.local.positionX(x);
+        return this.world.positionX(x);
     };
 
     Transform.prototype.positionY = function(y) {
-        return this.local.positionY(y);
+        return this.world.positionY(y);
     };
 
     Transform.prototype.translate = function(vector) {
-        return this.local.translate(vector);
+        return this.world.translate(vector);
     };
 
     return Transform;

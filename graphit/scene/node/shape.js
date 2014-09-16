@@ -14,22 +14,17 @@ define(function(require) {
 
     'use strict';
 
-    var eCap = require('graphit/enum/capability');
+    // var eCap = require('graphit/enum/capability');
     var scene = require('graphit/scene/util');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
     var Matrix33 = require('graphit/math/matrix33');
     var eAxis = require('graphit/enum/axis');
     var eShape = require('graphit/enum/shape');
-    var ns = require('graphit/namespace');
     var fact = require('graphit/math/factory');
     var GameObject = require('graphit/scene/gameobject');
     var TransformComponent = require('graphit/scene/component/transform');
     var ParameterMixin = require('graphit/mixin/argument');
-    ns = ns.scene.node;
-    var _ns_ = 'shape';
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var VALIDATORS = {
         kind : {
@@ -44,7 +39,6 @@ define(function(require) {
     };
 
     function SHAPE() {
-        console.log('arguments', arguments);
         this.setArguments(arguments, VALIDATORS);
         this.name = SHAPE.__namespace__;
         GameObject.call(this, arguments);
@@ -55,11 +49,9 @@ define(function(require) {
     SHAPE.prototype = Object.create(GameObject.prototype);
     ParameterMixin.call(SHAPE.prototype);
     SHAPE.__namespace__ = 'graphit/scene/node/shape';
-//    TransMixin.call(SHAPE.prototype);
 
     SHAPE.prototype.setUp = function(kind) {
         var meth = 'setUp_' + eShape.reverse(kind);
-        console.log('This', this.transform, meth);
         this.transform.positionX(this.pos.x);
         this.transform.positionY(this.pos.y);
         return this[meth]();
@@ -74,47 +66,44 @@ define(function(require) {
 
     SHAPE.prototype.setUp_rectangle = function() {
         Object.defineProperty(this, 'width', {
-            get: function() {
+            get : function() {
                 return this.u.x * 2;
             },
-            set: function(width) {
+            set : function(width) {
                 return this.u.x = width / 2;
             },
         });
         Object.defineProperty(this, 'height', {
-            get: function() {
+            get : function() {
                 return this.v.y * 2;
             },
-            set: function(height) {
+            set : function(height) {
                 return this.v.y = height / 2;
             },
         });
         this.u = new Vector2d(this.size.width / 2, 0);
         this.v = new Vector2d(0, this.size.height / 2);
     };
-    
+
     SHAPE.prototype.setUp_circle = function() {
         Object.defineProperty(this, 'width', {
-            get: function() {
+            get : function() {
                 return this.u.x * 2;
             },
-            set: function(width) {
+            set : function(width) {
                 return this.u.x = width / 2;
             },
         });
         Object.defineProperty(this, 'height', {
-            get: function() {
+            get : function() {
                 return this.u.x * 2;
             },
-            set: function(height) {
+            set : function(height) {
                 return this.u.x = height / 2;
             },
         });
         this.u = new Vector2d(this.size.width / 2, 0);
-        console.log('u', this.u);
     };
-    
 
-    ns[_ns_] = SHAPE;
-    return ns[_ns_];
+    return SHAPE;
 });

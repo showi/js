@@ -136,7 +136,6 @@ define(function(require) {
                 y : math.randInt(-dh + mh / 2, dh - mh / 2),
             },
         });
-        console.log('Renderer', this.shapeRenderer);
         node.addComponent(this.shapeRenderer);
         if (limit != 0) {
             node.fillStyle = 'red';
