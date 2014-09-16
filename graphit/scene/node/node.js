@@ -77,5 +77,5 @@ define(function(require) {
                 + '">';
     };
 
-    return node;
+    return NODE;
 });
