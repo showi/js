@@ -63,7 +63,7 @@ define(function(require) {
         if (!(obj.type in this.asset)) {
             this.asset[obj.type] = {};
         }
-        if (obj.name in this.asset[obj.type]) { throw 'NameAlreadyRegistered'; }
+        if (obj.name in this.asset[obj.type]) { console.log('NameAlreadyRegistered', obj.name); this.loading--; return true; }
         if (obj.error) {
             this._event_loaded(obj);
             console.error('Fail loading ', obj);

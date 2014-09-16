@@ -116,7 +116,7 @@ define(function(require) {
         var dtw = cell.tileWidth / 2;
         var dth = cell.tileHeight / 2;
         // console.log(tile); //tile); throw 'plop';
-        var tileset = Asset.getImage('grassland_tiles');
+        var tileset = Asset.getImage("grassland_tiles");
         // console.log(Asset.asset)
         // console.log(tileset); throw 'plop';
 

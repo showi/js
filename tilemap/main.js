@@ -38,8 +38,8 @@ define(function(require) {
     // worldTransform.translateXY(width/2.5, height / 0.9);
     // worldTransform.scale(0.5, 0.5);
     console.log('WorldTransform', worldTransform._data);
-    var grid = new Grid(1, 1, 8, 8, 128, 64);
-    grid.getJson('level/test.json', function(data) {
+    var grid = new Grid(1, 1, 16, 16, 128, 64);
+    grid.getJson('level/test2.json', function(data) {
         function wait(timeout) {
             console.log('Loading', grid.loading);
             if (grid.loading < 1) {
@@ -87,10 +87,10 @@ define(function(require) {
             mob.position.add(speed);
         }
         ctx.save();
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'black';
         ctx.fillRect(0,0, width, height);
-        ctx.translate(width/2, (height / 2));
-//        ctx.scale(0.5, 0.5);
+        ctx.translate(width/2, ratioY);
+//        ctx.scale(.5, 1.5);
         renderer.draw(ctx);
         ctx.restore();
         setTimeout(loop, 20000);
