@@ -33,6 +33,7 @@ define(function(require) {
     var mathFactory = require('graphit/math/factory');
     var Rect = require('graphit/math/rect');
     Vector2d = mathFactory.vector2d;
+    var ShapeRenderer = require('graphit/scene/node/shape/renderer');
     require('graphit/extend/jquery');
 
     var WORLD = null;
@@ -64,6 +65,7 @@ define(function(require) {
         console.log('Canvas WxH', this.canvas.width(), this.canvas.height());
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas.height() / 2);
+        this.shapeRenderer = new ShapeRenderer();
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
             compositing : {
@@ -145,7 +147,7 @@ define(function(require) {
                 y :  math.randInt(-dh + mh/2, dh - mh/2),
             },
         });
-        
+        node.addComponent(this.shapeRenderer);
         if (limit != 0) {
             node.fillStyle = 'red';
             node.zindex = 0;
@@ -223,7 +225,6 @@ define(function(require) {
                 that.wRenderer.update();
                 that.renderer.measureStart();
             }
-//            console.log(mathFactory.vector2d.StoreableStats());
             setTimeout(loop, timeout);
         }
         loop();
@@ -250,8 +251,7 @@ define(function(require) {
             ;
         };
         this.renderer.update = function(node, elapsed) {
-//            console.log('update');
-            if (tree.hasCapability(node, eCap.transform)) {
+            if (node.transform !== undefined) {
                 if (node.timeout !== undefined) {
                         var newSize = this.elapsedTime*0.01;
                         if ((node.width - newSize) > 0.01) {
@@ -263,45 +263,20 @@ define(function(require) {
                             return false;
                         }
                 }
-                var minx, miny, maxx, maxy, width, height, dw, dh, ndw, ndh, p;
+                var ndw, ndh, p;
                 ndw = node.width / 2;
                 ndh = node.height / 2;
                 var v = node.velocity.clone().smul(elapsed);
-
                 var speed = node.orientation.clone().mul(v);
-//                if (speed.x == Infinity || speed.y == Infinity) {
-//                    tree.setCapability(node, eCap.prune);
-//                    tree.unsetCapability(node, eCap.render);
-//                    that.createNode(this.root, 0);
-//                    return false;
-//                }
-                p = node.getLocalTransform().position();
-//                console.log('position', p, WORLD.x, WORLD.y);
-//                if (1) {
-//                    width = that.canvas.width();
-//                    height = that.canvas.height();
-//                    dw = width / 2;
-//                    dh = height /2;
-//                    minx = -dw + ndw;
-//                    maxx =  dw - ndw;
-//                    miny = -dh + ndh;
-//                    maxy = dh - ndh;
-//                }
+                p = node.transform.local.position();
                 p.add(speed);
-//                var px = p.x + ndw;
-//                var py = p.y + ndh;
-//                console.log(WORLD.width, WORLD.height, WORLD.x, WORLD.y, ndw, ndh);
                 if (p.x <= (WORLD.x + ndw) || (p.x + ndw) >= WORLD.width) {
                     node.orientation.inverseX();
                 }
                 if (p.y <= (WORLD.y + ndh) || (p.y + ndh) >= WORLD.height) {
                     node.orientation.inverseY();
                 }
-//                console.log('speed', speed);
                 node.transform.translate(speed);
-//               console.log('x/y', node.position(), 'position', p);
-//                speed.Delete();
-//                v.Delete();
             }
             return true;
         };
@@ -318,7 +293,6 @@ define(function(require) {
         drawTick();
         function loop() {
             that.renderer.step();
-//            mathFactory.matrix33.ClearCache();
             setTimeout(loop, that.timeout);
         }
         loop();
