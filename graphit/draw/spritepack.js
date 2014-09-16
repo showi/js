@@ -62,9 +62,8 @@ define(function(require) {
                     graphit.assetManager.loadImage(name, d.path, this.uid);
                 }
             }
-        }
-        
-    }
-    ns[_ns_] = SPRITEPACK;
-    return ns[_ns_];
+        }  
+    };
+
+    return SPRITEPACK;
 });

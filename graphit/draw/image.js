@@ -14,12 +14,15 @@ define(function(require) {
 
     'use strict';
 
+    var namespace = require('graphit/namespace');
     var eType = require('graphit/enum/type');
-        
+
     function IMAGE(parent, name, src, fnOk, fnFail, linkUid) {
         console.log('new Image', parent, name, src);
-        if (fnOk === undefined) fnOk = function() {};
-        if (fnFail === undefined) fnFail = function() {};
+        if (fnOk === undefined) fnOk = function() {
+        };
+        if (fnFail === undefined) fnFail = function() {
+        };
         this.__namespace__ = 'graphit/draw/Image';
         var that = this;
         this.name = name;
@@ -51,15 +54,9 @@ define(function(require) {
     };
 
     IMAGE.prototype.drawTile = function(ctx, x, y, tileWidth, tileHeight) {
-        ctx.drawImage(this.element,
-                      x * tileWidth,
-                      y * tileHeight,
-                      tileWidth,
-                      tileHeight,
-                      0, 0, 
-                      tileWidth, tileHeight);
+        ctx.drawImage(this.element, x * tileWidth, y * tileHeight, tileWidth,
+                      tileHeight, 0, 0, tileWidth, tileHeight);
     };
 
-    ns[_ns_] = IMAGE;
-    return ns[_ns_];
+    return IMAGE;
 });

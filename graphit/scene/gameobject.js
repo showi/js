@@ -20,14 +20,21 @@ define(function(require) {
     var util = require('graphit/scene/util');
     var eCap = require('graphit/enum/capability');
     var eType = require('graphit/scene/enum/type');
+    var Dlist = require('graphit/datatype/dlist');
 
     function GAMEOBJECT() {
         this.type = eType.gameobject;
         BaseObject.apply(this, arguments);
         this.component = {};
+        this.child = new Dlist();
     };
     GAMEOBJECT.prototype = Object.create(BaseObject.prototype);
     GAMEOBJECT.__namespace__ = 'graphit/scene/gameobject';
+
+    GAMEOBJECT.prototype.appendChild = function(child) {
+        child.parent = this;
+        this.child.append(child);
+    };
 
     GAMEOBJECT.prototype.getComponent = function(name) {
         if (name in this.component) { return this.component[name]; }
