@@ -124,12 +124,11 @@ define(function(require) {
         var dh = height / 2;
         var mw = dw * this.ratio;
         var mh = dh * this.ratio;
-        // log('w/h', width, height, 'dw/dh', dw, dh, 'mw/mh', mw, mh);
         var node = new ShapeNode({
             kind : math.choice([eShape.circle]),
             size : {
-                width : 0.1, //math.randInt(5, mw),
-                height : 0.1, //math.randInt(5, mh),
+                width : 0.1,
+                height : 0.1,
             },
             pos : {
                 x : math.randInt(-dw + mw / 2, dw - mw / 2),
@@ -249,33 +248,20 @@ define(function(require) {
                 var v = node.velocity.clone().smul(elapsed);
                 var speed = node.orientation.clone().mul(v);
                 p = node.transform.position();
-//                if (node.parent !== undefined
-//                        && tree.hasCapability(node.parent, eCap.transform)) {
-//                    width = node.parent.width;
-//                    height = node.parent.height;
-//                    dw = width / 2;
-//                    dh = height / 2;
-//                    p = node.parent.worldTransform.position();
-//                    minx = p.x + -dw + ndw;
-//                    maxx = p.x + dw - ndw;
-//                    miny = p.y - dh + ndh;
-//                    maxy = p.y + dh - ndh;
-//                } else {
-                    width = that.canvas.width();
-                    height = that.canvas.height();
-                    dw = width / 2;
-                    dh = height / 2;
-                    minx = -dw + ndw;
-                    maxx = dw - ndw;
-                    miny = -dh + ndh;
-                    maxy = dh - ndh;
-//                }
+                width = that.canvas.width();
+                height = that.canvas.height();
+                dw = width / 2;
+                dh = height / 2;
+                minx = -dw + ndw;
+                maxx = dw - ndw;
+                miny = -dh + ndh;
+                maxy = dh - ndh;
                 if (node.timeout < this.startTime) {
                     node.timeout = this.startTime + 10;
                     var newSize = (this.elapsedTime / 10);
                     var newBorn = false;
                     if (node.grow) {
-                        if ((node.width + newSize) < maxx/3) {
+                        if ((node.width + newSize) < maxx / 3) {
                             node.width += newSize;
                         } else {
                             newBorn = true;
@@ -295,7 +281,8 @@ define(function(require) {
                         node.x = math.randFloat(-minx, maxx);
                         node.y = math.randFloat(-miny, maxy);
                         node.fillStyle = tool.randomColor();
-                        node.velocity.randomize().normalize().smul(math.randFloat(0.1, 0.5));
+                        node.velocity.randomize().normalize()
+                                .smul(math.randFloat(0.1, 0.5));
                         node.timeout = this.startTime + math.randInt(10, 1000);
                     }
                 }
