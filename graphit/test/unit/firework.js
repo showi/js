@@ -46,7 +46,7 @@ define(function(require) {
     }
 
     MOUSE.prototype.setUp = function(size, ratio) {
-        this.numRectangle = 1;
+        this.numRectangle = 10;
         this.numChild = 0;
         this.size = size;
         this.ratio = 0.8;
@@ -128,8 +128,8 @@ define(function(require) {
         var node = new ShapeNode({
             kind : math.choice([eShape.circle]),
             size : {
-                width : math.randInt(5, mw),
-                height : math.randInt(5, mh),
+                width : 0.1, //math.randInt(5, mw),
+                height : 0.1, //math.randInt(5, mh),
             },
             pos : {
                 x : math.randInt(-dw + mw / 2, dw - mw / 2),
@@ -270,27 +270,30 @@ define(function(require) {
                     miny = -dh + ndh;
                     maxy = dh - ndh;
                 }
-                if (node.timeout > this.startTime) {
-                    node.timeout = this.startTime + math.randInt(0, 1000);
+//                console.log('startTime', this.startTime);
+                if (node.timeout < this.startTime) {
+//                    console.log('timeout', node.timeout, this.startTime);
+                    node.timeout = this.startTime + math.randInt(1, 10);
                     var newSize = (this.elapsedTime / 10);
                     var newBorn = false;
                     if (node.grow) {
-                        if ((node.width + newSize) < maxx/2) {
+                        if ((node.width + newSize) < maxx/3) {
                             node.width += newSize;
                         } else {
                             newBorn = true;
-                            node.grow = true;
+                            node.grow = false;
                         }
                     } else {
                         if ((node.height - newSize) > 1) {
                             node.width -= newSize;
                         } else {
                             newBorn = true;
-                            node.grow = false;
+                            node.grow = true;
                         }
                     }
                     if (newBorn) {
-                        node.width = 1;//math.randFloat(0, maxx);
+                        node.width = 0.1;//math.randFloat(0, maxx);
+                        node.grow = true;
                         node.x = math.randFloat(-minx, maxx);
                         node.y = math.randFloat(-miny, maxy);
                         node.fillStyle = tool.randomColor();
