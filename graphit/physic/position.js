@@ -14,8 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var util = require('graphit/util');
-    var MixinParameter = require('../mixin/parameter');
+    var ArgumentMixin = require('../mixin/argument');
 
     var VALIDATORS = {
         x : {
@@ -29,8 +28,7 @@ define(function(require) {
     };
 
     function POSITION(options) {
-        this.__MODULE__ = 'graphit/physic/Position';
-        this.setParameters(options, VALIDATORS);
+        this.setArguments(options, VALIDATORS);
     };
-    util.injectMixin(POSITION, MixinParameter);
+    ArgumentMixin.call(POSITION.prototype);
 });

@@ -2,12 +2,26 @@ define(function(require) {
 
     require('graphit/scene/include');
     var Manager = require('graphit/asset/manager');
+    var eType = require('graphit/enum/type');
 
-    function T_GAMEOBJECT() {
-        this.__namespace__ = 'graphit/test/array';
+    function log() {
+        console.log.apply(console, arguments);
     }
 
-    T_GAMEOBJECT.prototype.run = function() {
+    function T_ASSETMANAGER() {
+        ;
+    }
+    T_ASSETMANAGER.__namespace = 'graphit/test/array';
+
+    T_ASSETMANAGER.prototype.run = function() {
+        log('Loading Tileset');
+        var url = 'img/tile/iso-64x64-outside.png';
+        Manager.load(eType.tileset, url, url, function(data) {
+            console.log('Tileset loaded', url, data, this);
+        });
+    };
+
+    T_ASSETMANAGER.prototype.no_test_spritepack = function() {
         var actions = ['attack', 'been hit', 'paused', 'running', 'talking',
                        'tipping over', 'walking'];
         var action;
@@ -48,5 +62,5 @@ define(function(require) {
         }
     };
 
-    return new T_GAMEOBJECT();
+    return new T_ASSETMANAGER();
 });

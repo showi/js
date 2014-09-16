@@ -16,6 +16,7 @@ define(function(require) {
 
     var Vector2d = require('graphit/math/vector2d');
     var Asset = require('graphit/asset/manager');
+    var eType = require('graphit/enum/type');
 
     function Renderer(grid) {
         this.grid = grid;
@@ -102,33 +103,16 @@ define(function(require) {
     };
     Renderer.prototype.gridCoordinate = function(px, py, diag) {
         var r = 2;
-        // var xi = Math.floor(px/diag + r*py/diag);
-        // var yi = Math.floor(r*py/diag - px/diag);
         var xi = px / diag + r * py / diag;
         var yi = r * py / diag - px / diag;
         return new Vector2d(xi, yi);
     };
 
     Renderer.prototype.drawTile_ground = function(ctx, x, y, cell) {
-//        console.log('X/Y', x, y);
         this.countR++;
-//        if (this.countR > 3) throw "PLOP";
         var dtw = cell.tileWidth / 2;
         var dth = cell.tileHeight / 2;
-        // console.log(tile); //tile); throw 'plop';
-        var tileset = Asset.getImage("grassland_tiles");
-        // console.log(Asset.asset)
-        // console.log(tileset); throw 'plop';
-
-        // console.log('---- ---- ----', x, y, tileset);
-        // console.logr(tileset.image, x*this.grid.tileWidth,
-        // y*this.grid.tileHeight, this.grid.tileWidth, this.grid.tileHeight);
-        // y = this.grid.tileWidth ;
-        // x= tile % this.grid.tileWidth;
-        // x = cell.get(x,y) / this.grid.tileWidth;
-
-        // console.log('dtw/dth', dtw, dth);
-
+        var tileset = Asset.get(eType.image, this.grid.json.tilesets[0].name);
         var xLocal = (x * dtw) - (y * dtw);
         var yLocal = (x * dth) + (y * dth);
         ctx.save();
@@ -137,18 +121,15 @@ define(function(require) {
             var index = cell.get(x, y, il);
             if (index === undefined || index == 0) continue;
             index--;
-            var tW = tileset.element.width / this.grid.tileWidth;
-            var tH = tileset.element.height / this.grid.tileHeight;
+            var tW = tileset.width / this.grid.tileWidth;
+            var tH = tileset.height / this.grid.tileHeight;
             // console.log('cell', c); throw 'plop';
             var yTile = Math.floor(index / tW);
             var xTile = index % tW;
 
             tileset.drawTile(ctx, xTile, yTile, this.grid.tileWidth,
                              this.grid.tileHeight);
-//            console.log('tw/th', tW, tH, 'index', index, xTile, yTile, 'tile W/H', this.grid.tileWidth,
-//                        this.grid.tileHeight);
         }
-//         throw 'pouet';
         // ctx.beginPath();
         // ctx.moveTo(64, 32);
         // ctx.lineTo(128, 64);

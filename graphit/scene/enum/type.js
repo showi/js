@@ -14,12 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
     var Enum = require('graphit/enum');
-    ns = ns.scene.enum;
-    var _ns_ = 'type';
-    console.log('namespace', ns);
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var CAPABILITY = new Enum({
         gameobject: 1 << 0,
@@ -28,9 +23,8 @@ define(function(require) {
         texture: 1 << 3,
         texture2d: 1 << 4,
         sprite: 1 << 5,
+        renderer: 1 << 6,
     });
     CAPABILITY.__namespace__ = 'graphit/enum/capability';
-
-    ns[_ns_] = CAPABILITY;
-    return ns[_ns_];
+    return CAPABILITY;
 });

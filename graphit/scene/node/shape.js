@@ -14,10 +14,10 @@ define(function(require) {
 
     'use strict';
 
-    var Node = require('graphit/scene/node/node');
+//    var Node = require('graphit/scene/node/node');
     var eCap = require('graphit/enum/capability');
     var scene = require('graphit/scene/util');
-    var TransMixin = require('graphit/scene/mixin/transform');
+//    var TransMixin = require('graphit/scenes/mixin/transform');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
     var Matrix33 = require('graphit/math/matrix33');
@@ -25,6 +25,9 @@ define(function(require) {
     var eShape = require('graphit/enum/shape');
     var ns = require('graphit/namespace');
     var fact = require('graphit/math/namespace');
+    var GameObject = require('graphit/scene/gameobject');
+    var TransformComponent = require('graphit/scene/component/transform');
+    var ParameterMixin = require('graphit/mixin/argument');
     ns = ns.scene.node;
     var _ns_ = 'shape';
 
@@ -43,21 +46,22 @@ define(function(require) {
     };
 
     function SHAPE() {
-        Node.call(this, arguments);
-        this.setParameters(arguments, VALIDATORS);
-        this.transform = fact.matrix33.Create();
-        this.worldTransform = fact.matrix33.Create();
-        scene.setCapability(this, eCap.render);
-        scene.setCapability(this, eCap.draw);
-        scene.setCapability(this, eCap.transform);
+        console.log('arguments', arguments);
+        this.setArguments(arguments, VALIDATORS);
+        this.name = SHAPE.__namespace__;
+        GameObject.call(this, arguments);
+        this.addComponent(TransformComponent);
         this.setUp(this.kind);
     };
-    SHAPE.prototype = Object.create(Node.prototype);
+
+    SHAPE.prototype = Object.create(GameObject.prototype);
+    ParameterMixin.call(SHAPE.prototype);
     SHAPE.__namespace__ = 'graphit/scene/node/shape';
-    TransMixin.call(SHAPE.prototype);
+//    TransMixin.call(SHAPE.prototype);
 
     SHAPE.prototype.setUp = function(kind) {
         var meth = 'setUp_' + eShape.reverse(kind);
+        console.log('This', this.transform, meth);
         this.transform.positionX(this.pos.x);
         this.transform.positionY(this.pos.y);
         return this[meth]();
@@ -109,34 +113,9 @@ define(function(require) {
             },
         });
         this.u = new Vector2d(this.size.width / 2, 0);
+        console.log('u', this.u);
     };
     
-    SHAPE.prototype.draw = function(renderer) {
-        var meth = 'draw_' + eShape.reverse(this.kind);
-        return this[meth](renderer);
-    };
-    SHAPE.prototype.render = function(renderer) {
-        return this.draw(renderer);
-    };
-    SHAPE.prototype.draw_line = function(renderer) {
-        var dSize = this.size / 2;
-        shape.line(renderer.ctx, -dSize, 0, dSize, 0);
-    };
-
-    SHAPE.prototype.draw_circle = function(renderer) {
-        shape.circle(renderer.ctx, 0, 0, this.u.x);
-    };
-
-    SHAPE.prototype.draw_rectangle = function(renderer) {
-        if (this.fillStyle !== undefined) {
-            renderer.ctx
-                .fillRect(-this.u.x, -this.v.y, this.u.x * 2, this.v.y * 2);
-        }
-        if (this.strokeStyle !== undefined) {
-            renderer.ctx
-            .strokeRect(-this.u.x, -this.v.y, this.u.x * 2, this.v.y * 2);
-        }
-    };
 
     ns[_ns_] = SHAPE;
     return ns[_ns_];

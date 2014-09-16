@@ -18,17 +18,18 @@ define(function(require) {
     var util = require('graphit/util');
 
     return function() {
-        this.setParameters = function(options, validators) {
+        this.setArguments = function(options, validators) {
             if (options === undefined) { return; }
             if (options.lengtht < 2) { return; }
             var opts = options[0];
             if (opts === undefined) { return; }
-            opts = this.checkParameters(opts, validators);
+            opts = this.checkArguments(opts, validators);
             for (var key in opts) {
                 this[key] = opts[key];
             }
         };
-        this.checkParameters = function(options, validators) {
+        this.checkArguments = function(options, validators) {
+            console.log('Checking options', options, validators);
             var opts = {};
             for (name in options) {
                 if (!options.hasOwnProperty(name)){

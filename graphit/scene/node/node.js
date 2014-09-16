@@ -17,7 +17,7 @@ define(function(require) {
     var util = require('graphit/util');
     var namespace = require('graphit/namespace');
     var Dlist = require('graphit/datatype/dlist');
-    var ParameterMixin = require('graphit/mixin/parameter');
+    var ArgumentMixin = require('graphit/mixin/argument');
     var RenderableMixin = require('graphit/scene/mixin/renderable');
 
     var ns = namespace.scene.node;
@@ -37,13 +37,13 @@ define(function(require) {
     };
 
     function NODE() {
-        this.setParameters(arguments, VALIDATORS);
+        this.setArguments(arguments, VALIDATORS);
         this.uid = namespace.genUID();
         this.child = new Dlist();
         this.capability = 0;
     };
     NODE.__namespace__ = 'graphit/scene/node/node';
-    ParameterMixin.call(NODE.prototype);
+    ArgumentMixin.call(NODE.prototype);
     RenderableMixin.call(NODE.prototype);
 
     NODE.prototype.appendChild = function(child) {

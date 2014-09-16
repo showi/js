@@ -20,7 +20,7 @@ define(function(require) {
     var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
     var Context = require('../draw/context');
     var util = require('graphit/util');
-    var MixinParameter = require('../mixin/parameter');
+    var ArgumentMixin = require('../mixin/argument');
 
     if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
@@ -39,12 +39,12 @@ define(function(require) {
     };
 
     function CANVAS(options) {
-        this.setParameters(options, VALIDATORS);
+        this.setArguments(options, VALIDATORS);
         this.element = null;
         this.context = null;
         this._newContext(options.width, options.height, options.id);
     };
-
+    ArgumentMixin.call(CANVAS.prototype);
     CANVAS.__namespace__ = 'graphit/draw/canvas';
 
     CANVAS.prototype._newContext = function(width, height, id) {
@@ -279,7 +279,6 @@ define(function(require) {
         }
         return this.element.height;
     };
-    MixinParameter.call(CANVAS.prototype);
 
     ns[_ns_] = CANVAS;
     return ns[_ns_];

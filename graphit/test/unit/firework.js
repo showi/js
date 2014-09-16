@@ -30,6 +30,7 @@ define(function(require) {
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
     var math = require('graphit/math');
+    var ShapeRenderer = require('graphit/scene/node/shape/renderer');
 
     require('graphit/extend/jquery');
 
@@ -58,6 +59,7 @@ define(function(require) {
         this.screenTransform = new Matrix33();
         this.screenTransform.translateXY(this.canvas.width() / 2, this.canvas
                 .height() / 2);
+        this.shapeRenderer = new ShapeRenderer();
         this.renderer = new Renderer({
             ctx : this.buffer.back.getCtx(),
             compositing : {
@@ -134,7 +136,8 @@ define(function(require) {
                 y : math.randInt(-dh + mh / 2, dh - mh / 2),
             },
         });
-
+        console.log('Renderer', this.shapeRenderer);
+        node.addComponent(this.shapeRenderer);
         if (limit != 0) {
             node.fillStyle = 'red';
             node.zindex = 0;
@@ -240,8 +243,7 @@ define(function(require) {
             ;
         };
         this.renderer.update = function(node, elapsed) {
-            if (tree.hasCapability(node, eCap.transform)) {
-
+            if (node.transform !== undefined) {
                 var minx, miny, maxx, maxy, width, heith, dw, dh, ndw, ndh, p;
                 ndw = node.width / 2
                 ndh = node.height / 2;

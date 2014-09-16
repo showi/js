@@ -15,7 +15,7 @@ define(function(require) {
     'use strict';
 
     var util = require('graphit/util');    
-    var MixinParameter = require('../mixin/parameter');
+    var MixinParameter = require('../mixin/argument');
     var Context = require('../draw/context');
     var MissingParameterException = require('graphit/exception/MissingParameter');
     
@@ -31,7 +31,7 @@ define(function(require) {
     function LAYER(options) {
         this.__namespace__ = 'graphit/draw/layer';
         try {
-            this.setParameters(options, VALIDATORS);
+            this.setArguments(options, VALIDATORS);
         } catch (e) {
             console.error(e);
             throw e;

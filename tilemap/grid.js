@@ -19,6 +19,10 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var Asset = require('graphit/asset/manager');
 
+    function log() {
+        console.log.apply(console, arguments);
+    }
+
     function Grid(col, row, cellCol, cellRow, tileWidth, tileHeight) {
         this.setUp(col, row, cellCol, cellRow, tileWidth, tileHeight);
     }
@@ -46,20 +50,23 @@ define(function(require) {
     };
 
     Grid.prototype.loadJson = function(data) {
-        this.col = this.row = 1
-        this.cellCol = data.width;
-        this.cellRow = data.height;
-        this.tileHeight = data.tileheight;
-        this.tileWidth = data.tilewidth;
-        this.cellWidth = this.col * this.tileWidth;
-        this.cellHeight = this.row * this.tileHeight;
+        this.loading = 0;
+        this.json = data;
+        log('>>>>> loadJson', this.json);
+        this.setUp(1, 1, data.width, data.height, data.tilewidth, data.tileheight);
+//        this.col = this.row = 1
+//        this.cellCol = data.width;
+//        this.cellRow = data.height;
+//        this.tileHeight = data.tileheight;
+//        this.tileWidth = data.tilewidth;
+//        this.cellWidth = this.col * this.tileWidth;
+//        this.cellHeight = this.row * this.tileHeight;
         this.version = data.version;
         this.orientation = data.orientation;
-        this.width = data.width * data.tilewidth;
-        this.height = data.height * data.tileheight;
-        this.rect = new Rect(0, 0, this.width, this.height);
-        this.json = data;
-        this.loading = 0;
+//        this.width = data.width * data.tilewidth;
+//        this.height = data.height * data.tileheight;
+//        this.rect = new Rect(0, 0, this.width, this.height);
+
         this.loadTileSets(this.json.tilesets);
         this.cell = [];
         for (var i = 0; i < (this.col * this.row); i++) {
@@ -77,8 +84,9 @@ define(function(require) {
         this.loading++;
         for (i = 0; i < tilesets.length, tileset = tilesets[i]; i++) {
             var url = tileset.image.slice(3, tileset.image.length);
-            console.log(i, 'Loading tilesets', url);
-            Asset.loadImage(tileset.name, url, function() {
+            console.log(i, 'Loading tilesets', tileset.name, url, tileset);
+            Asset.loadTileset(tileset.name, url, function() {
+                this.json = tileset;
                 that.loading--;
             });
         }

@@ -16,7 +16,7 @@ define(function(require) {
 
     var ns = require('graphit/namespace');
     var util = require('graphit/util');
-    var ParameterMixin = require('graphit/mixin/parameter');
+    var ArgumentMixin = require('graphit/mixin/argument');
     var RenderableMixin = require('graphit/scene/mixin/renderable');
     var tree = require('graphit/scene/util');
     var eCap = require('graphit/enum/capability');
@@ -68,7 +68,7 @@ define(function(require) {
         });
         this.now = Date.now();
         this.uid = util.genUID();
-        this.setParameters(arguments, VALIDATOR);
+        this.setArguments(arguments, VALIDATOR);
         this.startTime = Date.now();
         this.endTime = null;
         this.skipped = 0;
@@ -107,7 +107,7 @@ define(function(require) {
         this.setCtx(this.ctx);
     }
     RENDERER.__namespace__ = 'graphit/renderer';
-    ParameterMixin.call(RENDERER.prototype);
+    ArgumentMixin.call(RENDERER.prototype);
     RenderableMixin.call(RENDERER.prototype);
 
     RENDERER.prototype.setCtx = function(ctx) {
@@ -167,12 +167,14 @@ define(function(require) {
     };
 
     RENDERER.prototype.hookExec = function(name, node) {
+        var ret;
         if (name in this) {
-            this[name].call(this, node);
+            ret = this[name].call(this, node);
         }
         if (node !== undefined && name in node) {
-            node[name].call(node, this);
+            ret = node[name].call(node, this);
         }
+        return ret;
     };
 
     RENDERER.prototype.ups = function() {
@@ -242,6 +244,7 @@ define(function(require) {
             util.emptyArray(this.transforms);
             this.pushTransform(this.worldTransform);
             if (this.render_node(this.root, this.elapsedTime)) {
+                console.log('push object into layer');
                 this.layer.append(this.root);
             }
             this.popTransform();
@@ -269,17 +272,19 @@ define(function(require) {
                 for (nidx = 0; nidx < layer.length, node = layer[nidx]; nidx++) {
                     this.pre_render(node);
                     this.ctx.save();
-                    node.pre_render(this);
-                    if (tree.hasCapability(node, eCap.transform)) {
-                        wt = node.getLocalTransform()._data;
+                    this.hookExec('pre_render', node); //node.pre_render(this);
+                    if (node.transform !== undefined) {
+                        wt = node.transform.local._data;
 //                        this.ctx.translate(wt[2], wt[5]);
                          this.ctx.transform(wt[0], wt[1], wt[3], wt[4],
                          wt[2],
                          wt[5]);
                     }
                     this.apply_node_context(node);
-                    this.render(node);
-                    node.render(this);
+//                    this.hookExec('render', node);
+                    node.renderer.draw(this, node);
+//                    this.render(node);
+//                    node.render(this);
                     if (this.ctx.fillStyle) {
                         this.ctx.fill();
                     }
@@ -288,7 +293,9 @@ define(function(require) {
                     }
                     this.post_render(node);
                     this.ctx.restore();
-                    node.post_render(this);
+                    if (node.post_render !== undefined) {
+                        node.post_render(this);
+                    }
                 }
             };
             this.draw_end();
@@ -304,21 +311,27 @@ define(function(require) {
     };
 
     RENDERER.prototype.render_node = function(node, elapsed) {
+        var hasTransform = (node.transform === undefined)? false: true;
         var child = null;
-        var ret = tree.hasCapability(node, eCap.render);
+        var ret = (node.renderer === undefined)? false: true;//tree.hasCapability(node, eCap.render);
         /* PRE UPDATE */
-        this.pre_update(node, elapsed);
-        node.pre_update(this, elapsed);
+        this.hookExec('pre_update', node);
+//        this.pre_update(node, elapsed);
+//        node.pre_update(this, elapsed);
         /* UPDATE */
-        if (!this.update(node, elapsed)) { return ret; }
-        node.update(this, elapsed);
-        if (tree.hasCapability(node, eCap.transform)) {
+       this.hookExec('update', node); // Can return directly if update fail
+//        if (!this.update(node, elapsed)) { return ret; }
+//        node.update(this, elapsed);
+        if (hasTransform) {
+//        if (tree.hasCapability(node, eCap.transform)) {
             this.pushTransform(this.transform);
-            node.applyLocalTransform(this.transform);//.clone();
+            node.transform.applyLocalTransform(this.transform);
+//            node.applyLocalTransform(this.transform);//.clone();
         }
         /* POSTUPDATE */
-        this.post_update(node, elapsed);
-        node.post_update(this, elapsed);
+        this.hookExec('post_update', node, elapsed);
+//        this.post_update(node, elapsed);
+//        node.post_update(this, elapsed);
         if (node.child !== undefined) {
             /* RENDERING CHILD */
             child = node.child.first;
@@ -334,8 +347,7 @@ define(function(require) {
             }
        
         }
-        /* TRANSFORM POP */
-        if (tree.hasCapability(node, eCap.transform)) {
+        if (hasTransform) {
             this.popTransform();
         }
         /* TRUE if Drawable */

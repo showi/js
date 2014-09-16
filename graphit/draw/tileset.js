@@ -18,17 +18,10 @@ define(function(require) {
     var ns = namespace.draw;
     var eType = require('graphit/enum/type');
     var Image = require('graphit/draw/image');
-                        
-    var _ns_ = eType.reverse(eType.spritepack);
 
-    if (_ns_ in ns && ns[_ns_] != undefined) { return ns[_ns_]; }
-
-    function TILESET(parent, name, src, fnOk, fnFail) {
-        if (fnOk === undefined) fnOk = function() {
-        };
-        if (fnFail === undefined) fnFail = function() {
-        };
-        this.__namespace__ = 'graphit/draw/spritepack';
+    function TILESET(parent, name, url, fnOk, fnFail) {
+        if (parent === undefined) { throw 'NoParent'; }
+        if (name === undefined) { throw 'NoName'; }
         var that = this;
         this.name = name;
         this.type = eType.tileset;
@@ -36,40 +29,32 @@ define(function(require) {
         this.isLoaded = false;
         this.error = undefined;
         this.uid = namespace.genUID();
-
-        jQuery.getJSON(src, function(data) {
+        this.url = url;
+        function loadOk(data) {
+            console.log('Tileset loaded', this.toString());
             that.isLoaded = true;
-            that.error = undefined;
-            parent.addAsset(that);
-            that.loadJSON(data);
             fnOk.call(that, data);
-        });
+        }
+        function loadFail(data) {
+            console.log('Failed to load', this.toString());
+            this.isLoaded = false;
+            fFail.call(that, data);
+        }
+        this.parent.loadImage(name, url, loadOk, loadFail);
+    };
+    TILESET.__namespace__ = 'graphit/draw/tileset';
+
+    TILESET.prototype.toString = function() {
+        var s = '<tileset';
+        for (var name in this) {
+            if (!this.hasOwnKeyProperty(name)) {
+                console.log('skipping key', name);
+                continue;
+            }
+            s += name + '="'+this[name]+'"';
+        }
+        return s;
     };
 
-    TILESET.prototype.loadJSON = function(data) {
-        this.json = data;
-        if (!('animationPack' in data)) {
-            throw 'NoAnimationPack'; 
-        }
-        data = data['animationPack'];
-        if (!(this.name in data)) {
-            throw 'NoRequiredName';
-        }
-        data = data[this.name];
-        var pool;
-        for(var action in data) {
-            for (var direction in data[action]) {
-                console.log('pool', pool);
-                pool = data[action][direction];
-                for (var i = 0; i < pool.length; i++) {
-                    var d = data[action][direction][i];
-                    var name = [this.name, action, direction, i].join('-');
-                    graphit.assetManager.loadImage(name, d.path, this.uid);
-                }
-            }
-        }
-        
-    }
-    ns[_ns_] = TILESET;
-    return ns[_ns_];
+    return TILESET;
 });

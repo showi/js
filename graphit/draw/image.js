@@ -24,6 +24,7 @@ define(function(require) {
     }
         
     function IMAGE(parent, name, src, fnOk, fnFail, linkUid) {
+        console.log('new Image', parent, name, src);
         if (fnOk === undefined) fnOk = function() {};
         if (fnFail === undefined) fnFail = function() {};
         this.__namespace__ = 'graphit/draw/Image';
@@ -42,7 +43,7 @@ define(function(require) {
                 element.error = undefined;
                 parent.addAsset(element);
                 this.image = element;
-                fnOk.call(this, element);
+                fnOk.call(that, element);
             };
         }(this));
         this.element.onerror = (function(element) {
@@ -50,7 +51,7 @@ define(function(require) {
                 element.isLoaded = false;
                 element.error = 'Cannot load image: ' + element.src;
                 parent.addAsset(element);
-                fnFail.call(this, element);
+                fnFail.call(that, element);
             };
         }(this));
         this.element.src = encodeURI(src);
@@ -64,7 +65,6 @@ define(function(require) {
                       tileHeight,
                       0, 0, 
                       tileWidth, tileHeight);
-//        throw 'plop';
     };
 
     ns[_ns_] = IMAGE;

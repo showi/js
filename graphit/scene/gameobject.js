@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
@@ -23,12 +23,6 @@ define(function(require) {
     var eCap = require('graphit/enum/capability');
     var eType = require('graphit/scene/enum/type');
 
-    var _ns_ = 'gameobject';
-
-    if (_ns_ in ns && ns[_ns_] != undefined) {
-        return ns[_ns_];
-    }
-
     function GAMEOBJECT() {
         this.type = eType.gameobject;
         BaseObject.apply(this, arguments);
@@ -36,26 +30,35 @@ define(function(require) {
     };
     GAMEOBJECT.prototype = Object.create(BaseObject.prototype);
     GAMEOBJECT.__namespace__ = 'graphit/scene/gameobject';
-    
+
     GAMEOBJECT.prototype.getComponent = function(name) {
         if (name in this.component) { return this.component[name]; }
         return null;
     };
 
     GAMEOBJECT.prototype.addComponent = function(cls) {
+        console.log('cls', cls, typeof cls);
         var name = cls.name;
+        var component;
+        if (typeof cls === 'object') {
+            component = cls;
+            name = eType.reverse(component.type);
+            console.log('component', name, component);
+//            throw 'PLOP';
+        } else {
+            component = new cls(this);
+        }
         name = name.toLowerCase();
         if (name in this.component) { throw 'ComponentAlreadyAttached'; }
-        this.component[name] = new cls(this);
+//        this.component[name] = new cls(this);
+        this.component[name] = component;
+        console.log('Component', name, this.component[name]);
         Object.defineProperty(this, name, {
-            get: function() {
-                if (!(name in this.component)) {
-                    return null;
-                }
+            get : function() {
+                if (!(name in this.component)) { return null; }
                 return this.component[name];
             },
         });
     };
-    ns[_ns_] = GAMEOBJECT;
-    return ns[_ns_];
+    return GAMEOBJECT;
 });
