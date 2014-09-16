@@ -249,18 +249,18 @@ define(function(require) {
                 var v = node.velocity.clone().smul(elapsed);
                 var speed = node.orientation.clone().mul(v);
                 p = node.transform.position();
-                if (node.parent !== undefined
-                        && tree.hasCapability(node.parent, eCap.transform)) {
-                    width = node.parent.width;
-                    height = node.parent.height;
-                    dw = width / 2;
-                    dh = height / 2;
-                    p = node.parent.worldTransform.position();
-                    minx = p.x + -dw + ndw;
-                    maxx = p.x + dw - ndw;
-                    miny = p.y - dh + ndh;
-                    maxy = p.y + dh - ndh;
-                } else {
+//                if (node.parent !== undefined
+//                        && tree.hasCapability(node.parent, eCap.transform)) {
+//                    width = node.parent.width;
+//                    height = node.parent.height;
+//                    dw = width / 2;
+//                    dh = height / 2;
+//                    p = node.parent.worldTransform.position();
+//                    minx = p.x + -dw + ndw;
+//                    maxx = p.x + dw - ndw;
+//                    miny = p.y - dh + ndh;
+//                    maxy = p.y + dh - ndh;
+//                } else {
                     width = that.canvas.width();
                     height = that.canvas.height();
                     dw = width / 2;
@@ -269,11 +269,9 @@ define(function(require) {
                     maxx = dw - ndw;
                     miny = -dh + ndh;
                     maxy = dh - ndh;
-                }
-//                console.log('startTime', this.startTime);
+//                }
                 if (node.timeout < this.startTime) {
-//                    console.log('timeout', node.timeout, this.startTime);
-                    node.timeout = this.startTime + math.randInt(1, 10);
+                    node.timeout = this.startTime + 10;
                     var newSize = (this.elapsedTime / 10);
                     var newBorn = false;
                     if (node.grow) {
@@ -292,12 +290,13 @@ define(function(require) {
                         }
                     }
                     if (newBorn) {
-                        node.width = 0.1;//math.randFloat(0, maxx);
+                        node.width = 0.1;
                         node.grow = true;
                         node.x = math.randFloat(-minx, maxx);
                         node.y = math.randFloat(-miny, maxy);
                         node.fillStyle = tool.randomColor();
                         node.velocity.randomize().normalize().smul(math.randFloat(0.1, 0.5));
+                        node.timeout = this.startTime + math.randInt(10, 1000);
                     }
                 }
                 p.add(speed);
