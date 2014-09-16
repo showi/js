@@ -15,10 +15,6 @@ define(function(require) {
     'use strict';
 
     var Enum = require('graphit/enum');
-    var ns = require('graphit/namespace');
-    ns = ns.enum;
-    var _ns_ = 'matrix33';
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var MATRIX33 = new Enum({
         m11 : 0,
@@ -33,11 +29,9 @@ define(function(require) {
 
         mX : 2, // m13,
         mY : 5, // m23,
-        mSx: 0,
-        mSy: 4,
+        mSx : 0,
+        mSy : 4,
     });
+
     MATRIX33.__namespace__ = 'graphit/enum/matrix33';
-    
-    ns[_ns_] = MATRIX33;
-    return ns[_ns_];
 });

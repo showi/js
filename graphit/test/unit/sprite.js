@@ -16,7 +16,7 @@ define(function(require) {
 
     var Sprite = require('graphit/scene/sprite');
     var Texture = require('graphit/scene/texture/texture2d');
-    var math = require('graphit/math/namespace');
+    var math = require('graphit/math/factory');
     var Canvas = require('graphit/draw/canvas');
     var Asset = require('graphit/asset/manager');
     var body = jQuery('body');

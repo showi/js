@@ -14,11 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
     var Enum = require('graphit/enum');
-    ns = ns.enum;
-    var _ns_ = 'shape';
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var SHAPE = new Enum({
         'rectangle' : 1 << 0,
@@ -28,6 +24,5 @@ define(function(require) {
     });
     SHAPE.__namespace__ = 'graphit/enum/shape';
 
-    ns[_ns_] = SHAPE;
-    return ns[_ns_];
+    return SHAPE;
 });

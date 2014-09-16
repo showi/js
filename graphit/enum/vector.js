@@ -15,18 +15,13 @@ define(function(require) {
     'use strict';
 
     var Enum = require('graphit/enum');
-    var ns = require('graphit/namespace');
-    ns = ns.enum;
-    var _ns_ = 'vector';
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var VECTOR = new Enum({
         x : 0, // m13,
         y : 1,
-        z : 2, 
+        z : 2,
     });
     VECTOR.__namespace__ = 'graphit/enum/vector';
-    
-    ns[_ns_] = VECTOR;
-    return ns[_ns_];
+
+    return VECTOR;
 });

@@ -30,7 +30,7 @@ define(function(require) {
     var DBuffer = require('graphit/draw/doublebuffer');
     var WRenderer = require('graphit/widget/renderer');
     var math = require('graphit/math');
-    var mathFactory = require('graphit/math/namespace');
+    var mathFactory = require('graphit/math/factory');
     var Rect = require('graphit/math/rect');
     Vector2d = mathFactory.vector2d;
     require('graphit/extend/jquery');

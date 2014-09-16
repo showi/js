@@ -17,7 +17,7 @@ define(function(require) {
     var ns = require('graphit/namespace');
     var BaseObject = require('graphit/scene/baseobject');
     var eType = require('graphit/scene/enum/type');
-    var math = require('graphit/math/namespace');
+    var math = require('graphit/math/factory');
 
     ns = ns.scene;
     var _ns_ = 'sprite';

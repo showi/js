@@ -20,8 +20,6 @@ define(function(require) {
     var Storeable = require('graphit/storeable');
     var eType = require('graphit/enum/type');
 
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
-
     function VECTOR2D(x, y) {
         this.type = eType.vector2d;
         this.setUp(x, y);
@@ -141,8 +139,8 @@ define(function(require) {
     VECTOR2D.prototype.lengthSlow = function() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     };
-    var v = new VECTOR2D();
-    v.Delete();
-    ns[_ns_] = VECTOR2D;
-    return ns[_ns_];
+//    var v = new VECTOR2D();
+//    v.Delete();
+
+    return VECTOR2D;
 });

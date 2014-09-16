@@ -9,17 +9,10 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
-
-    var ns = require('graphit/math');
-    var _ns_ = 'line';
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) {
-        return ns[_ns_];
-    }
 
     function LINE(a, b) {
         this.__namespace__ = 'graphit/math/line';
@@ -28,10 +21,9 @@ define(function(require) {
     };
 
     LINE.prototype.toString = function() {
-        return '<Line a: ' + this.a.toString() + 
-               ', b: ' + this.b.toString() + '>';
+        return '<Line a: ' + this.a.toString() + ', b: ' + this.b.toString()
+                + '>';
     };
 
-    ns[_ns_] = LINE;
-    return ns[_ns_];
+    return LINE;
 });

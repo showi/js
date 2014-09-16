@@ -14,11 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
     var Enum = require('graphit/enum');
-    ns = ns.enum;
-    var _ns_ = 'context';
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var CONTEXT = new Enum({
         fillStyle : true,
@@ -38,11 +34,6 @@ define(function(require) {
         globalCompositeOperation : true,
     });
     CONTEXT.__namespace__ = 'graphit/enum/context';
-//    var props = ['canvas', 'fillStyle', 'font', 'globalAlpha',
-//                 'globalCompositeOperation', 'lineCap', 'lineJoin',
-//                 'lineWidth', 'miterLimit', 'shadowOffsetX',
-//                 'shadowOffsetY', 'shadowBlur', 'shadowColor',
-//                 'strokeStyle', 'textAlign', 'textBaseline'];
-    ns[_ns_] = CONTEXT;
-    return ns[_ns_];
+    
+    return CONTEXT;
 });

@@ -17,7 +17,7 @@ define(function(require) {
     require('graphit/extend/jquery');
 
     var util = require('graphit/util');
-    var math = require('graphit/math/namespace');
+    var math = require('graphit/math/factory');
     var test = require('graphit/test/util');
     var Canvas = require('graphit/draw/canvas');
     var tool = require('graphit/draw/tool');

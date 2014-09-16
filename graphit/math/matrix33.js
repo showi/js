@@ -14,14 +14,10 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/math');
     var Vector2d = require('graphit/math/vector2d');
-    var InputFilterMixin = require('graphit/mixin/inputfilter');
+//    var InputFilterMixin = require('graphit/mixin/inputfilter');
     var Storeable = require('graphit/storeable');
     var eType = require('graphit/enum/type');
-    var _ns_ = eType.reverse(eType.matrix33);
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var m11 = 0;
     var m12 = 1;
@@ -367,10 +363,10 @@ define(function(require) {
         return this;
     };
 
-    InputFilterMixin.call(MATRIX33.prototype);
+//    InputFilterMixin.call(MATRIX33.prototype);
 
-    var m = new MATRIX33();
-    m.Delete();
-    ns[_ns_] = MATRIX33;
-    return ns[_ns_];
+//    var m = new MATRIX33();
+//    m.Delete();
+
+     return MATRIX33;
 });

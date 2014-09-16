@@ -16,8 +16,6 @@ define(function(require) {
 
     var BaseObject = require('graphit/scene/baseobject');
     var Line = require('graphit/math/line');
-    var ns = require('graphit/namespace');
-    ns = ns.scene.node;
     var shape = require('graphit/draw/shape');
     var util = require('graphit/scene/util');
     var eCap = require('graphit/enum/capability');
@@ -44,13 +42,11 @@ define(function(require) {
             component = cls;
             name = eType.reverse(component.type);
             console.log('component', name, component);
-//            throw 'PLOP';
         } else {
             component = new cls(this);
         }
         name = name.toLowerCase();
         if (name in this.component) { throw 'ComponentAlreadyAttached'; }
-//        this.component[name] = new cls(this);
         this.component[name] = component;
         console.log('Component', name, this.component[name]);
         Object.defineProperty(this, name, {

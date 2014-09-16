@@ -14,17 +14,15 @@ define(function(require) {
 
     'use strict';
 
-//    var Node = require('graphit/scene/node/node');
     var eCap = require('graphit/enum/capability');
     var scene = require('graphit/scene/util');
-//    var TransMixin = require('graphit/scenes/mixin/transform');
     var shape = require('graphit/draw/shape');
     var Vector2d = require('graphit/math/vector2d');
     var Matrix33 = require('graphit/math/matrix33');
     var eAxis = require('graphit/enum/axis');
     var eShape = require('graphit/enum/shape');
     var ns = require('graphit/namespace');
-    var fact = require('graphit/math/namespace');
+    var fact = require('graphit/math/factory');
     var GameObject = require('graphit/scene/gameobject');
     var TransformComponent = require('graphit/scene/component/transform');
     var ParameterMixin = require('graphit/mixin/argument');

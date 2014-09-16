@@ -14,10 +14,6 @@ define(function(require) {
 
     'use strict';
 
-    var namespace = require('graphit/namespace');
-    var ns = namespace.scene;
-    var Matrix33 = require('graphit/math/matrix33');
-    var math = require('graphit/math');
     var Component = require('graphit/scene/component');
     var eType = require('graphit/scene/enum/type');
 
