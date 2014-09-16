@@ -20,15 +20,10 @@ define(function(require) {
     var ArgumentMixin = require('graphit/mixin/argument');
     var RenderableMixin = require('graphit/scene/mixin/renderable');
 
-    var ns = namespace.scene.node;
-    var _ns_ = 'node';
-
-    if (_ns_ in ns && ns !== undefined) { return ns[_ns_]; }
-
     var VALIDATORS = {
         parent : {
             required : true,
-            defaultValue: null,
+            defaultValue : null,
         },
         traversable : {
             required : true,
@@ -82,6 +77,5 @@ define(function(require) {
                 + '">';
     };
 
-    ns[_ns_] = NODE;
-    return ns[_ns_];
+    return node;
 });

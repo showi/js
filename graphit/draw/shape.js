@@ -9,13 +9,10 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
-
-    var util = require('../util');
-    var tool = require('./tool');
 
     var SHAPE = {
         __namespace__ : 'graphit/draw/shape',
@@ -35,9 +32,9 @@ define(function(require) {
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             ctx.closePath();
         },
-        point: function(ctx, x, y) {
+        point : function(ctx, x, y) {
             ctx.beginPath();
-            ctx.rect(x-0.5, y-0.5, 1,1);
+            ctx.rect(x - 0.5, y - 0.5, 1, 1);
             ctx.closePath();
         }
     };

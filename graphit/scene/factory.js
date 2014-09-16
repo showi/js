@@ -16,8 +16,6 @@ define(function(require) {
 
     require('graphit/scene/node/element');
     require('graphit/scene/node/primitive');
-    var ns = require('graphit/namespace');
-    var util = require('graphit/util');
 
     var FACTORY = {
         node : function(cls, opts, args) {

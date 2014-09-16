@@ -14,24 +14,18 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
     var BaseObject = require('graphit/scene/baseobject');
     var eType = require('graphit/scene/enum/type');
-    ns = ns.scene;
-    var _ns_ = eType.reverse(eType.texture);
-
-    if (_ns_ in ns && ns[_ns_] != undefined) { return ns[_ns_]; }
 
     function TEXTURE() {
         this.type = eType.texture;
         BaseObject.apply(this, arguments);
         this.anisoLevel = 0;
         this.filterMode = 0;
-        this.height = 0,
-        this.width = 0;
+        this.height = 0, this.width = 0;
         this.wrapMode = 0;
     };
-    
+
     TEXTURE.prototype = Object.create(BaseObject.prototype);
 
     TEXTURE.__namespace__ = 'graphit/scene/texture';
@@ -42,6 +36,5 @@ define(function(require) {
     TEXTURE.prototype.getNativeTexturePtr = function() {
         throw 'NotImplementedError';
     };
-    ns[_ns_] = TEXTURE;
-    return ns[_ns_];
+    return TEXTURE;
 });

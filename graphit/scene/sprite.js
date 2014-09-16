@@ -13,26 +13,15 @@ See the GNU General Public License for more details.
 define(function(require) {
 
     'use strict';
-    
-    var ns = require('graphit/namespace');
+
     var BaseObject = require('graphit/scene/baseobject');
     var eType = require('graphit/scene/enum/type');
     var math = require('graphit/math/factory');
-
-    ns = ns.scene;
-    var _ns_ = 'sprite';
-    
-    if (_ns_ in ns && ns[_ns_] != undefined) { return ns[_ns_]; }
     
     function SPRITE(texture, rect, pivot, pixelToUnits) {
         this.type = eType.sprite;
         BaseObject.apply(this, arguments);
         this.setUp(texture, rect, pivot, pixelToUnits);
-        //        this.border = undefined;
-//        this.bounds = undefined;
-//        this.packed = false;
-//        this.textureRect = undefined;
-//        this.textureRectOffset = undefined;
     }
     
     SPRITE.prototype.setUp = function(texture, rect, pivot, pixelToUnits) {
@@ -42,6 +31,5 @@ define(function(require) {
     };
 
     SPRITE.prototyep = Object.create(BaseObject.prototype);
-    ns[_ns_] = SPRITE;
-    return ns[_ns_];
+    return SPRITE;
 });

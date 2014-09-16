@@ -14,13 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
-    ns = ns.draw;
-    var _ns_ = 'context';
-
     var eProp = require('graphit/enum/context');
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function CONTEXT(canvas) {
         if (!(this instanceof CONTEXT)) { return new CONTEXT(canvas); }
@@ -102,6 +96,5 @@ define(function(require) {
             }(p));
         }
     };
-    ns[_ns_] = CONTEXT;
-    return ns[_ns_];
+    return CONTEXT;
 });

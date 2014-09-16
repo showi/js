@@ -22,12 +22,6 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var eAxis = require('graphit/enum/axis');
 
-    var ns = require('graphit/namespace');
-    ns = ns.scene.node;
-    var _ns_ = 'shape';
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
-
     var VALIDATORS = {
         kind : {
             required : true
@@ -61,6 +55,5 @@ define(function(require) {
         
     };
 
-    ns[_ns_] = SHAPE;
-    return ns[_ns_];
+    return SHAPE;
 });

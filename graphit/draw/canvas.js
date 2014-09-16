@@ -15,14 +15,10 @@ define(function(require) {
     'use strict';
 
     var namespace = require('graphit/namespace');
-    var ns = namespace.draw;
-    var _ns_ = 'canvas';
     var InvalidDocumentIdException = require('../exception/InvalidDocumentId');
     var Context = require('../draw/context');
     var util = require('graphit/util');
     var ArgumentMixin = require('../mixin/argument');
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var VALIDATORS = {
         width : {
@@ -280,6 +276,5 @@ define(function(require) {
         return this.element.height;
     };
 
-    ns[_ns_] = CANVAS;
-    return ns[_ns_];
+    return CANVAS;
 });

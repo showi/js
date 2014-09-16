@@ -15,7 +15,6 @@ define(function(require) {
     'use strict';
 
     var namespace = require('graphit/namespace');
-    var ns = namespace.draw;
     var eType = require('graphit/enum/type');
     var Image = require('graphit/draw/image');
 

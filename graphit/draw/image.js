@@ -14,14 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var namespace = require('graphit/namespace');
-    var ns = namespace.draw;
     var eType = require('graphit/enum/type');
-    var _ns_ = eType.reverse(eType.image);
-    
-    if (_ns_ in ns && ns[_ns_] != undefined) {
-        return ns[_ns_];
-    }
         
     function IMAGE(parent, name, src, fnOk, fnFail, linkUid) {
         console.log('new Image', parent, name, src);

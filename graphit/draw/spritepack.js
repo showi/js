@@ -15,13 +15,8 @@ define(function(require) {
     'use strict';
 
     var namespace = require('graphit/namespace');
-    var ns = namespace.draw;
     var eType = require('graphit/enum/type');
     var Image = require('graphit/draw/image');
-                        
-    var _ns_ = eType.reverse(eType.spritepack);
-
-    if (_ns_ in ns && ns[_ns_] != undefined) { return ns[_ns_]; }
 
     function SPRITEPACK(parent, name, src, fnOk, fnFail) {
         if (fnOk === undefined) fnOk = function() {
