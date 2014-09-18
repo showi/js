@@ -25,20 +25,21 @@ define(function(require) {
     var Vector2d = require('graphit/math/vector2d');
     var GameObject = require('graphit/scene/gameobject');
     var Renderer = require('graphit/renderer');
+    var tool = require('graphit/draw/tool');
 
-    function Circle(renderer, x, y) {
+    function Circle(renderer, x, y, radius, fillStyle) {
         this.kind = eKind.circle;
         Shape.call(this, {
             kind : eKind.circle,
-            pos : new Vector2d(0, 0),
+            pos : new Vector2d(x, y),
             size : {
-                width : 100
+                width: radius,
             }
         });
         this.addComponent(RigidBody);
         this.addComponent(renderer);
-        this.fillStyle = 'red';
         this.rigidbody.velocity = new Vector2d(1.0, 0.0);
+        this.fillStyle = fillStyle;
     };
 
     Circle.prototype = Object.create(Shape.prototype);
@@ -50,9 +51,6 @@ define(function(require) {
         var world = new GameObject();
         world.addComponent(Transform);
         world.transform.position(new Vector2d(this.width / 2, this.height / 2));
-        console.log(world.transform.world.toString());
-        console.log(world.transform.local.toString());
-        
         this.world = world;
         this.setupCanvas(this.width, this.height);
         this.setupRenderer();
@@ -86,11 +84,22 @@ define(function(require) {
     };
 
     T_RIGIDBODY.prototype.run = function() {
+        this.ctx.strokeStyle = 'white';
+        this.ctx.lineWidth = 0.1;
+        shape.grid(this.ctx, this.width, this.height, 10, 10);
+        this.ctx.stroke();
         console.log('Testing rigidbody');
         var shapeRenderer = new ShapeRenderer();
-        var circle = new Circle(shapeRenderer, 0, 0);
+        var circle = new Circle(shapeRenderer, 0, 0, 40, tool.randomColor());
         this.world.appendChild(circle);
-        console.log(circle);
+        var circle2 = new Circle(shapeRenderer, 50, 0, 10, tool.randomColor());
+//        circle2.transform.translate(new Vector2d(50, 0));
+        circle2.transform.rotate(45*Math.PI/180);
+        
+        circle.appendChild(circle2);
+        
+        var circle3 = new Circle(shapeRenderer, 100, 0, 5, tool.randomColor());
+        circle.appendChild(circle3);
         var that = this;
 
         function loop() {

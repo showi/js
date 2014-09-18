@@ -34,7 +34,7 @@ define(function(require) {
     };
 
     ShapeRenderer.prototype.draw_circle = function(renderer, node) {
-        console.log('draw circle', renderer, node);
+        console.log('draw circle', renderer, node.transform.local.toString());
         shape.circle(renderer.ctx, 0, 0, node.u.x);
     };
 

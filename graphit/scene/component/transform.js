@@ -59,7 +59,6 @@ define(function(require) {
         } else {
             this._local.copy(this.world);
         }
-        console.log('mul', local.toString());
         return this._local.mul(local);
     };
 
@@ -78,6 +77,10 @@ define(function(require) {
 
     Transform.prototype.translate = function(vector) {
         return this.world.translate(vector);
+    };
+
+    Transform.prototype.rotate = function(angle) {
+        return this.world.rotateZ(angle);
     };
 
     return Transform;

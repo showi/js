@@ -36,6 +36,27 @@ define(function(require) {
             ctx.beginPath();
             ctx.rect(x - 0.5, y - 0.5, 1, 1);
             ctx.closePath();
+        },
+        grid : function(ctx, width, height, spaceX, spaceY, offsetX, offsetY) {
+            if (offsetX === undefined) {
+                offsetX = spaceX;
+            }
+            if (offsetY === undefined) {
+                offsetY = spaceY;
+            }
+            var numCol = width / spaceX;
+            var numRow = height / spaceY;
+            var i, v;
+            for (i = 0; i < numCol; i++) {
+                var v = i * spaceX + offsetX;
+                this.line(ctx, v, 0, v, height);
+                ctx.stroke();
+            }
+            for (i = 0; i < numRow; i++) {
+                var v = i * spaceY + offsetY;
+                this.line(ctx, 0, v, width, v);
+                ctx.stroke();
+            }
         }
     };
     return SHAPE;

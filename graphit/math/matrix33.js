@@ -249,20 +249,25 @@ define(function(require) {
         return this;
     };
 
-    MATRIX33.prototype.rotate = function(angle) {
+    MATRIX33.prototype.rotateZ = function(angle) {
         // this.inputFilter(angle);
         if (angle > (Math.PI / 180)) {
             angle = angle - (Math.PI / 180);
         }
+        console.log('angle', angle)
         // console.log('rotate/angle', angle);
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
+        var r = new MATRIX33([cos, -sin, 0, 
+                            sin, cos, 0, 
+                            0, 0, 1]);
         // console.log('sin/cos', sin, cos);
-        this._data[m11] += cos;
-        this._data[m12] -= sin;
-        this._data[m21] += sin;
-        this._data[m22] += cos;
+//        this._data[m11] += cos;
+//        this._data[m12] -= sin;
+//        this._data[m21] += sin;
+//        this._data[m22] += cos;
         // console.log(this._data);
+        this.mul(r);
         return this;
     };
 

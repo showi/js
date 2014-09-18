@@ -118,9 +118,9 @@ define(function(require) {
     };
 
     RENDERER.prototype.pushTransform = function(transform) {
-        console.log('push', transform.toString());
-        this.transforms.push(transform);
+        this.transforms.push(this.transform);
         this.transform = transform;
+        console.log('PopTransform', this.transform);
         return this;
     };
 
@@ -130,6 +130,7 @@ define(function(require) {
         if (elm != undefined) {
 //            elm.Delete();
         }
+        console.log('PopTransform', this.transform);
         return this;
     };
 
@@ -249,6 +250,7 @@ define(function(require) {
                 this.layer.append(this.root);
             }
             this.popTransform();
+            console.log('transforms', this.transforms);
         }
         if (this.canDraw) {
             this.canDraw = false;
@@ -327,11 +329,12 @@ define(function(require) {
         if (hasTransform) {
 //        if (tree.hasCapability(node, eCap.transform)) {
 
-            console.log('applyTransform', this.transform);
+//            console.log('applyTransform', this.transform);
             node.transform.applyLocalTransform(this.transform);
-            console.log('pushTransform', node, node.transform.local);
+//            console.log('pushTransform', node, node.transform.local);
             this.pushTransform(node.transform.local);
             //            node.applyLocalTransform(this.transform);//.clone();
+           console.log('transform', this.transform.toString());
         }
         /* POSTUPDATE */
         this.hookExec('post_update', node, elapsed);
