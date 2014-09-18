@@ -69,7 +69,6 @@ define(function(require) {
         this.now = Date.now();
         this.uid = util.genUID();
         this.setArguments(arguments, VALIDATOR);
-        this.startTime = Date.now();
         this.endTime = null;
         this.skipped = 0;
         this.skippedDraw = 0;
@@ -77,7 +76,8 @@ define(function(require) {
         this.fixedUpdate = 33;
         this.fixedDraw = 100;
         this.timeout = 1000/66;
-        this.updateAdder = 0;
+        this.updateAdder = this.fixedUpdate;
+        this.startTime = Date.now() - this.fixedUpdate;
         this.limitUpdate = 3;
         this.limitSkippedDraw = 3;
         this.limitSkippedRender = 2;
@@ -118,6 +118,7 @@ define(function(require) {
     };
 
     RENDERER.prototype.pushTransform = function(transform) {
+        console.log('push', transform.toString());
         this.transforms.push(transform);
         this.transform = transform;
         return this;
@@ -253,7 +254,7 @@ define(function(require) {
             this.canDraw = false;
             doDraw = true;
         }
-        doDraw = false;
+//        doDraw = false;
         if (doDraw == false && (this.skippedDraw < this.limitSkippedDraw)) {
             this.skippedDraw++;
         } else {
@@ -325,9 +326,12 @@ define(function(require) {
 //        node.update(this, elapsed);
         if (hasTransform) {
 //        if (tree.hasCapability(node, eCap.transform)) {
-            this.pushTransform(this.transform);
+
+            console.log('applyTransform', this.transform);
             node.transform.applyLocalTransform(this.transform);
-//            node.applyLocalTransform(this.transform);//.clone();
+            console.log('pushTransform', node, node.transform.local);
+            this.pushTransform(node.transform.local);
+            //            node.applyLocalTransform(this.transform);//.clone();
         }
         /* POSTUPDATE */
         this.hookExec('post_update', node, elapsed);

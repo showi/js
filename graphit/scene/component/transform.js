@@ -23,10 +23,18 @@ define(function(require) {
         this.type = eType.transform;
         Component.call(this);
         this.world = new Matrix33();
-        this.local = new Matrix33();
         this._dirty = true;
     }
     Transform.prototype = Object.create(Component.prototype);
+
+    Object.defineProperty(Transform.prototype, 'local', {
+        get: function() {
+            if (this._local !== undefined) {
+                return this._local;
+            }
+            return this.world;
+        }})
+    ;
 
     Transform.prototype.localPosition = function(position) {
         if (this.local === undefined) { return this.world.position(position); }
@@ -45,11 +53,18 @@ define(function(require) {
         throw 'NotImplemented';
     };
 
-    Transform.prototype.applyLocalTransform = function(world) {
-        return this.local.copy(this.world).mul(world);
+    Transform.prototype.applyLocalTransform = function(local) {
+        if (this._local === undefined) {
+            this._local = this.world.clone();
+        } else {
+            this._local.copy(this.world);
+        }
+        console.log('mul', local.toString());
+        return this._local.mul(local);
     };
 
     Transform.prototype.position = function(vector) {
+        console.log('change position', vector);
         return this.world.position(vector);
     };
 

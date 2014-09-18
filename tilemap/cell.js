@@ -16,6 +16,9 @@ define(function(require) {
 
     var Rect = require('graphit/math/rect');
     var Tile = require('tile/tile');
+    var namespace = require('graphit/namespace');
+
+    var eventLoad = new Event('level-load');
 
     function Cell(col, row, cellWidth, cellHeight) {
         this.setUp(col, row, cellWidth, cellHeight);
@@ -36,8 +39,15 @@ define(function(require) {
         for (var i = 0; i < numCell; i++) {
             this.tile[i] = new Tile();
         }
+        this.loading = 0;
     };
     
+    Cell.prototype.load = function(url) {
+        this.loading++;
+        namespace.event.dispatch(eventLoad);
+        
+    };
+ 
     Cell.prototype.get = function(x, y, layerNum) {
         if (layerNum === undefined) {
             layerNum = 0;

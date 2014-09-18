@@ -23,12 +23,14 @@ define(function(require) {
     }
     /* Extending javascript object */
     require('graphit/extend/string');
+    var Gevent = require('graphit/event');
 //    require('graphit/extend/math');
 
     /* injecting our base data */
     var NAMESPACE = {
         __version__ : '0.0.1',
         __namespace__ : _ns_,
+        event: new Gevent(),
         tool : null,
         shape : null,
         draw: {},

@@ -21,7 +21,7 @@ define(function(require) {
     var Matrix33 = require('graphit/math/matrix33');
     var eAxis = require('graphit/enum/axis');
     var eShape = require('graphit/enum/shape');
-    var fact = require('graphit/math/factory');
+//    var fact = require('graphit/math/factory');
     var GameObject = require('graphit/scene/gameobject');
     var TransformComponent = require('graphit/scene/component/transform');
     var ParameterMixin = require('graphit/mixin/argument');
@@ -39,19 +39,22 @@ define(function(require) {
     };
 
     function SHAPE() {
-        this.setArguments(arguments, VALIDATORS);
+        console.log(this);
         this.name = SHAPE.__namespace__;
         GameObject.call(this, arguments);
+        this.setArguments(arguments, VALIDATORS);
         this.addComponent(TransformComponent);
         this.setUp(this.kind);
     };
 
-    SHAPE.prototype = Object.create(GameObject.prototype);
     ParameterMixin.call(SHAPE.prototype);
+    SHAPE.prototype = Object.create(GameObject.prototype);
     SHAPE.__namespace__ = 'graphit/scene/node/shape';
 
     SHAPE.prototype.setUp = function(kind) {
         var meth = 'setUp_' + eShape.reverse(kind);
+        console.log(this);
+        
         this.transform.positionX(this.pos.x);
         this.transform.positionY(this.pos.y);
         return this[meth]();

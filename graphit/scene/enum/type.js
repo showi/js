@@ -24,6 +24,8 @@ define(function(require) {
         texture2d: 1 << 4,
         sprite: 1 << 5,
         renderer: 1 << 6,
+        collider: 1 << 7,
+        rigidbody: 1 << 8,
     });
     CAPABILITY.__namespace__ = 'graphit/enum/capability';
     return CAPABILITY;

@@ -92,7 +92,10 @@ define(function(require) {
         }
     };
 
-    Grid.prototype.getJson = function(url, fn) {
+    Grid.prototype.getJson = function(cellNumber, url, fn) {
+        if (this.cell.length < cellNumber) {
+            throw 'InvalidCellNumber:' + cellNumber;
+        }
         var that = this;
         function load(data) {
             that.loadJson(data);

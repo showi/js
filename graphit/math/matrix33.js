@@ -16,7 +16,7 @@ define(function(require) {
 
     var Vector2d = require('graphit/math/vector2d');
 //    var InputFilterMixin = require('graphit/mixin/inputfilter');
-    var Storeable = require('graphit/storeable');
+//    var Storeable = require('graphit/storeable');
     var eType = require('graphit/enum/type');
 
     var m11 = 0;
@@ -45,7 +45,7 @@ define(function(require) {
         this.type = eType.matrix33;
         this.setUp(matrix);
     }
-    MATRIX33.prototype = Object.create(Storeable.prototype);
+//    MATRIX33.prototype = Object.create(Storeable.prototype);
 
     MATRIX33.__namespace__ = 'graphit/math/matrix33';
 
@@ -107,8 +107,8 @@ define(function(require) {
          * 
          * @return: new Matrix33 object
          */
-        return this.Create(this._data);
-//        return new MATRIX33(this);
+//        return this.Create(this._data);
+        return new MATRIX33(this);
     };
 
     MATRIX33.prototype.equal = function(matrix) {
