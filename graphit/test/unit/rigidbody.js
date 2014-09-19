@@ -80,6 +80,9 @@ define(function(require) {
             this.ctx.save();
             this.ctx.fillStyle = 'black';
             this.ctx.fillRect(0, 0, that.width, that.height);
+            this.ctx.strokeStyle = 'white';
+            this.ctx.lineWidth = 0.1;
+            shape.grid(this.ctx, that.width, that.height, 10, 10);
             this.ctx.restore();
         };
         this.renderer = renderer;
@@ -101,11 +104,6 @@ define(function(require) {
     };
 
     T_RIGIDBODY.prototype.run = function() {
-        this.ctx.save();
-        this.ctx.strokeStyle = 'white';
-        this.ctx.lineWidth = 0.1;
-        shape.grid(this.ctx, this.width, this.height, 10, 10);
-        this.ctx.save();
         console.log('Testing rigidbody');
         var shapeRenderer = new ShapeRenderer();
         var circle = new Circle(shapeRenderer, 0, 0, 50, tool.randomColor());
