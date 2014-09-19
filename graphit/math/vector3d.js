@@ -38,6 +38,10 @@ define(function(require) {
         return new VECTOR3D(x, y, z);
     };
 
+    VECTOR3D.prototype.fill = function(value) {
+        this.x = this.y = this.z = value;
+    };
+
     VECTOR3D.prototype.copy = function(vector) {
         this.x = vector.x;
         this.y = vector.y;

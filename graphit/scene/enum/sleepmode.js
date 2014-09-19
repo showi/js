@@ -14,13 +14,12 @@ define(function(require) {
 
     'use strict';
 
-    var util = require('graphit/test/util');
-    var kinds_visual = ['clock', 'randart', 'movingpaint', 'mouseclick'];
-    var kinds_speed = ['speed_array', 'speed_matrix33', 'speed_canvas'];
-    var kinds_math = ['speed_matrix33', 'vector2d'];
-    var kinds = ['rigidbody'];
-    for (var i = 0; i < kinds.length; i++) {
-        util.runTest(kinds[i]);
-    }
+    var Enum = require('graphit/enum');
+
+    var SLEEPMODE = new Enum({
+        awake: 1 << 0,
+        asleep: 1 << 1,
+    });
+    SLEEPMODE.__namespace__ = 'graphit/scene/enum/sleepmode';
+    return SLEEPMODE;
 });
- 

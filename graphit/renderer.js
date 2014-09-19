@@ -26,6 +26,7 @@ define(function(require) {
     var Dlist = require('graphit/datatype/dlist');
     var math = require('graphit/math');
     var Layer = require('graphit/renderer/layer');
+    var Vector3d = require('graphit/math/vector3d');
 
     var VALIDATOR = {
         'root' : {
@@ -71,7 +72,7 @@ define(function(require) {
         this.numUpdate = 0;
         this.fixedUpdate = 33;
         this.fixedDraw = 100;
-        this.timeout = 1000/66;
+        this.timeout = 1000 / 66;
         this.updateAdder = this.fixedUpdate;
         this.startTime = Date.now() - this.fixedUpdate;
         this.limitUpdate = 3;
@@ -116,7 +117,7 @@ define(function(require) {
     RENDERER.prototype.pushTransform = function(transform) {
         this.transforms.push(this.transform);
         this.transform = transform;
-//        console.log('PopTransform', this.transform);
+        // console.log('PopTransform', this.transform);
         return this;
     };
 
@@ -124,9 +125,9 @@ define(function(require) {
         var elm = this.transforms.pop();
         this.transform = elm;
         if (elm != undefined) {
-//            elm.Delete();
+            // elm.Delete();
         }
-//        console.log('PopTransform', this.transform);
+        // console.log('PopTransform', this.transform);
         return this;
     };
 
@@ -240,19 +241,20 @@ define(function(require) {
             this.layer.empty();
             this.measure.ups.count++;
             util.emptyArray(this.transforms);
+            this.updateTree(this.root);
             this.pushTransform(this.worldTransform);
             if (this.render_node(this.root, this.elapsedTime)) {
                 console.log('push object into layer');
                 this.layer.append(this.root);
             }
             this.popTransform();
-//            console.log('transforms', this.transforms);
+            // console.log('transforms', this.transforms);
         }
         if (this.canDraw) {
             this.canDraw = false;
             doDraw = true;
         }
-//        doDraw = false;
+        // doDraw = false;
         if (doDraw == false && (this.skippedDraw < this.limitSkippedDraw)) {
             this.skippedDraw++;
         } else {
@@ -271,18 +273,18 @@ define(function(require) {
                 for (nidx = 0; nidx < layer.length, node = layer[nidx]; nidx++) {
                     this.pre_render(node);
                     this.ctx.save();
-                    this.hookExec('pre_render', node); //node.pre_render(this);
+                    this.hookExec('pre_render', node); // node.pre_render(this);
                     if (node.transform !== undefined) {
                         wt = node.transform.local._data;
-//                        this.ctx.translate(wt[3], wt[7]);
-                        this.ctx.transform(wt[0], wt[1], wt[4], wt[5],
-                         wt[3], wt[7]);
+                        // this.ctx.translate(wt[3], wt[7]);
+                        this.ctx.transform(wt[0], wt[1], wt[4], wt[5], wt[3],
+                                           wt[7]);
                     }
                     this.apply_node_context(node);
-//                    this.hookExec('render', node);
+                    // this.hookExec('render', node);
                     node.renderer.draw(this, node);
-//                    this.render(node);
-//                    node.render(this);
+                    // this.render(node);
+                    // node.render(this);
                     if (this.ctx.fillStyle) {
                         this.ctx.fill();
                     }
@@ -308,32 +310,49 @@ define(function(require) {
         ;
     };
 
+    RENDERER.prototype.updateTree = function(root) {
+        if (root.rigidbody2d !== undefined) {
+            root.rigidbody2d.update(this.elapsedTime);
+            if (root.transform !== undefined) {
+                console.log('velocity', root.rigidbody2d.velocity);
+                root.transform.translate(root.rigidbody2d.velocity);
+            }
+        }
+        var child = root.child.first;
+        while (child != undefined) {
+            this.updateTree(child.content);
+            child = child.next;
+        }
+    };
+
     RENDERER.prototype.render_node = function(node, elapsed) {
-        var hasTransform = (node.transform === undefined)? false: true;
+        var hasTransform = (node.transform === undefined) ? false : true;
         var child = null;
-        var ret = (node.renderer === undefined)? false: true;//tree.hasCapability(node, eCap.render);
+        var ret = (node.renderer === undefined) ? false : true;// tree.hasCapability(node,
+                                                                // eCap.render);
         /* PRE UPDATE */
         this.hookExec('pre_update', node, elapsed);
-//        this.pre_update(node, elapsed);
-//        node.pre_update(this, elapsed);
+        // this.pre_update(node, elapsed);
+        // node.pre_update(this, elapsed);
         /* UPDATE */
-       this.hookExec('update', node, elapsed); // Can return directly if update fail
-//        if (!this.update(node, elapsed)) { return ret; }
-//        node.update(this, elapsed);
+        this.hookExec('update', node, elapsed); // Can return directly if update
+                                                // fail
+        // if (!this.update(node, elapsed)) { return ret; }
+        // node.update(this, elapsed);
         if (hasTransform) {
-//        if (tree.hasCapability(node, eCap.transform)) {
+            // if (tree.hasCapability(node, eCap.transform)) {
 
-//            console.log('applyTransform', this.transform);
+            // console.log('applyTransform', this.transform);
             node.transform.applyLocalTransform(this.transform);
-//            console.log('pushTransform', node, node.transform.local);
+            // console.log('pushTransform', node, node.transform.local);
             this.pushTransform(node.transform.local);
-            //            node.applyLocalTransform(this.transform);//.clone();
-//           console.log('transform', this.transform.toString());
+            // node.applyLocalTransform(this.transform);//.clone();
+            // console.log('transform', this.transform.toString());
         }
         /* POSTUPDATE */
         this.hookExec('post_update', node, elapsed);
-//        this.post_update(node, elapsed);
-//        node.post_update(this, elapsed);
+        // this.post_update(node, elapsed);
+        // node.post_update(this, elapsed);
         if (node.child !== undefined) {
             /* RENDERING CHILD */
             child = node.child.first;
@@ -347,7 +366,7 @@ define(function(require) {
                 }
                 child = child.next;
             }
-       
+
         }
         if (hasTransform) {
             this.popTransform();
@@ -355,6 +374,6 @@ define(function(require) {
         /* TRUE if Drawable */
         return ret;
     };
-    
+
     return RENDERER;
 });

@@ -73,7 +73,7 @@ define(function(require) {
 
     Object.defineProperty(RECT.prototype, 'size', {
         get : function() {
-            return Vector3d.Create(this.width, this.height);
+            return new Vector3d(this.width, this.height);
         },
         set : function(size) {
             this.width = size.x;
