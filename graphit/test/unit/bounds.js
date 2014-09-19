@@ -9,18 +9,21 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 See the GNU General Public License for more details.
-*/
+ */
 define(function(require) {
 
     'use strict';
 
-    var util = require('graphit/test/util');
-    var kinds_visual = ['clock', 'randart', 'movingpaint', 'mouseclick'];
-    var kinds_speed = ['speed_array', 'speed_matrix33', 'speed_canvas'];
-    var kinds_math = ['speed_matrix33', 'vector2d'];
-    var kinds = ['planet'];
-    for (var i = 0; i < kinds.length; i++) {
-        util.runTest(kinds[i]);
+    var Bounds = require('graphit/scene/bounds');
+    
+    function T_BOUNDS() {
+        
     }
+    T_BOUNDS.__namespace__ = 'graphit/test/unit/bounds';
+
+    T_BOUNDS.prototype.run = function() {
+        var b = new Bounds(-0.5, -0.5, 1, 1);
+        console.log(b);
+    };
+    return new T_BOUNDS();
 });
- 

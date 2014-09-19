@@ -18,6 +18,7 @@ define(function(require) {
     var eType = require('graphit/enum/type');
 
     function RECT(left, top, width, height) {
+        if (arguments.length < 4) throw 'InvalidArgumentsLength';
         this.type = eType.rect;
         this.extents = new Vector3d();
         this.center = new Vector3d();
@@ -72,7 +73,7 @@ define(function(require) {
 
     Object.defineProperty(RECT.prototype, 'size', {
         get : function() {
-            return Vector2d.Create(this.width, this.height);
+            return Vector3d.Create(this.width, this.height);
         },
         set : function(size) {
             this.width = size.x;

@@ -139,7 +139,7 @@ define(function(require) {
     };
 
     VECTOR3D.prototype.toString = function() {
-        return '<Vector2d x=' + this.x + ', y=' + this.y + ', z=' + this.z
+        return '<Vector3d x=' + this.x + ', y=' + this.y + ', z=' + this.z
                 + '>';
     };
 
