@@ -314,7 +314,6 @@ define(function(require) {
         if (root.rigidbody2d !== undefined) {
             root.rigidbody2d.update(this.elapsedTime);
             if (root.transform !== undefined) {
-                console.log('velocity', root.rigidbody2d.velocity);
                 root.transform.translate(root.rigidbody2d.velocity);
             }
         }
