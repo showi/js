@@ -123,7 +123,7 @@ define(function(require) {
 
         function loop() {
             that.renderer.step();
-            setTimeout(loop, 1000 / 33);
+            setTimeout(loop, 1000 / 120);
         }
         loop();
     };
