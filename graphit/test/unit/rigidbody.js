@@ -56,6 +56,7 @@ define(function(require) {
         this.setupRenderer();
         this.setupHtml();
     };
+
     T_RIGIDBODY.prototype.setupRenderer = function(width, height) {
         var that = this;
         var renderer = new Renderer({
@@ -69,16 +70,12 @@ define(function(require) {
             if(r>360) {
                 r /= 360;
             }
-//            console.log('rotate', r);
            node.transform.rotate(r);
-
         };
-
         renderer.render = function(node) {
             node.renderer(this, node);
             console.log('render');
         };
-
         renderer.draw_init = function() {
             this.ctx.save();
             this.ctx.fillStyle = 'black';
@@ -87,6 +84,7 @@ define(function(require) {
         };
         this.renderer = renderer;
     };
+
     T_RIGIDBODY.prototype.setupHtml = function(width, height) {
         var body = jQuery('body');
         body.append(this.canvas.element);
@@ -113,10 +111,8 @@ define(function(require) {
         var circle = new Circle(shapeRenderer, 0, 0, 50, tool.randomColor());
         this.world.appendChild(circle);
         var circle2 = new Circle(shapeRenderer, 75, 0, 25, tool.randomColor());
-//        circle2.transform.translate(new Vector3d(50, 0));
         circle2.name = 'circle2';
         circle.appendChild(circle2);
-        
         var circle3 = new Circle(shapeRenderer, 25, 0, 5, tool.randomColor());
         circle3.name = 'circle3';
         circle2.appendChild(circle3);
@@ -126,7 +122,6 @@ define(function(require) {
 
         function loop() {
             that.renderer.step();
-//            throw "ONE STEP";
             setTimeout(loop, 1000 / 33);
         }
         loop();
