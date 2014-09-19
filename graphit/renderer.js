@@ -14,7 +14,6 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
     var util = require('graphit/util');
     var ArgumentMixin = require('graphit/mixin/argument');
     var RenderableMixin = require('graphit/scene/mixin/renderable');
@@ -23,14 +22,11 @@ define(function(require) {
     var eMat = require('graphit/enum/matrix33');
     var eCtx = require('graphit/enum/context');
     var Node = require('graphit/scene/node/node');
-    var Matrix33 = require('graphit/math/matrix33');
+    var Matrix44 = require('graphit/math/matrix44');
     var Dlist = require('graphit/datatype/dlist');
     var math = require('graphit/math');
     var Layer = require('graphit/renderer/layer');
 
-    var _ns_ = 'renderer';
-
-    if (_ns_ in ns && ns[_ns_] != undefined) { return ns[_ns_]; }
     var VALIDATOR = {
         'root' : {
             required : true,
@@ -48,7 +44,7 @@ define(function(require) {
         },
         'worldTransform' : {
             required : true,
-            defaultValue : new Matrix33(),
+            defaultValue : new Matrix44(),
         },
         'canDraw' : {
             required : true,
@@ -120,7 +116,7 @@ define(function(require) {
     RENDERER.prototype.pushTransform = function(transform) {
         this.transforms.push(this.transform);
         this.transform = transform;
-        console.log('PopTransform', this.transform);
+//        console.log('PopTransform', this.transform);
         return this;
     };
 
@@ -130,7 +126,7 @@ define(function(require) {
         if (elm != undefined) {
 //            elm.Delete();
         }
-        console.log('PopTransform', this.transform);
+//        console.log('PopTransform', this.transform);
         return this;
     };
 
@@ -250,7 +246,7 @@ define(function(require) {
                 this.layer.append(this.root);
             }
             this.popTransform();
-            console.log('transforms', this.transforms);
+//            console.log('transforms', this.transforms);
         }
         if (this.canDraw) {
             this.canDraw = false;
@@ -278,11 +274,9 @@ define(function(require) {
                     this.hookExec('pre_render', node); //node.pre_render(this);
                     if (node.transform !== undefined) {
                         wt = node.transform.local._data;
-//                        console.log('wt', wt);
-//                        this.ctx.translate(wt[2], wt[5]);
-                         this.ctx.transform(wt[0], wt[1], wt[3], wt[4],
-                         wt[2],
-                         wt[5]);
+//                        this.ctx.translate(wt[3], wt[7]);
+                        this.ctx.transform(wt[0], wt[1], wt[4], wt[5],
+                         wt[3], wt[7]);
                     }
                     this.apply_node_context(node);
 //                    this.hookExec('render', node);
@@ -334,7 +328,7 @@ define(function(require) {
 //            console.log('pushTransform', node, node.transform.local);
             this.pushTransform(node.transform.local);
             //            node.applyLocalTransform(this.transform);//.clone();
-           console.log('transform', this.transform.toString());
+//           console.log('transform', this.transform.toString());
         }
         /* POSTUPDATE */
         this.hookExec('post_update', node, elapsed);
@@ -361,6 +355,6 @@ define(function(require) {
         /* TRUE if Drawable */
         return ret;
     };
-    ns[_ns_] = RENDERER;
-    return ns[_ns_];
+    
+    return RENDERER;
 });

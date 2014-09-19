@@ -18,17 +18,13 @@ define(function(require) {
     var Point = require('graphit/geom/point2d');
     var shape = require('graphit/draw/shape');
     var Matrix33 = require('graphit/math/matrix33');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
     var eMat = require('graphit/enum/matrix33');
     var Base2d = require('graphit/geom/base2d');
     var scene = require('graphit/scene/util');
     var TransformMixin = require('graphit/scene/mixin/transform');
     var m = require('graphit/enum/matrix33');
     var eCap = require('graphit/enum/capability');
-    ns = ns.geom;
-    var _ns_ = 'circle2d';
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function CIRCLE2D(x, y, radius) {
         console.log('NEW circle', x, y, radius);
@@ -95,6 +91,5 @@ define(function(require) {
         return '<Circle2d transform=' + this.transform.toString() + '>';
     };
 
-    ns[_ns_] = CIRCLE2D;
-    return ns[_ns_];
+    return CIRCLE2D;
 });

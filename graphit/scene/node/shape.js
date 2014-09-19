@@ -17,7 +17,7 @@ define(function(require) {
     // var eCap = require('graphit/enum/capability');
     var scene = require('graphit/scene/util');
     var shape = require('graphit/draw/shape');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
     var Matrix33 = require('graphit/math/matrix33');
     var eAxis = require('graphit/enum/axis');
     var eShape = require('graphit/enum/shape');
@@ -84,8 +84,8 @@ define(function(require) {
                 return this.v.y = height / 2;
             },
         });
-        this.u = new Vector2d(this.size.width / 2, 0);
-        this.v = new Vector2d(0, this.size.height / 2);
+        this.u = new Vector3d(this.size.width / 2, 0);
+        this.v = new Vector3d(0, this.size.height / 2);
     };
 
     SHAPE.prototype.setUp_circle = function() {
@@ -105,7 +105,7 @@ define(function(require) {
                 return this.u.x = height / 2;
             },
         });
-        this.u = new Vector2d(this.size.width / 2, 0);
+        this.u = new Vector3d(this.size.width / 2, 0);
     };
 
     return SHAPE;

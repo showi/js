@@ -14,11 +14,12 @@ define(function(require) {
 
     'use strict';
 
-    var Vector2d = require('graphit/math/vector2d');
-//    var InputFilterMixin = require('graphit/mixin/inputfilter');
-//    var Storeable = require('graphit/storeable');
+    /* Importing our modules */
+    var Vector3d = require('graphit/math/vector3d');
     var eType = require('graphit/enum/type');
+    var math = require('graphit/math');
 
+    /* Matrix cell indexes */
     var m11 = 0;
     var m12 = 1;
     var m13 = 2;
@@ -45,8 +46,6 @@ define(function(require) {
         this.type = eType.matrix33;
         this.setUp(matrix);
     }
-//    MATRIX33.prototype = Object.create(Storeable.prototype);
-
     MATRIX33.__namespace__ = 'graphit/math/matrix33';
 
     MATRIX33.prototype.New = function(matrix) {
@@ -79,7 +78,6 @@ define(function(require) {
         this._data[7] = data[7];
         this._data[8] = data[8];
         return this;
-        this._data = data;
     };
 
     MATRIX33.prototype.copy = function(matrix) {
@@ -107,7 +105,7 @@ define(function(require) {
          * 
          * @return: new Matrix33 object
          */
-//        return this.Create(this._data);
+        //        return this.Create(this._data);
         return new MATRIX33(this);
     };
 
@@ -220,7 +218,7 @@ define(function(require) {
     };
 
     MATRIX33.prototype.position = function(vector) {
-        if (vector === undefined) { return new Vector2d(this._data[mX],
+        if (vector === undefined) { return new Vector3d(this._data[mX],
                                                         this._data[mY]); }
         // this.inputFilter(vector);
         this._data[mX] = vector.x;
@@ -250,23 +248,13 @@ define(function(require) {
     };
 
     MATRIX33.prototype.rotateZ = function(angle) {
-        // this.inputFilter(angle);
-        if (angle > (Math.PI / 180)) {
-            angle = angle - (Math.PI / 180);
-        }
-        console.log('angle', angle)
+        angle = math.degToRad(angle);
+        console.log('angle', angle);
+
         // console.log('rotate/angle', angle);
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
-        var r = new MATRIX33([cos, -sin, 0, 
-                            sin, cos, 0, 
-                            0, 0, 1]);
-        // console.log('sin/cos', sin, cos);
-//        this._data[m11] += cos;
-//        this._data[m12] -= sin;
-//        this._data[m21] += sin;
-//        this._data[m22] += cos;
-        // console.log(this._data);
+        var r = new MATRIX33([cos, -sin, 0, sin, cos, 0, 0, 0, 1]);
         this.mul(r);
         return this;
     };
@@ -289,10 +277,8 @@ define(function(require) {
     };
 
     MATRIX33.prototype.mul = function(matrix) {
-        // this.inputFilterMatrix(matrix);
-        var b = matrix._data;
-//        var aClone = this.clone();
-        var a = this.clone()._data;
+        var a = matrix._data;
+        var b = this.clone()._data;
         this._data[m11] = a[m11] * b[m11] + a[m12] * b[m21] + a[m13] * b[m31];
         this._data[m12] = a[m11] * b[m12] + a[m12] * b[m22] + a[m13] * b[m32];
         this._data[m13] = a[m11] * b[m13] + a[m12] * b[m23] + a[m13] * b[m33];
@@ -304,35 +290,35 @@ define(function(require) {
         this._data[m31] = a[m31] * b[m11] + a[m32] * b[m21] + a[m33] * b[m31];
         this._data[m32] = a[m31] * b[m12] + a[m32] * b[m22] + a[m33] * b[m32];
         this._data[m33] = a[m31] * b[m13] + a[m32] * b[m23] + a[m33] * b[m33];
-//        aClone.Delete();
+        //        aClone.Delete();
         return this;
     };
 
     MATRIX33.prototype.add = function(matrix) {
         // this.inputFilterMatrix(matrix);
-        this._data[m11] += matrix._date[m11];
-        this._data[m12] += matrix._date[m12];
-        this._data[m13] += matrix._date[m13];
-        this._data[m21] += matrix._date[m21];
-        this._data[m22] += matrix._date[m22];
-        this._data[m23] += matrix._date[m23];
-        this._data[m31] += matrix._date[m31];
-        this._data[m32] += matrix._date[m32];
-        this._data[m33] += matrix._date[m33];
+        this._data[m11] += matrix._data[m11];
+        this._data[m12] += matrix._data[m12];
+        this._data[m13] += matrix._data[m13];
+        this._data[m21] += matrix._data[m21];
+        this._data[m22] += matrix._data[m22];
+        this._data[m23] += matrix._data[m23];
+        this._data[m31] += matrix._data[m31];
+        this._data[m32] += matrix._data[m32];
+        this._data[m33] += matrix._data[m33];
         return this;
     };
 
     MATRIX33.prototype.sub = function(matrix) {
         // this.inputFilterMatrix(matrix);
-        this._data[m11] -= matrix._date[m11];
-        this._data[m12] -= matrix._date[m12];
-        this._data[m13] -= matrix._date[m13];
-        this._data[m21] -= matrix._date[m21];
-        this._data[m22] -= matrix._date[m22];
-        this._data[m23] -= matrix._date[m23];
-        this._data[m31] -= matrix._date[m31];
-        this._data[m32] -= matrix._date[m32];
-        this._data[m33] -= matrix._date[m33];
+        this._data[m11] -= matrix._data[m11];
+        this._data[m12] -= matrix._data[m12];
+        this._data[m13] -= matrix._data[m13];
+        this._data[m21] -= matrix._data[m21];
+        this._data[m22] -= matrix._data[m22];
+        this._data[m23] -= matrix._data[m23];
+        this._data[m31] -= matrix._data[m31];
+        this._data[m32] -= matrix._data[m32];
+        this._data[m33] -= matrix._data[m33];
         return this;
     };
 
@@ -368,10 +354,10 @@ define(function(require) {
         return this;
     };
 
-//    InputFilterMixin.call(MATRIX33.prototype);
+    //    InputFilterMixin.call(MATRIX33.prototype);
 
-//    var m = new MATRIX33();
-//    m.Delete();
+    //    var m = new MATRIX33();
+    //    m.Delete();
 
-     return MATRIX33;
+    return MATRIX33;
 });

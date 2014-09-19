@@ -14,7 +14,7 @@ define(function(require) {
 
     'use strict';
 
-    var Matrix33 = require('graphit/math/matrix33');
+    var Matrix44 = require('graphit/math/matrix44');
     var math = require('graphit/math');
     var Component = require('graphit/scene/component');
     var eType = require('graphit/scene/enum/type');
@@ -22,7 +22,7 @@ define(function(require) {
     function Transform() {
         this.type = eType.transform;
         Component.call(this);
-        this.world = new Matrix33();
+        this.world = new Matrix44();
         this._dirty = true;
     }
     Transform.prototype = Object.create(Component.prototype);

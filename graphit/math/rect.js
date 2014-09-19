@@ -13,96 +13,97 @@ See the GNU General Public License for more details.
 define(function(require) {
 
     'use strict';
-    
-    var Vector2dObj = require('graphit/math/vector2d');
-    var Storeable = require('graphit/storeable');
-    var eType = require('graphit/enum/type');
 
-    var Vector2d = new Vector2dObj();
-    Vector2d.Delete();
+    var Vector3d = require('graphit/math/vector3d');
+    var eType = require('graphit/enum/type');
 
     function RECT(left, top, width, height) {
         this.type = eType.rect;
-        this.extents = Vector2d.Create();
-        this.center = Vector2d.Create();
+        this.extents = new Vector3d();
+        this.center = new Vector3d();
         this.setUp(left, top, width, height);
-       
-    };
-    RECT.prototype = Object.create(Storeable.prototype);
 
-    
+    };
+
     Object.defineProperty(RECT.prototype, 'position', {
-        get: function() {
+        get : function() {
             return this.center.clone().sub(this.extents);
         },
-        set: function(position) {
+        set : function(position) {
             this.center.add(position.clone().add(this.extents));
         }
-    });          
+    });
+
     Object.defineProperty(RECT.prototype, 'x', {
-        get: function() {
+        get : function() {
             return this.center.x - this.extents.x;
         },
-        set: function(x) {
+        set : function(x) {
             this.center.x = x + this.extents.x;
         }
     });
+
     Object.defineProperty(RECT.prototype, 'y', {
-        get: function() {
+        get : function() {
             return this.center.y - this.extents.y;
         },
-        set: function(y) {
+        set : function(y) {
             this.center.y = y + this.extents.y;
         }
     });
+
     Object.defineProperty(RECT.prototype, 'width', {
-        get: function() {
+        get : function() {
             return this.extents.x * 2;
         },
-        set: function(width) {
+        set : function(width) {
             this.extents.x = width / 2;
         }
     });
+
     Object.defineProperty(RECT.prototype, 'height', {
-        get: function() {
+        get : function() {
             return this.extents.y * 2;
         },
-        set: function(height) {
+        set : function(height) {
             this.extents.y = height / 2;
         }
     });
-    
+
     Object.defineProperty(RECT.prototype, 'size', {
-        get: function() {
+        get : function() {
             return Vector2d.Create(this.width, this.height);
         },
-        set: function(size) {
+        set : function(size) {
             this.width = size.x;
             this.height = size.y;
         }
     });
+
     Object.defineProperty(RECT.prototype, 'max', {
-        get: function() {
+        get : function() {
             return this.u.clone().sub(this.v);
         },
-        set: function(max) {
+        set : function(max) {
             this.center.x += max.x / 2;
             this.center.y += max.y / 2;
             this.width += max.x;
             this.height += max.y;
         }
-    }); 
-    
+    });
+
     RECT.prototype.clone = function() {
-        return this.Create(this.x, this.y, this.width, this.height);
+        //        return this.Create(this.x, this.y, this.width, this.height);
+        return new RECT(this.x, this.y, this.width, this.height);
     };
-    
+
     RECT.prototype.copy = function(rect) {
         this.center.copy(rect.center);
         this.u.copy(rect.u);
         this.v.copy(rect.v);
-    }
-    RECT.prototype.New = function (left, top, width, height) {
+    };
+
+    RECT.prototype.New = function(left, top, width, height) {
         return new RECT(left, top, width, height);
     };
 
@@ -110,9 +111,9 @@ define(function(require) {
         this.extents.x = width / 2;
         this.extents.y = height / 2;
         this.center.x = left + this.extents.x;
-        this.center.y = top + this.extents.y;  
+        this.center.y = top + this.extents.y;
     };
-    
+
     RECT.prototype.contains = function(point) {
         console.log('point', point);
         console.log('x', this.x);
@@ -139,10 +140,10 @@ define(function(require) {
     };
 
     RECT.prototype.toString = function() {
-        var s ='<Rect ';
-        s+= 'position: ' + this.position + ",";
-        s+= '>';
+        var s = '<Rect ';
+        s += 'position: ' + this.position + ",";
+        s += '>';
         return s
-    }
+    };
     return RECT;
 });

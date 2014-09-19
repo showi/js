@@ -15,12 +15,8 @@ define(function(require) {
     'use strict';
 
     var ns = require('graphit/math');
-    var Vector2d = require('graphit/math/vector2d');
-    var InputFilterMixin = require('graphit/mixin/inputfilter');
-    var _ns_ = 'matrix33AB';
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
-
+    var Vector3d = require('graphit/math/vector3d');
+    
     var m11 = 0;
     var m12 = 1;
     var m13 = 2;
@@ -80,7 +76,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.equal = function(matrix) {
-        this.inputFilterMatrix(matrix);
         for (var i = 0; i < 9; i++) {
             if (this._data[i] != matrix._data[i]) { return false; }
         }
@@ -88,7 +83,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fill = function(value) {
-        this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -111,7 +105,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fillSlow = function(value) {
-        this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -127,7 +120,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.fillMedium = function(value) {
-        this.inputFilter(value);
         /*
          * Fill matrix with some value
          * 
@@ -160,26 +152,22 @@ define(function(require) {
     };
 
     MATRIX33.prototype.translate = function(vector) {
-        this.inputFilterVector(vector);
         this._data[mX] += vector.x;
         this._data[mY] += vector.y;
         return this;
     };
 
     MATRIX33.prototype.translateX = function(x) {
-        this.inputFilter(x);
         this._data[mX] += x;
         return this;
     };
 
     MATRIX33.prototype.translateY = function(y) {
-        this.inputFilter(y);
         this._data[mY] += y;
         return this;
     };
 
     MATRIX33.prototype.translateXY = function(x, y) {
-        this.inputFilter(x, y);
         this._data[mX] += x;
         this._data[mY] += y;
         return this;
@@ -188,7 +176,6 @@ define(function(require) {
     MATRIX33.prototype.position = function(vector) {
         if (vector === undefined) { return new Vector2d(this._data[mX],
                                                         this._data[mY]); }
-        this.inputFilter(vector);
         this._data[mX] = vector.x;
         this._data[mY] = vector.y;
         return this;
@@ -196,7 +183,6 @@ define(function(require) {
 
     MATRIX33.prototype.positionX = function(x) {
         if (x === undefined) { return this._data[mX]; }
-        this.inputFilter(x);
         this._data[mX] = x;
         return this;
     };
@@ -209,14 +195,12 @@ define(function(require) {
     };
 
     MATRIX33.prototype.positionXY = function(x, y) {
-        this.inputFilter(x, y);
         this._data[mX] = x;
         this._data[mY] = y;
         return this;
     };
 
     MATRIX33.prototype.rotate = function(angle) {
-        this.inputFilter(angle);
         if (angle > (Math.PI / 180)) {
             angle = angle - (Math.PI / 180);
         }
@@ -250,7 +234,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.mul = function(matrix) {
-        this.inputFilterMatrix(matrix);
         var b = matrix._data;
         var a = this.clone()._data;
         this._data[m11] = a[m11] * b[m11] + a[m12] * b[m21] + a[m13] * b[m31];
@@ -268,7 +251,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.add = function(matrix) {
-        this.inputFilterMatrix(matrix);
         this._data[m11] += matrix._date[m11];
         this._data[m12] += matrix._date[m12];
         this._data[m13] += matrix._date[m13];
@@ -282,7 +264,6 @@ define(function(require) {
     };
 
     MATRIX33.prototype.sub = function(matrix) {
-        this.inputFilterMatrix(matrix);
         this._data[m11] -= matrix._date[m11];
         this._data[m12] -= matrix._date[m12];
         this._data[m13] -= matrix._date[m13];
@@ -316,8 +297,5 @@ define(function(require) {
         return r;
     };
 
-    InputFilterMixin.call(MATRIX33.prototype);
-
-    ns[_ns_] = MATRIX33;
-    return ns[_ns_];
+    return MATRIX33;
 });

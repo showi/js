@@ -22,7 +22,7 @@ define(function(require) {
     var eKind = require('graphit/enum/shape');
     var ParameterMixin = require('graphit/mixin/argument');
     var shape = require('graphit/draw/shape');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
     var GameObject = require('graphit/scene/gameobject');
     var Renderer = require('graphit/renderer');
     var tool = require('graphit/draw/tool');
@@ -31,14 +31,14 @@ define(function(require) {
         this.kind = eKind.circle;
         Shape.call(this, {
             kind : eKind.circle,
-            pos : new Vector2d(x, y),
+            pos : new Vector3d(x, y),
             size : {
                 width: radius,
             }
         });
         this.addComponent(RigidBody);
         this.addComponent(renderer);
-        this.rigidbody.velocity = new Vector2d(1.0, 0.0);
+        this.rigidbody.velocity = new Vector3d(1.0, 0.0);
         this.fillStyle = fillStyle;
     };
 
@@ -50,22 +50,41 @@ define(function(require) {
         this.height = 600;
         var world = new GameObject();
         world.addComponent(Transform);
-        world.transform.position(new Vector2d(this.width / 2, this.height / 2));
+        world.transform.position(new Vector3d(this.width / 2, this.height / 2));
         this.world = world;
         this.setupCanvas(this.width, this.height);
         this.setupRenderer();
         this.setupHtml();
     };
     T_RIGIDBODY.prototype.setupRenderer = function(width, height) {
+        var that = this;
         var renderer = new Renderer({
             root : this.world,
             ctx : this.ctx,
         });
+        renderer.update = function(node, elapsed) {
+            if (node.name != 'circle2' && node.name != 'circle3')
+                return true;
+            var r = 0.1 * elapsed;
+            if(r>360) {
+                r /= 360;
+            }
+//            console.log('rotate', r);
+           node.transform.rotate(r);
+
+        };
+
         renderer.render = function(node) {
             node.renderer(this, node);
             console.log('render');
         };
 
+        renderer.draw_init = function() {
+            this.ctx.save();
+            this.ctx.fillStyle = 'black';
+            this.ctx.fillRect(0, 0, that.width, that.height);
+            this.ctx.restore();
+        };
         this.renderer = renderer;
     };
     T_RIGIDBODY.prototype.setupHtml = function(width, height) {
@@ -84,27 +103,30 @@ define(function(require) {
     };
 
     T_RIGIDBODY.prototype.run = function() {
+        this.ctx.save();
         this.ctx.strokeStyle = 'white';
         this.ctx.lineWidth = 0.1;
         shape.grid(this.ctx, this.width, this.height, 10, 10);
-        this.ctx.stroke();
+        this.ctx.save();
         console.log('Testing rigidbody');
         var shapeRenderer = new ShapeRenderer();
-        var circle = new Circle(shapeRenderer, 0, 0, 40, tool.randomColor());
+        var circle = new Circle(shapeRenderer, 0, 0, 50, tool.randomColor());
         this.world.appendChild(circle);
-        var circle2 = new Circle(shapeRenderer, 50, 0, 10, tool.randomColor());
-//        circle2.transform.translate(new Vector2d(50, 0));
-        circle2.transform.rotate(45*Math.PI/180);
-        
+        var circle2 = new Circle(shapeRenderer, 75, 0, 25, tool.randomColor());
+//        circle2.transform.translate(new Vector3d(50, 0));
+        circle2.name = 'circle2';
         circle.appendChild(circle2);
         
-        var circle3 = new Circle(shapeRenderer, 100, 0, 5, tool.randomColor());
-        circle.appendChild(circle3);
+        var circle3 = new Circle(shapeRenderer, 25, 0, 5, tool.randomColor());
+        circle3.name = 'circle3';
+        circle2.appendChild(circle3);
         var that = this;
+        
+        var rotation = 1;
 
         function loop() {
             that.renderer.step();
-            throw "ONE STEP";
+//            throw "ONE STEP";
             setTimeout(loop, 1000 / 33);
         }
         loop();

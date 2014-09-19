@@ -13,19 +13,15 @@ See the GNU General Public License for more details.
 define(function(require) {
 
     'use strict';
-    var ns = require('graphit/namespace');
-    ns = ns.math;
-    var _ns_ = 'factory';
+
     var Rect= require('graphit/math/rect');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
     var Matrix33 = require('graphit/math/matrix33');
-    
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     var RectFactory = new Rect(0,0,1,1);
     RectFactory.Delete();
 
-    var Vector2dFactory = new Vector2d();
+    var Vector2dFactory = new Vector3d();
     Vector2dFactory.Delete();
 
     var Matrix33Factory = new Matrix33();
@@ -37,6 +33,5 @@ define(function(require) {
         matrix33: Matrix33Factory,
     };
 
-    ns[_ns_] = NAMESPACE;
-    return ns[_ns_];
+    return NAMESPACE;
 });

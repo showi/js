@@ -16,7 +16,7 @@ define(function(require) {
 
     var Component = require('graphit/scene/component');
     var eType = require('graphit/scene/enum/type');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
 
     function Rigidbody() {
         this.type = eType.rigidbody;
@@ -34,14 +34,14 @@ define(function(require) {
         this.isKinematic = undefined;
         this.mass = undefined;
         this.maxAngularVelocity = undefined;
-        this.position = new Vector2d(0, 0);
+        this.position = new Vector3d(0, 0);
         this.rotation = 0;
         this.sleepAngularVelocity = 0.14;
         this.sleepVelocity = 0.14;
         this.solverIterationCount = undefined;
         this.useConeFriction = undefined;
         this.useGravity = undefined;
-        this.velocity = new Vector2d(0, 0);
+        this.velocity = new Vector3d(0, 0);
         this.worldCenterOfMass = undefined;
     }
     Rigidbody.prototype = Object.create(Component.prototype);

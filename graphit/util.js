@@ -14,11 +14,8 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
-    var _ns_ = 'util';
     var math = require('graphit/math');
-    var Vector2d = require('graphit/math/vector2d');
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
+    var Vector3d = require('graphit/math/vector3d');
     
     var documentElement = jQuery(document);
     var windowElement = jQuery(window);
@@ -126,7 +123,6 @@ define(function(require) {
         },
     };
     UTIL.__namespace__ = 'graphit/util';
-
-    ns[_ns_] = UTIL;
-    return ns[_ns_];
+    
+    return UTIL;
 });

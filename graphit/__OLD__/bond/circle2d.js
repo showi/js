@@ -15,7 +15,7 @@ define(function(require) {
     'use strict';
     
     var Circle = require('graphit/geom/circle2d');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector2d = require('graphit/math/vector3d');
 
     var Collision = function() {
         this.collide = false;

@@ -18,7 +18,7 @@ define(function(require) {
     var Point = require('graphit/geom/point2d');
     var shape = require('graphit/draw/shape');
     var Matrix33 = require('graphit/math/matrix33');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
     var eMat = require('graphit/enum/matrix33');
     var Base2d = require('graphit/geom/base2d');
     var scene = require('graphit/scene/util');

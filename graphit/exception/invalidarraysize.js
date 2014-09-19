@@ -14,20 +14,13 @@ define(function(require) {
 
     'use strict';
 
-    var Enum = require('graphit/enum');
+    function EXCEPTION(message) {
+        this.name = 'InvalidArraySize';
+        this.message = message;
+    };
 
-    var TYPE = new Enum({
-        rect : 1 << 1,
-        vector3d : 1 << 2,
-        matrix33 : 1 << 3,
-        matrix44: 1 << 4,
-        image : 1 << 5,
-        spritepack : 1 << 6,
-        tileset : 1 << 7,
-        sceneNodeShap : 1 << 8,
-        level: 1 << 9,
-    });
-    TYPE.__namespace__ = 'graphit/enum/type';
+    EXCEPTION.prototype = new Error();
+    EXCEPTION.prototype.constructor = EXCEPTION;
 
-    return TYPE;
+    return EXCEPTION;
 });

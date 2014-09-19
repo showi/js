@@ -14,15 +14,14 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
-//    var include = require('graphit/math/include');
-    var _ns_ = 'math';
-    //    var util = require('graphit/util');
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
-
     var MATH = {
         __namespace__ : 'graphit/math',
+        /* CONSTANTS */
+        halfPI: Math.PI / 180,
+        /* Functions */
+        degToRad: function(deg) {
+            return deg * this.halfPI;
+        },
         round : function(value, precision) {
             var factor = 1;
             if (precision === undefined) {
@@ -114,8 +113,5 @@ define(function(require) {
             return list[this.randInt(0, list.length)];
         }
     };
-    MATH.__namespace__ = 'graphit/math';
-
-    ns[_ns_] = MATH;
-    return ns[_ns_];
+    return MATH;
 });

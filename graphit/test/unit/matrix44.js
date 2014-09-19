@@ -13,21 +13,21 @@ See the GNU General Public License for more details.
 define(function(require) {
 
     'use strict';
+    
+    var Matrix44 = require('graphit/math/matrix44');
 
-    var Enum = require('graphit/enum');
+    function T_MATRIX44() {
+    }
 
-    var TYPE = new Enum({
-        rect : 1 << 1,
-        vector3d : 1 << 2,
-        matrix33 : 1 << 3,
-        matrix44: 1 << 4,
-        image : 1 << 5,
-        spritepack : 1 << 6,
-        tileset : 1 << 7,
-        sceneNodeShap : 1 << 8,
-        level: 1 << 9,
-    });
-    TYPE.__namespace__ = 'graphit/enum/type';
+    T_MATRIX44.prototype.run = function() {
+        console.log('Matrix44', Matrix44);
+        var a = new Matrix44();
+        console.log('Matrix44', a.toString());
+    };
 
-    return TYPE;
+    T_MATRIX44.prototype.test_mul = function() {
+
+    };
+    
+    return new T_MATRIX44();
 });

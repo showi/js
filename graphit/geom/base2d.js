@@ -14,20 +14,14 @@ define(function(require) {
 
     'use strict';
 
-    var ns = require('graphit/namespace');
     var Point = require('graphit/geom/point2d');
     var shape = require('graphit/draw/shape');
     var Matrix33 = require('graphit/math/matrix33');
-    var Vector2d = require('graphit/math/vector2d');
+    var Vector3d = require('graphit/math/vector3d');
     var eMat = require('graphit/enum/matrix33');
 
     var TransformMixin = require('graphit/scene/mixin/transform');
     var m = require('graphit/enum/matrix33');
-
-    ns = ns.geom;
-    var _ns_ = 'base2d';
-
-    if (_ns_ in ns && ns[_ns_] !== undefined) { return ns[_ns_]; }
 
     function BASE2D() {
         this.enable_transform();
@@ -58,6 +52,4 @@ define(function(require) {
         return '<Circle2d transform=' + this.transform.toString() + '>';
     };
 
-    ns[_ns_] = BASE2D;
-    return ns[_ns_];
 });

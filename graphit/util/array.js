@@ -14,13 +14,19 @@ define(function(require) {
 
     'use strict';
 
-    var Node = require('graphit/scene/node/node');
-
-    function ELEMENT() {
-        Node.call(this, arguments);
+    return {
+        empty: function(array) {
+            while(array.length > 1) {
+                array.pop();
+            }
+        }, 
+        copy: function(src, dest){
+            if (dest.length < src.length) {
+                throw 'ArraySrcLenghtSuperioToDestLength';
+            }
+            for (var i = 0; i < dest.length; i++) {
+                dest[i] = src[i];
+            }
+        }
     };
-    ELEMENT.prototype = Object.create(Node.prototype);
-    ELEMENT.__namespace__ = 'graphit/scene/node/element';
-
-    return ELEMENT;
 });
