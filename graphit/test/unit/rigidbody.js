@@ -28,6 +28,63 @@ define(function(require) {
     var tool = require('graphit/draw/tool');
     var util = require('graphit/util');
 
+    var planets = {
+                   sun: {
+                       position: new Vector3d(),
+                       radius: 100,
+                   },
+                   mercure: {
+                       position: new Vector3d(110, 0),
+                       radius: 5,
+                       parent: 'sun',
+                       rotation: 0.01
+                   },                   
+                   venus: {
+                       position: new Vector3d(120, 0),
+                       radius: 10,
+                       parent: 'sun',
+                       rotation: 0.03
+                   },
+                   terre: {
+                       position: new Vector3d(140, 0),
+                       radius: 10,
+                       parent: 'sun',
+                       rotation: 0.04
+                   },
+                   mars: {
+                       position: new Vector3d(150, 0),
+                       radius: 5,
+                       parent: 'sun',
+                       rotation: 0.05,
+                   },
+                   jupiter: {
+                       position: new Vector3d(160, 0),
+                       radius: 20,
+                       parent: 'sun',
+                       rotation: 0.06,
+                   },
+                   saturne: {
+                       position: new Vector3d(170, 0),
+                       radius: 15,
+                       parent: 'sun',
+                       rotation: 0.07,
+                   },
+                   uranus: {
+                       position: new Vector3d(180, 0),
+                       radius: 10,
+                       parent: 'sun',
+                       rotation: 0.08,
+                   },
+                   neptune: {
+                       position: new Vector3d(190, 0),
+                       radius: 10,
+                       parent: 'sun',
+                       rotation: 0.09
+                   },
+
+
+
+    };
     function Circle(renderer, x, y, radius, fillStyle) {
         this.kind = eKind.circle;
         Shape.call(this, {
@@ -67,9 +124,9 @@ define(function(require) {
             ctx : this.ctx,
         });
         renderer.update = function(node, elapsed) {
-            if (node.name != 'circle2' && node.name != 'circle3')
+            if (node.isRotating === undefined)
                 return true;
-            var r = 0.1 * elapsed;
+            var r = node.isRotating * elapsed;
             if(r>360) {
                 r /= 360;
             }
@@ -106,20 +163,35 @@ define(function(require) {
         this.canvas = canvas;
     };
 
+    T_RIGIDBODY.prototype.buildTree = function(shapeRenderer, data) {
+        var tree = {};
+        for(name in data) {
+            var planet = data[name];
+            planet.name = name;
+            if (planet.parent !== undefined) {
+                continue;
+            }
+            var circle = new Circle(shapeRenderer, planet.position.x, planet.position.y, planet.radius, tool.randomColor());
+            tree[name] = circle;
+        }
+        for(name in data) {
+            var planet = data[name];
+            if (planet.parent === undefined) {
+                continue;
+            }
+            var circle = new Circle(shapeRenderer, planet.position.x, planet.position.y, planet.radius, tool.randomColor());
+            circle.isRotating = planet.rotation;
+            tree[planet.parent].appendChild(circle);
+        }
+        for (var name in tree) {
+            this.world.appendChild(tree[name]);
+        }
+    };
+    
     T_RIGIDBODY.prototype.run = function() {
-        console.log('Testing rigidbody');
-        var shapeRenderer = new ShapeRenderer();
-        var circle = new Circle(shapeRenderer, 0, 0, 50, tool.randomColor());
-        this.world.appendChild(circle);
-        var circle2 = new Circle(shapeRenderer, 75, 0, 25, tool.randomColor());
-        circle2.name = 'circle2';
-        circle.appendChild(circle2);
-        var circle3 = new Circle(shapeRenderer, 25, 0, 5, tool.randomColor());
-        circle3.name = 'circle3';
-        circle2.appendChild(circle3);
         var that = this;
-        
-        var rotation = 1;
+        var shapeRenderer = new ShapeRenderer();
+        this.buildTree(shapeRenderer, planets);
 
         function loop() {
             that.renderer.step();
