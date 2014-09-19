@@ -26,6 +26,7 @@ define(function(require) {
     var GameObject = require('graphit/scene/gameobject');
     var Renderer = require('graphit/renderer');
     var tool = require('graphit/draw/tool');
+    var util = require('graphit/util');
 
     function Circle(renderer, x, y, radius, fillStyle) {
         this.kind = eKind.circle;
@@ -46,8 +47,10 @@ define(function(require) {
     ParameterMixin.call(Circle.prototype);
 
     function T_RIGIDBODY() {
-        this.width = 800;
-        this.height = 600;
+        var size = util.documentSize();
+        this.size = size;
+        this.width = size.x;
+        this.height = size.y;
         var world = new GameObject();
         world.addComponent(Transform);
         world.transform.position(new Vector3d(this.width / 2, this.height / 2));

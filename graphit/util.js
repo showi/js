@@ -46,11 +46,11 @@ define(function(require) {
         },
         windowSize : function() {
             
-            return new Vector2d(windowElement.width(),
+            return new Vector3d(windowElement.width(),
                                 windowElement.height());
         },
         documentSize : function() {
-            return new Vector2d(documentElement.width(),
+            return new Vector3d(documentElement.width(),
                                 documentElement.height());
         },
         setParameters : function(that, options, validators) {
